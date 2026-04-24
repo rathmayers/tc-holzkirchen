@@ -1,10 +1,10 @@
 ---
 const navLinks = [
-  { label: 'Club',          href: '/club' },
-  { label: 'Mannschaften',  href: '/mannschaften' },
-  { label: 'Tennisschule',  href: '/tennisschule' },
-  { label: 'News',          href: '/news' },
-  { label: 'Platzbuchung',  href: '/platzbuchung' },
+  { label: "Club", href: "/club" },
+  { label: "Mannschaften", href: "/mannschaften" },
+  { label: "Tennisschule", href: "/tennisschule" },
+  { label: "News", href: "/news" },
+  { label: "Platzbuchung", href: "/platzbuchung" },
 ];
 
 const pathname = Astro.url.pathname;
@@ -16,51 +16,75 @@ const pathname = Astro.url.pathname;
   data-header
 >
   <!-- Top bar -->
-  <div class="bg-court text-white/70 text-xs font-mono tracking-wider hidden md:block">
-    <div class="max-w-screen-xl mx-auto px-6 py-2 flex justify-between items-center">
+  <div
+    class="bg-court text-white/70 text-xs font-mono tracking-wider hidden md:block"
+  >
+    <div
+      class="max-w-screen-xl mx-auto px-6 py-2 flex justify-between items-center"
+    >
       <span>Saison 2025 läuft – Plätze buchbar!</span>
       <div class="flex items-center gap-6">
-        <a href="mailto:info@tc-holzkirchen.de" class="hover:text-white transition-colors">info@tc-holzkirchen.de</a>
-        <a href="tel:+498024123456" class="hover:text-white transition-colors">+49 8024 123 456</a>
+        <a
+          href="mailto:info@tc-holzkirchen.de"
+          class="hover:text-white transition-colors">info@tc-holzkirchen.de</a
+        >
+        <a href="tel:+498024123456" class="hover:text-white transition-colors"
+          >+49 8024 123 456</a
+        >
       </div>
     </div>
   </div>
 
   <!-- Main nav -->
   <nav class="bg-chalk/95 backdrop-blur-md border-b border-sand-dark">
-    <div class="max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between">
-
+    <div
+      class="max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between"
+    >
       <!-- Logo -->
       <a href="/" class="flex items-center gap-3 group">
-        <div class="w-10 h-10 bg-clay flex items-center justify-center text-white font-display text-xl leading-none shrink-0">
-          TC
-        </div>
+        <img
+          src="/images/tch.png"
+          alt="TC Holzkirchen Logo"
+          class="w-10 h-10 object-contain shrink-0"
+        />
         <div class="leading-tight">
-          <span class="block font-display text-xl text-court tracking-wide">TC Holzkirchen</span>
-          <span class="block font-mono text-[10px] uppercase tracking-widest text-court/50">Tennis seit 1950</span>
+          <span class="block font-display text-xl text-court tracking-wide"
+            >TC Holzkirchen</span
+          >
+          <span
+            class="block font-mono text-[10px] uppercase tracking-widest text-court/50"
+            >Tennis seit 1950</span
+          >
         </div>
       </a>
 
       <!-- Desktop nav -->
       <ul class="hidden lg:flex items-center gap-8">
-        {navLinks.map(link => (
-          <li>
-            <a
-              href={link.href}
-              class:list={[
-                'nav-link',
-                pathname.startsWith(link.href) ? 'text-clay' : 'text-court/70'
-              ]}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
+        {
+          navLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class:list={[
+                  "nav-link",
+                  pathname.startsWith(link.href)
+                    ? "text-clay"
+                    : "text-court/70",
+                ]}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
       </ul>
 
       <!-- CTA + Burger -->
       <div class="flex items-center gap-4">
-        <a href="/mitglied-werden" class="btn-primary hidden md:inline-flex text-xs py-3 px-5">
+        <a
+          href="/mitglied-werden"
+          class="btn-primary hidden md:inline-flex text-xs py-3 px-5"
+        >
           Mitglied werden
         </a>
         <button
@@ -68,9 +92,12 @@ const pathname = Astro.url.pathname;
           class="lg:hidden flex flex-col gap-1.5 p-2"
           aria-label="Menü öffnen"
         >
-          <span class="w-6 h-0.5 bg-court transition-all duration-200" id="b1"></span>
-          <span class="w-6 h-0.5 bg-court transition-all duration-200" id="b2"></span>
-          <span class="w-4 h-0.5 bg-court transition-all duration-200" id="b3"></span>
+          <span class="w-6 h-0.5 bg-court transition-all duration-200" id="b1"
+          ></span>
+          <span class="w-6 h-0.5 bg-court transition-all duration-200" id="b2"
+          ></span>
+          <span class="w-4 h-0.5 bg-court transition-all duration-200" id="b3"
+          ></span>
         </button>
       </div>
     </div>
@@ -81,13 +108,15 @@ const pathname = Astro.url.pathname;
       class="lg:hidden hidden border-t border-sand-dark bg-chalk"
     >
       <ul class="max-w-screen-xl mx-auto px-6 py-4 flex flex-col gap-4">
-        {navLinks.map(link => (
-          <li>
-            <a href={link.href} class="nav-link block text-court/70 py-1">
-              {link.label}
-            </a>
-          </li>
-        ))}
+        {
+          navLinks.map((link) => (
+            <li>
+              <a href={link.href} class="nav-link block text-court/70 py-1">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
         <li class="pt-2 border-t border-sand-dark">
           <a href="/mitglied-werden" class="btn-primary w-full justify-center">
             Mitglied werden
@@ -103,16 +132,16 @@ const pathname = Astro.url.pathname;
 
 <script>
   // Sticky shadow on scroll
-  const header = document.getElementById('site-header')!;
-  window.addEventListener('scroll', () => {
-    header.classList.toggle('shadow-lg', window.scrollY > 10);
+  const header = document.getElementById("site-header")!;
+  window.addEventListener("scroll", () => {
+    header.classList.toggle("shadow-lg", window.scrollY > 10);
   });
 
   // Mobile menu toggle
-  const btn = document.getElementById('burger-btn')!;
-  const menu = document.getElementById('mobile-menu')!;
-  btn.addEventListener('click', () => {
-    const open = !menu.classList.contains('hidden');
-    menu.classList.toggle('hidden', open);
+  const btn = document.getElementById("burger-btn")!;
+  const menu = document.getElementById("mobile-menu")!;
+  btn.addEventListener("click", () => {
+    const open = !menu.classList.contains("hidden");
+    menu.classList.toggle("hidden", open);
   });
 </script>
