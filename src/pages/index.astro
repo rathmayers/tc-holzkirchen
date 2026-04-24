@@ -83,7 +83,7 @@ const latestNews = sortedNews.slice(0, 4);
         <a href="/news" class="btn-outline hidden sm:inline-flex">Alle News</a>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6" data-animate>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-animate>
         {latestNews.map(entry => (
           <NewsCard
             title={entry.data.title}
