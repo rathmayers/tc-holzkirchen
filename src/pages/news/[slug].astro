@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allNews = await getCollection('news', e => e.data.published);
+  return allNews.map(entry => ({
+    params: { slug: entry.slug },
+    props:  { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const formattedDate = new Intl.DateTimeFormat('de-DE', {
+  day: '2-digit', month: 'long', year: 'numeric',
+}).format(entry.data.date);
+
+// Related posts (same category, max 3)
+const allNews = await getCollection('news', e => e.data.published && e.slug !== entry.slug);
+const related = allNews
+  .filter(e => e.data.category === entry.data.category)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout
+  title={`${entry.data.title} – TC Holzkirchen`}
+  description={entry.data.summary}
+  image={entry.data.image}
+>
+
+  <!-- Article Header -->
+  <div class="bg-court text-white py-16">
+    <div class="max-w-3xl mx-auto px-6">
+      <div class="flex items-center gap-3 font-mono text-xs text-white/40 uppercase tracking-widest mb-4">
+        <a href="/news" class="hover:text-clay transition-colors">← News</a>
+        <span>/</span>
+        <span>{entry.data.category}</span>
+      </div>
+      <h1 class="font-display text-5xl md:text-7xl text-white leading-none mb-4">
+        {entry.data.title}
+      </h1>
+      <div class="flex items-center gap-4 text-white/50 text-sm font-mono">
+        <time datetime={entry.data.date.toISOString()}>{formattedDate}</time>
+        <span>·</span>
+        <span>{entry.data.author}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero image -->
+  {entry.data.image && (
+    <div class="max-w-5xl mx-auto px-6 -mt-8">
+      <img
+        src={entry.data.image}
+        alt={entry.data.imageAlt ?? entry.data.title}
+        class="w-full h-80 object-cover shadow-2xl"
+        loading="eager"
+      />
+    </div>
+  )}
+
+  <!-- Article Content -->
+  <article class="max-w-3xl mx-auto px-6 py-16">
+    <div class="prose prose-lg prose-headings:font-display prose-headings:text-court prose-a:text-clay max-w-none">
+      <Content />
+    </div>
+  </article>
+
+  <!-- Related -->
+  {related.length > 0 && (
+    <section class="bg-sand py-16">
+      <div class="max-w-screen-xl mx-auto px-6">
+        <p class="section-label mb-8">Weitere Beiträge</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {related.map(e => (
+            <NewsCard
+              title={e.data.title}
+              summary={e.data.summary}
+              date={e.data.date}
+              author={e.data.author}
+              category={e.data.category}
+              slug={e.slug}
+              image={e.data.image}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+</BaseLayout>

@@ -1,0 +1,188 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Über uns – TC Holzkirchen"
+  description="Der TC Holzkirchen – Geschichte, Vorstand und Ansprechpartner."
+>
+
+  <!-- Header -->
+  <div class="bg-court py-16 text-white diagonal-divider">
+    <div class="max-w-screen-xl mx-auto px-6 pb-12">
+      <p class="section-label text-clay mb-3">Unser Club</p>
+      <h1 class="font-display text-7xl md:text-9xl leading-none">TC<br/>Holz<span class="text-clay">kirchen</span></h1>
+    </div>
+  </div>
+
+  <!-- Vereinsinfo Kacheln -->
+  <section class="py-16 bg-chalk">
+    <div class="max-w-screen-xl mx-auto px-6">
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16" data-animate>
+        {[
+          { zahl: '486',  label: 'Mitglieder',      sub: 'davon 179 Jugendliche' },
+          { zahl: '1958', label: 'Gründungsjahr',   sub: 'über 65 Jahre Tennis' },
+          { zahl: '6',    label: 'Freiplätze',       sub: '5 Wettspielplätze' },
+          { zahl: '16',   label: 'Mannschaften',     sub: 'Aktive, Senioren & Jugend' },
+        ].map(item => (
+          <div class="bg-white border border-sand-dark p-6">
+            <p class="font-display text-5xl md:text-6xl text-clay leading-none">{item.zahl}</p>
+            <p class="font-display text-xl text-court mt-2">{item.label}</p>
+            <p class="font-mono text-xs text-court/40 uppercase tracking-widest mt-1">{item.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Über uns Text -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20" data-animate>
+        <div>
+          <p class="section-label mb-4">Seit 1958</p>
+          <h2 class="section-title mb-6">Tennis im Herzen<br/>von Holzkirchen</h2>
+          <p class="text-court/60 leading-relaxed mb-4">
+            Der TC Holzkirchen e.V. wurde 1958 gegründet und ist mit über 486 Mitgliedern
+            einer der größten Sportvereine der Region. Unser Clubgelände liegt zentral
+            in Holzkirchen und bietet optimale Bedingungen für alle Altersgruppen.
+          </p>
+          <p class="text-court/60 leading-relaxed mb-8">
+            Mit 6 Freiplätzen, 16 aktiven Mannschaften vom Bambini bis zu den Herren 70
+            und einem starken Jugendprogramm mit 179 jungen Spielerinnen und Spielern
+            ist der TC Holzkirchen die erste Adresse für Tennis im Landkreis Miesbach.
+          </p>
+          <div class="flex flex-col gap-2 text-sm font-mono text-court/50">
+            <p>📍 Krankenhausstr. 8, 83607 Holzkirchen</p>
+            <p>✉️ <a href="mailto:info@tc-holzkirchen.de" class="text-clay hover:underline">info@tc-holzkirchen.de</a></p>
+            <p>🌐 <a href="https://www.btv.de/de/mein-verein/vereinsseite/tc-holzkirchen.html" target="_blank" rel="noopener" class="text-clay hover:underline">Vereinsseite beim BTV</a></p>
+          </div>
+        </div>
+
+        <!-- Schnelllinks -->
+        <div class="space-y-3">
+          {[
+            { label: 'Mitglied werden',     href: '/mitglied-werden',  primary: true },
+            { label: 'Platzbuchung',         href: '/platzbuchung',     primary: false },
+            { label: 'Mannschaften & Spielplan', href: '/mannschaften', primary: false },
+            { label: 'News & Aktuelles',     href: '/news',             primary: false },
+          ].map(link => (
+            <a
+              href={link.href}
+              class:list={[
+                'flex items-center justify-between px-6 py-4 border transition-all group',
+                link.primary
+                  ? 'bg-clay border-clay text-white hover:bg-clay-dark'
+                  : 'bg-white border-sand-dark text-court hover:border-clay',
+              ]}
+            >
+              <span class:list={['font-display text-xl', link.primary ? '' : 'group-hover:text-clay transition-colors']}>
+                {link.label}
+              </span>
+              <svg class="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Ansprechpartner -->
+      <div data-animate>
+        <div class="flex items-end justify-between mb-8">
+          <div>
+            <p class="section-label mb-2">Vorstand & Funktionäre</p>
+            <h2 class="font-display text-5xl text-court">Ansprechpartner</h2>
+          </div>
+          <p id="ap-timestamp" class="font-mono text-xs text-court/30 hidden">
+            Aktualisiert: –
+          </p>
+        </div>
+
+        <!-- Loading -->
+        <div id="ap-loading" class="text-center py-12">
+          <div class="inline-flex items-center gap-3 text-court/30">
+            <div class="w-4 h-4 border-2 border-clay border-t-transparent rounded-full animate-spin"></div>
+            <span class="font-mono text-xs uppercase tracking-widest">Lade Kontaktdaten von btv.de...</span>
+          </div>
+        </div>
+
+        <!-- Grid -->
+        <div id="ap-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden"></div>
+
+        <!-- Fallback -->
+        <div id="ap-fallback" class="hidden text-center py-8">
+          <p class="text-court/40 text-sm font-mono mb-4">Kontaktdaten konnten nicht geladen werden.</p>
+          <a href="https://www.btv.de/de/mein-verein/vereinsseite/tc-holzkirchen.html"
+             target="_blank" rel="noopener"
+             class="font-mono text-xs text-clay uppercase tracking-widest hover:underline">
+            Direkt auf btv.de →
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+interface Person {
+  name: string; funktion: string;
+  telefon: string; mobil: string; email: string;
+}
+
+async function loadAnsprechpartner() {
+  try {
+    const res  = await fetch('/api/spielplan');
+    const data = await res.json();
+    const personen: Person[] = data.vorstand ?? data.ansprechpartner ?? [];
+
+    document.getElementById('ap-loading')!.classList.add('hidden');
+
+    if (!personen.length) {
+      document.getElementById('ap-fallback')!.classList.remove('hidden');
+      return;
+    }
+
+    // Timestamp
+    if (data.abgerufen) {
+      const ts = document.getElementById('ap-timestamp')!;
+      ts.textContent = `Aktualisiert: ${new Date(data.abgerufen).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })}`;
+      ts.classList.remove('hidden');
+    }
+
+    const grid = document.getElementById('ap-grid')!;
+    grid.classList.remove('hidden');
+    grid.innerHTML = personen.map(p => `
+      <div class="bg-white border border-sand-dark p-6 hover:border-clay/40 transition-all">
+        <p class="font-display text-xl text-court mb-0.5">${p.name}</p>
+        <p class="font-mono text-xs text-clay uppercase tracking-widest mb-4">${p.funktion || '–'}</p>
+        <div class="space-y-2 text-xs text-court/50 font-mono">
+          ${p.telefon ? `<div class="flex items-center gap-2">
+            <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 17l.92-.08z"/>
+            </svg>
+            <a href="tel:${p.telefon.replace(/\s/g,'')}" class="hover:text-clay transition-colors">${p.telefon}</a>
+          </div>` : ''}
+          ${p.mobil ? `<div class="flex items-center gap-2">
+            <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+            <a href="tel:${p.mobil.replace(/\s/g,'')}" class="hover:text-clay transition-colors">${p.mobil}</a>
+          </div>` : ''}
+          ${p.email ? `<div class="flex items-center gap-2">
+            <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <a href="mailto:${p.email}" class="text-clay hover:underline truncate">${p.email}</a>
+          </div>` : ''}
+        </div>
+      </div>
+    `).join('');
+
+  } catch {
+    document.getElementById('ap-loading')!.classList.add('hidden');
+    document.getElementById('ap-fallback')!.classList.remove('hidden');
+  }
+}
+
+loadAnsprechpartner();
+</script>

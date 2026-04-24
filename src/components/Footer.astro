@@ -1,0 +1,76 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-court text-white">
+  <!-- Main footer -->
+  <div class="max-w-screen-xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+
+    <!-- Brand -->
+    <div class="lg:col-span-2">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-clay flex items-center justify-center text-white font-display text-xl">TC</div>
+        <div>
+          <span class="block font-display text-xl">TC Holzkirchen</span>
+          <span class="block font-mono text-xs text-white/40 uppercase tracking-widest">Tennis seit 1950</span>
+        </div>
+      </div>
+      <p class="text-white/60 text-sm leading-relaxed max-w-sm">
+        Der Tennisclub Holzkirchen ist Heimat für Tennisbegeisterte aller Altersgruppen –
+        vom Einsteiger bis zum Turnierspieler, im Herzen des Landkreises Miesbach.
+      </p>
+      <div class="flex gap-4 mt-6">
+        <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center hover:border-clay hover:bg-clay/10 transition-all" aria-label="Facebook">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center hover:border-clay hover:bg-clay/10 transition-all" aria-label="Instagram">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div>
+      <p class="section-label text-clay mb-4">Club</p>
+      <ul class="space-y-2 text-sm text-white/60">
+        {[
+          ['Über uns',    '/club'],
+          ['Geschichte',  '/club/geschichte'],
+          ['Vorstand',    '/club/vorstand'],
+          ['Mitglieder',  '/club/mitglieder'],
+          ['Sponsoren',   '/club/sponsoren'],
+        ].map(([label, href]) => (
+          <li><a href={href} class="hover:text-white transition-colors">{label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Kontakt -->
+    <div>
+      <p class="section-label text-clay mb-4">Kontakt</p>
+      <address class="not-italic text-sm text-white/60 space-y-2">
+        <p>TC Holzkirchen e.V.</p>
+        <p>Musterstraße 12<br />83607 Holzkirchen</p>
+        <p class="pt-1">
+          <a href="tel:+498024123456" class="hover:text-white transition-colors">+49 8024 123 456</a>
+        </p>
+        <p>
+          <a href="mailto:info@tc-holzkirchen.de" class="hover:text-white transition-colors">info@tc-holzkirchen.de</a>
+        </p>
+      </address>
+    </div>
+
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="border-t border-white/10">
+    <div class="max-w-screen-xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-white/30 font-mono">
+      <span>© {currentYear} TC Holzkirchen e.V. Alle Rechte vorbehalten.</span>
+      <div class="flex gap-5">
+        <a href="/impressum" class="hover:text-white/60 transition-colors">Impressum</a>
+        <a href="/datenschutz" class="hover:text-white/60 transition-colors">Datenschutz</a>
+        <a href="/admin" class="hover:text-white/60 transition-colors">Admin</a>
+      </div>
+    </div>
+  </div>
+</footer>

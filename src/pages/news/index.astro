@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { getCollection } from 'astro:content';
+
+const allNews = await getCollection('news', e => e.data.published);
+const sorted = allNews.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const categories = ['Alle', 'Vereinsnews', 'Mannschaft', 'Turnier', 'Jugend', 'Allgemein'];
+---
+
+<BaseLayout
+  title="News – TC Holzkirchen"
+  description="Aktuelle Nachrichten, Berichte und Events des TC Holzkirchen."
+>
+
+  <!-- Page Header -->
+  <div class="bg-court py-16 text-white">
+    <div class="max-w-screen-xl mx-auto px-6">
+      <p class="section-label text-clay mb-3">Aktuelles</p>
+      <h1 class="font-display text-7xl">News &<br/>Berichte</h1>
+    </div>
+  </div>
+
+  <!-- Filter tabs (JS-fähig) -->
+  <div class="bg-sand border-b border-sand-dark sticky top-[108px] md:top-[136px] z-40">
+    <div class="max-w-screen-xl mx-auto px-6 flex gap-6 overflow-x-auto py-3 scrollbar-none">
+      {categories.map(cat => (
+        <button
+          data-category={cat}
+          class:list={[
+            'filter-btn shrink-0 font-mono text-xs uppercase tracking-widest pb-2 border-b-2 transition-all',
+            cat === 'Alle'
+              ? 'border-clay text-court'
+              : 'border-transparent text-court/40 hover:text-court',
+          ]}
+        >
+          {cat}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <!-- News Grid -->
+  <section class="py-16 bg-chalk">
+    <div class="max-w-screen-xl mx-auto px-6">
+      <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sorted.map(entry => (
+          <div data-cat={entry.data.category} class="news-item">
+            <NewsCard
+              title={entry.data.title}
+              summary={entry.data.summary}
+              date={entry.data.date}
+              author={entry.data.author}
+              category={entry.data.category}
+              slug={entry.slug}
+              image={entry.data.image}
+            />
+          </div>
+        ))}
+      </div>
+
+      {sorted.length === 0 && (
+        <div class="text-center py-24 text-court/40">
+          <p class="font-display text-5xl mb-4">Noch keine News</p>
+          <p class="font-mono text-sm">Die ersten Beiträge folgen bald.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const items   = document.querySelectorAll<HTMLElement>('.news-item');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cat = btn.dataset.category!;
+
+      // Update active state
+      buttons.forEach(b => {
+        b.classList.toggle('border-clay', b.dataset.category === cat);
+        b.classList.toggle('text-court',  b.dataset.category === cat);
+        b.classList.toggle('border-transparent', b.dataset.category !== cat);
+        b.classList.toggle('text-court/40', b.dataset.category !== cat);
+      });
+
+      // Filter items
+      items.forEach(item => {
+        const visible = cat === 'Alle' || item.dataset.cat === cat;
+        item.style.display = visible ? '' : 'none';
+      });
+    });
+  });
+</script>

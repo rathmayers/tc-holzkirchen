@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// In Produktion: echte Session-Prüfung (z.B. Astro middleware + JWT oder Lucia Auth)
+---
+
+<BaseLayout title="Admin Login – TC Holzkirchen">
+  <div class="min-h-[80vh] bg-court flex items-center justify-center px-6">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-10">
+        <div class="w-14 h-14 bg-clay flex items-center justify-center text-white font-display text-2xl mx-auto mb-4">TC</div>
+        <h1 class="font-display text-4xl text-white">Admin-Bereich</h1>
+        <p class="text-white/40 font-mono text-xs uppercase tracking-widest mt-1">TC Holzkirchen</p>
+      </div>
+
+      <form id="login-form" class="space-y-5">
+        <div>
+          <label class="form-label text-white/50" for="username">Benutzername</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="form-input"
+            placeholder="admin"
+            required
+            autocomplete="username"
+          />
+        </div>
+        <div>
+          <label class="form-label text-white/50" for="password">Passwort</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-input"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+
+        <div id="login-error" class="hidden bg-clay/20 border border-clay/40 text-white/80 text-sm font-mono px-4 py-3">
+          Ungültige Anmeldedaten.
+        </div>
+
+        <button type="submit" class="btn-primary w-full justify-center">
+          Anmelden
+        </button>
+      </form>
+
+      <p class="text-center text-white/30 text-xs font-mono mt-8 uppercase tracking-widest">
+        Nur für berechtigte Redakteure
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Demo-Login: In Produktion gegen echtes Backend ersetzen
+  document.getElementById('login-form')!.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const user = (form.querySelector('#username') as HTMLInputElement).value;
+    const pass = (form.querySelector('#password') as HTMLInputElement).value;
+
+    // Beispiel-Check – in Produktion: echte API-Anfrage
+    if (user === 'admin' && pass === 'tennis2025') {
+      sessionStorage.setItem('tc-admin', '1');
+      window.location.href = '/admin/news-erstellen';
+    } else {
+      document.getElementById('login-error')!.classList.remove('hidden');
+    }
+  });
+</script>

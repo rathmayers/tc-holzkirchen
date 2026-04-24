@@ -1,0 +1,79 @@
+---
+interface Props {
+  title:    string;
+  summary:  string;
+  date:     Date;
+  author:   string;
+  category: string;
+  slug:     string;
+  image?:   string;
+  featured?: boolean;
+}
+
+const { title, summary, date, author, category, slug, image, featured } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('de-DE', {
+  day: '2-digit', month: 'long', year: 'numeric',
+}).format(date);
+
+const categoryColors: Record<string, string> = {
+  'Vereinsnews':  'bg-court text-white',
+  'Mannschaft':   'bg-clay text-white',
+  'Turnier':      'bg-amber-600 text-white',
+  'Jugend':       'bg-emerald-600 text-white',
+  'Platzbuchung': 'bg-blue-600 text-white',
+  'Allgemein':    'bg-sand-dark text-court',
+};
+const catClass = categoryColors[category] ?? 'bg-sand-dark text-court';
+---
+
+<article class:list={['news-card group', featured && 'lg:col-span-2 lg:grid lg:grid-cols-2']}>
+
+  <!-- Image placeholder (echtes Bild via `image` prop) -->
+  <div class:list={['bg-court/10 overflow-hidden relative', featured ? 'h-64 lg:h-auto' : 'h-52']}>
+    {image
+      ? <img src={image} alt={title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+      : (
+        <div class="w-full h-full bg-gradient-to-br from-court to-court-light flex items-center justify-center">
+          <!-- SVG Tennis Ball Platzhalter -->
+          <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="28"/>
+            <path d="M32 4 Q10 20 10 32 Q10 44 32 60"/>
+            <path d="M32 4 Q54 20 54 32 Q54 44 32 60"/>
+          </svg>
+        </div>
+      )
+    }
+    <!-- Category badge -->
+    <span class:list={['absolute top-3 left-3 font-mono text-[10px] uppercase tracking-widest px-2.5 py-1', catClass]}>
+      {category}
+    </span>
+  </div>
+
+  <!-- Content -->
+  <div class="p-6">
+    <div class="flex items-center gap-3 text-xs font-mono text-court/40 uppercase tracking-widest mb-3">
+      <time datetime={date.toISOString()}>{formattedDate}</time>
+      <span>·</span>
+      <span>{author}</span>
+    </div>
+
+    <h2 class:list={['font-display text-court leading-tight mb-3', featured ? 'text-3xl' : 'text-2xl']}>
+      <a href={`/news/${slug}`} class="hover:text-clay transition-colors">
+        {title}
+      </a>
+    </h2>
+
+    <p class="text-court/60 text-sm leading-relaxed mb-4 line-clamp-3">{summary}</p>
+
+    <a
+      href={`/news/${slug}`}
+      class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-clay hover:gap-3 transition-all"
+    >
+      Weiterlesen
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+</article>

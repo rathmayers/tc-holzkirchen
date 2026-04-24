@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Platzbuchung – TC Holzkirchen"
+  description="Tennisplätze beim TC Holzkirchen online buchen."
+>
+
+  <div class="bg-court py-16 text-white">
+    <div class="max-w-screen-xl mx-auto px-6">
+      <p class="section-label text-clay mb-3">Online-Buchung</p>
+      <h1 class="font-display text-7xl">Platz<br/>buchen</h1>
+    </div>
+  </div>
+
+  <section class="py-24 bg-chalk">
+    <div class="max-w-screen-xl mx-auto px-6">
+
+      <!-- Status -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16" data-animate>
+        {[
+          { platz: 'Platz 1', status: 'Frei', color: 'bg-emerald-100 border-emerald-300 text-emerald-800' },
+          { platz: 'Platz 2', status: 'Belegt 14–15 Uhr', color: 'bg-amber-100 border-amber-300 text-amber-800' },
+          { platz: 'Platz 3', status: 'Frei', color: 'bg-emerald-100 border-emerald-300 text-emerald-800' },
+          { platz: 'Platz 4 (Flutlicht)', status: 'Frei', color: 'bg-emerald-100 border-emerald-300 text-emerald-800' },
+        ].map(({ platz, status, color }) => (
+          <div class:list={['border p-5', color]}>
+            <p class="font-display text-2xl mb-1">{platz}</p>
+            <p class="font-mono text-xs uppercase tracking-widest">{status}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Coming soon -->
+      <div class="max-w-2xl mx-auto text-center py-16 border-2 border-dashed border-sand-dark" data-animate>
+        <p class="font-display text-6xl text-court mb-4">Coming Soon</p>
+        <p class="text-court/60 mb-8 leading-relaxed">
+          Das integrierte Platzbuchungssystem ist in Entwicklung. Mitglieder können
+          Plätze dann direkt hier online reservieren – mit Kalenderansicht, Login
+          und automatischer Bestätigung.
+        </p>
+        <p class="font-mono text-sm text-court/40 uppercase tracking-widest">
+          Bis dahin: Buchung per Telefon oder E-Mail
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+          <a href="tel:+498024123456" class="btn-primary">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 17l.92-.08z"/>
+            </svg>
+            +49 8024 123 456
+          </a>
+          <a href="mailto:info@tc-holzkirchen.de" class="btn-outline">
+            info@tc-holzkirchen.de
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</BaseLayout>

@@ -1,0 +1,199 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Mannschaften & Spielplan – TC Holzkirchen"
+  description="Spielpläne und Ergebnisse aller Mannschaften des TC Holzkirchen."
+>
+
+  <div class="bg-court py-16 text-white">
+    <div class="max-w-screen-xl mx-auto px-6">
+      <p class="section-label text-clay mb-3">Spielbetrieb</p>
+      <h1 class="font-display text-7xl">Mannschaften<br/>&amp; Spielplan</h1>
+      <p class="text-white/40 font-mono text-xs uppercase tracking-widest mt-3">
+        Daten von btv.de · stündlich aktualisiert
+      </p>
+    </div>
+  </div>
+
+  <section class="py-16 bg-chalk min-h-[60vh]">
+    <div class="max-w-screen-xl mx-auto px-6">
+
+      <!-- Loading -->
+      <div id="loading" class="text-center py-24">
+        <div class="inline-flex items-center gap-3 text-court/40">
+          <div class="w-5 h-5 border-2 border-clay border-t-transparent rounded-full animate-spin"></div>
+          <span class="font-mono text-sm uppercase tracking-widest">Lade Spielplandaten...</span>
+        </div>
+      </div>
+
+      <!-- Inhalt -->
+      <div id="content" class="hidden space-y-12">
+
+        <!-- Tabs -->
+        <div class="flex gap-2 border-b border-sand-dark overflow-x-auto" id="tabs">
+          {['Mannschaften', 'Begegnungen'].map((tab, i) => (
+            <button
+              data-tab={i}
+              class:list={[
+                'tab-btn shrink-0 font-mono text-xs uppercase tracking-widest px-5 py-3 border-b-2 -mb-px transition-all',
+                i === 0
+                  ? 'border-clay text-court'
+                  : 'border-transparent text-court/40 hover:text-court'
+              ]}
+            >{tab}</button>
+          ))}
+        </div>
+
+        <div id="tab-mannschaften" class="tab-panel"></div>
+        <div id="tab-begegnungen"  class="tab-panel hidden"></div>
+
+        <!-- Footer -->
+        <div class="pt-6 border-t border-sand-dark flex items-center justify-between">
+          <p class="font-mono text-xs text-court/30 uppercase tracking-widest">Quelle: btv.de</p>
+          <a href="https://www.tennis.de/spielen/spielbetrieb/vereinsspielplan.html#BTV/02166/0"
+             target="_blank" rel="noopener"
+             class="font-mono text-xs text-clay uppercase tracking-widest hover:text-clay-dark transition-colors">
+            Vollständiger Spielplan auf tennis.de →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+interface Begegnung {
+  datum: string; uhrzeit: string; heim: string; gast: string;
+  ergebnis: string; istHeim: boolean; gespielt: boolean;
+}
+interface Mannschaft { name: string; kategorie: string; fuehrer: string; }
+
+async function load() {
+  try {
+    const res  = await fetch('/api/spielplan');
+    const data = await res.json();
+    document.getElementById('loading')!.classList.add('hidden');
+    document.getElementById('content')!.classList.remove('hidden');
+    renderMannschaften(data.mannschaften ?? []);
+    renderBegegnungen(data.begegnungen ?? []);
+    initTabs();
+  } catch {
+    document.getElementById('loading')!.innerHTML = `
+      <div class="text-center py-16">
+        <p class="font-display text-4xl text-court mb-4">Daten nicht verfügbar</p>
+        <a href="https://www.tennis.de/spielen/spielbetrieb/vereinsspielplan.html#BTV/02166/0"
+           target="_blank" rel="noopener" class="btn-primary inline-flex mt-4">
+          Spielplan auf tennis.de →
+        </a>
+      </div>`;
+  }
+}
+
+function renderMannschaften(mannschaften: Mannschaft[]) {
+  const el = document.getElementById('tab-mannschaften')!;
+
+  // Nach Kategorie gruppieren
+  const gruppen: Record<string, Mannschaft[]> = {};
+  for (const m of mannschaften) {
+    if (!gruppen[m.kategorie]) gruppen[m.kategorie] = [];
+    gruppen[m.kategorie].push(m);
+  }
+
+  el.innerHTML = Object.entries(gruppen).map(([kat, teams]) => `
+    <div class="mb-10">
+      <p class="section-label mb-4">${kat}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        ${teams.map(m => `
+          <div class="bg-white border border-sand-dark p-5 hover:border-clay transition-all group">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-8 h-8 bg-court flex items-center justify-center shrink-0 group-hover:bg-clay transition-colors">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M4.93 4.93c4.69 4.69 4.69 12.28 0 16.97M19.07 4.93c-4.69 4.69-4.69 12.28 0 16.97"/>
+                </svg>
+              </div>
+              <p class="font-display text-xl text-court group-hover:text-clay transition-colors">${m.name}</p>
+            </div>
+            <div class="pl-11 mt-2 space-y-0.5">
+              <p class="font-mono text-xs text-court/50">MF: ${m.fuehrer}</p>
+              ${m.mobil   ? `<a href="tel:${m.mobil.replace(/\s/g,'')}" class="block font-mono text-xs text-clay hover:underline">📱 ${m.mobil}</a>`   : ''}
+              ${m.telefon ? `<a href="tel:${m.telefon.replace(/\s/g,'')}" class="block font-mono text-xs text-court/40 hover:text-clay">📞 ${m.telefon}</a>` : ''}
+              ${m.email   ? `<a href="mailto:${m.email}" class="block font-mono text-xs text-clay hover:underline truncate">✉ ${m.email}</a>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderBegegnungen(begegnungen: Begegnung[]) {
+  const el = document.getElementById('tab-begegnungen')!;
+  if (!begegnungen.length) {
+    el.innerHTML = `
+      <div class="text-center py-16 border-2 border-dashed border-sand-dark">
+        <p class="font-display text-3xl text-court mb-3">Begegnungen auf tennis.de</p>
+        <p class="text-court/50 text-sm mb-6">Die Begegnungsdaten werden direkt von tennis.de geladen.</p>
+        <a href="https://www.tennis.de/spielen/spielbetrieb/vereinsspielplan.html#BTV/02166/0"
+           target="_blank" rel="noopener"
+           class="inline-flex items-center gap-2 bg-clay text-white font-mono text-xs uppercase tracking-widest px-6 py-3 hover:bg-clay-dark transition-colors">
+          Spielplan öffnen →
+        </a>
+      </div>`;
+    return;
+  }
+
+  const kommend  = begegnungen.filter(b => !b.gespielt);
+  const ergebnis = begegnungen.filter(b => b.gespielt).reverse();
+
+  el.innerHTML = `
+    ${kommend.length ? `
+      <div class="mb-10">
+        <p class="section-label mb-4">Kommende Spiele</p>
+        <div class="space-y-2">${kommend.map(renderSpielzeile).join('')}</div>
+      </div>` : ''}
+    ${ergebnis.length ? `
+      <div>
+        <p class="section-label mb-4">Letzte Ergebnisse</p>
+        <div class="space-y-2">${ergebnis.slice(0,20).map(renderSpielzeile).join('')}</div>
+      </div>` : ''}
+  `;
+}
+
+function renderSpielzeile(s: Begegnung) {
+  return `
+    <div class="flex items-center gap-3 py-3 px-4 bg-white border border-sand-dark hover:border-clay/30 transition-all">
+      <div class="shrink-0 w-24 font-mono text-xs text-court/40">${s.datum}<br/>${s.uhrzeit}</div>
+      <span class="shrink-0 w-6 h-6 flex items-center justify-center font-mono text-[10px] font-bold
+        ${s.istHeim ? 'bg-court text-white' : 'bg-sand-dark text-court/50'}">${s.istHeim ? 'H' : 'A'}</span>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium text-court truncate">${s.heim}</p>
+        <p class="text-xs text-court/50 truncate">vs. ${s.gast}</p>
+      </div>
+      <div class="shrink-0 font-display text-xl ${s.ergebnis ? 'text-clay' : 'text-court/20'}">
+        ${s.ergebnis || '–:–'}
+      </div>
+    </div>`;
+}
+
+function initTabs() {
+  const btns   = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+  const panels = document.querySelectorAll<HTMLElement>('.tab-panel');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.tab);
+      btns.forEach((b, i) => {
+        b.classList.toggle('border-clay', i === idx);
+        b.classList.toggle('text-court',  i === idx);
+        b.classList.toggle('border-transparent', i !== idx);
+        b.classList.toggle('text-court/40', i !== idx);
+      });
+      panels.forEach((p, i) => p.classList.toggle('hidden', i !== idx));
+    });
+  });
+}
+
+load();
+</script>

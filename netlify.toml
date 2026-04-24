@@ -1,0 +1,17 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Spielplan-Daten täglich um 6:00 Uhr aktualisieren
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
+
+# Caching für die Function-Antworten
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"

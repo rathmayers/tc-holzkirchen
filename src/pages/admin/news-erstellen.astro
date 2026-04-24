@@ -1,0 +1,236 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="News erstellen – Admin TC Holzkirchen">
+  <div class="bg-court/5 border-b border-sand-dark py-6">
+    <div class="max-w-screen-xl mx-auto px-6 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="/admin" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors">← Logout</a>
+        <span class="text-sand-dark">/</span>
+        <h1 class="font-display text-2xl text-court">News-Redaktion</h1>
+      </div>
+      <a href="/news" class="btn-outline text-xs py-2.5 px-4">Website ansehen</a>
+    </div>
+  </div>
+
+  <div class="max-w-screen-xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+    <!-- Form -->
+    <div class="lg:col-span-2">
+      <div class="bg-white border border-sand-dark p-8">
+        <h2 class="font-display text-3xl text-court mb-8">Neuen Beitrag erstellen</h2>
+
+        <div id="admin-form" class="space-y-6">
+
+          <!-- Titel -->
+          <div>
+            <label class="form-label" for="news-title">Titel *</label>
+            <input
+              type="text"
+              id="news-title"
+              class="form-input"
+              placeholder="z.B. Saisonstart 2025"
+              required
+            />
+          </div>
+
+          <!-- Zusammenfassung -->
+          <div>
+            <label class="form-label" for="news-summary">Kurzbeschreibung * <span class="text-court/30">(für Karten-Vorschau)</span></label>
+            <textarea
+              id="news-summary"
+              rows="2"
+              class="form-input resize-none"
+              placeholder="Kurze Zusammenfassung des Beitrags..."
+              required
+            ></textarea>
+          </div>
+
+          <!-- Kategorie + Datum -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="news-category">Kategorie *</label>
+              <select id="news-category" class="form-input">
+                <option value="Vereinsnews">Vereinsnews</option>
+                <option value="Mannschaft">Mannschaft</option>
+                <option value="Turnier">Turnier</option>
+                <option value="Jugend">Jugend</option>
+                <option value="Platzbuchung">Platzbuchung</option>
+                <option value="Allgemein">Allgemein</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="news-date">Datum *</label>
+              <input type="date" id="news-date" class="form-input" required />
+            </div>
+          </div>
+
+          <!-- Autor -->
+          <div>
+            <label class="form-label" for="news-author">Autor *</label>
+            <input type="text" id="news-author" class="form-input" placeholder="z.B. Vorstand TC Holzkirchen" />
+          </div>
+
+          <!-- Inhalt (Markdown) -->
+          <div>
+            <label class="form-label" for="news-content">
+              Inhalt (Markdown) *
+              <span class="text-court/30 ml-2 lowercase">**fett**, *kursiv*, ## Überschrift, - Liste</span>
+            </label>
+            <textarea
+              id="news-content"
+              rows="12"
+              class="form-input resize-y font-mono text-sm leading-relaxed"
+              placeholder="# Überschrift&#10;&#10;Hier beginnt der Beitrag...&#10;&#10;## Abschnitt&#10;&#10;Text mit **Fettschrift** und *Kursivschrift*."
+            ></textarea>
+          </div>
+
+          <!-- Bild URL -->
+          <div>
+            <label class="form-label" for="news-image">Bild-URL <span class="text-court/30">(optional, /images/news/bild.jpg)</span></label>
+            <input type="text" id="news-image" class="form-input" placeholder="/images/news/mein-bild.jpg" />
+          </div>
+
+          <!-- Featured -->
+          <div class="flex items-center gap-3">
+            <input type="checkbox" id="news-featured" class="w-4 h-4 accent-clay" />
+            <label for="news-featured" class="font-mono text-xs uppercase tracking-widest text-court/60">
+              Als Featured-Beitrag markieren (wird prominent dargestellt)
+            </label>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-4 pt-4 border-t border-sand-dark">
+            <button id="generate-btn" class="btn-primary">
+              MDX-Datei generieren
+            </button>
+            <button id="preview-btn" class="btn-outline">
+              Vorschau
+            </button>
+          </div>
+        </div>
+
+        <!-- Output -->
+        <div id="output-section" class="hidden mt-8 space-y-4">
+          <div class="flex items-center justify-between">
+            <p class="section-label">Generierte MDX-Datei</p>
+            <button id="copy-btn" class="font-mono text-xs uppercase tracking-widest text-clay hover:text-clay-dark transition-colors">
+              Kopieren
+            </button>
+          </div>
+          <pre
+            id="mdx-output"
+            class="bg-court text-green-300 font-mono text-xs p-6 overflow-x-auto whitespace-pre-wrap leading-relaxed border border-court/20"
+          ></pre>
+          <div class="bg-sand border border-sand-dark p-4 text-sm text-court/70 font-mono">
+            <p class="font-semibold text-court mb-1">📁 Datei speichern unter:</p>
+            <p id="file-path" class="text-clay"></p>
+            <p class="mt-2 text-court/50 text-xs">Danach <code class="bg-white px-1">npm run build</code> ausführen, um die Seite zu aktualisieren.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar: Tipps -->
+    <aside class="space-y-6">
+      <div class="bg-white border border-sand-dark p-6">
+        <h3 class="font-display text-xl text-court mb-4">Schnellhilfe</h3>
+        <ul class="space-y-3 text-sm text-court/60 font-mono">
+          <li><code class="bg-sand px-1.5 py-0.5 text-court text-xs">**Text**</code> → <strong>fett</strong></li>
+          <li><code class="bg-sand px-1.5 py-0.5 text-court text-xs">*Text*</code> → <em>kursiv</em></li>
+          <li><code class="bg-sand px-1.5 py-0.5 text-court text-xs">## Titel</code> → Überschrift</li>
+          <li><code class="bg-sand px-1.5 py-0.5 text-court text-xs">- Punkt</code> → Liste</li>
+          <li><code class="bg-sand px-1.5 py-0.5 text-court text-xs">[Link](URL)</code> → Verlinkung</li>
+        </ul>
+      </div>
+
+      <div class="bg-court text-white p-6">
+        <h3 class="font-display text-xl mb-3">Workflow</h3>
+        <ol class="space-y-3 text-sm text-white/60">
+          <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">1</span><span>Formular ausfüllen</span></li>
+          <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">2</span><span>MDX-Datei generieren & kopieren</span></li>
+          <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">3</span><span>Datei unter <code class="text-clay">src/content/news/</code> speichern</span></li>
+          <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">4</span><span><code class="text-clay">npm run build</code> ausführen</span></li>
+          <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">5</span><span>Deployment anstoßen</span></li>
+        </ol>
+      </div>
+
+      <div class="bg-sand border border-sand-dark p-6 text-sm text-court/60">
+        <p class="font-mono text-xs text-clay uppercase tracking-widest mb-2">Geplant: CMS-Integration</p>
+        <p>In einem nächsten Schritt kann ein Headless-CMS (z.B. Decap CMS, Keystatic oder Directus) angebunden werden, damit Redakteure Beiträge direkt über ein visuelles Interface verwalten können.</p>
+      </div>
+    </aside>
+
+  </div>
+</BaseLayout>
+
+<script>
+  // Auth guard (Demo)
+  if (!sessionStorage.getItem('tc-admin')) {
+    window.location.href = '/admin';
+  }
+
+  // Set today's date as default
+  const dateInput = document.getElementById('news-date') as HTMLInputElement;
+  dateInput.value = new Date().toISOString().split('T')[0];
+
+  function slugify(text: string): string {
+    return text
+      .toLowerCase()
+      .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+  }
+
+  function generateMDX(): string {
+    const title    = (document.getElementById('news-title')    as HTMLInputElement).value.trim();
+    const summary  = (document.getElementById('news-summary')  as HTMLTextAreaElement).value.trim();
+    const category = (document.getElementById('news-category') as HTMLSelectElement).value;
+    const date     = (document.getElementById('news-date')     as HTMLInputElement).value;
+    const author   = (document.getElementById('news-author')   as HTMLInputElement).value.trim();
+    const content  = (document.getElementById('news-content')  as HTMLTextAreaElement).value.trim();
+    const image    = (document.getElementById('news-image')    as HTMLInputElement).value.trim();
+    const featured = (document.getElementById('news-featured') as HTMLInputElement).checked;
+
+    const imageLine  = image   ? `\nimage: "${image}"` : '';
+    const featuredLine = featured ? '\nfeatured: true' : '';
+
+    return `---
+title: "${title}"
+summary: "${summary}"
+date: ${date}
+author: "${author}"
+category: "${category}"${imageLine}${featuredLine}
+published: true
+---
+
+${content}`;
+  }
+
+  document.getElementById('generate-btn')!.addEventListener('click', () => {
+    const title = (document.getElementById('news-title') as HTMLInputElement).value.trim();
+    if (!title) { alert('Bitte einen Titel eingeben.'); return; }
+
+    const mdx = generateMDX();
+    const slug = slugify(title);
+    const dateVal = (document.getElementById('news-date') as HTMLInputElement).value;
+    const filename = `${dateVal}-${slug}.mdx`;
+
+    document.getElementById('mdx-output')!.textContent = mdx;
+    document.getElementById('file-path')!.textContent = `src/content/news/${filename}`;
+    document.getElementById('output-section')!.classList.remove('hidden');
+    document.getElementById('output-section')!.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  document.getElementById('copy-btn')!.addEventListener('click', () => {
+    const text = document.getElementById('mdx-output')!.textContent ?? '';
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn')!;
+      btn.textContent = '✓ Kopiert!';
+      setTimeout(() => btn.textContent = 'Kopieren', 2000);
+    });
+  });
+</script>
