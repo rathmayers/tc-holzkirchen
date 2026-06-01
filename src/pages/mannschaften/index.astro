@@ -101,16 +101,23 @@ function renderMannschaften(mannschaften) {
     <div class="mb-10">
       <p class="section-label mb-4">${kat}</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        ${teams.map(m => `
-          <div class="bg-white border border-sand-dark p-5 hover:border-clay transition-all group">
-            <div class="flex items-center gap-3 mb-2">
-              <div class="w-8 h-8 bg-court flex items-center justify-center shrink-0 group-hover:bg-clay transition-colors">
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M4.93 4.93c4.69 4.69 4.69 12.28 0 16.97M19.07 4.93c-4.69 4.69-4.69 12.28 0 16.97"/>
-                </svg>
+        ${teams.map(m => {
+          const btvLink = m.teamid ? `https://www.btv.de/de/spielbetrieb/teamportrait.html?teamid=${m.teamid}` : '';
+          const tag = btvLink ? 'a' : 'div';
+          const attrs = btvLink ? `href="${btvLink}" target="_blank" rel="noopener"` : '';
+          return `
+          <${tag} ${attrs} class="bg-white border border-sand-dark p-5 hover:border-clay transition-all group block">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-court flex items-center justify-center shrink-0 group-hover:bg-clay transition-colors">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M4.93 4.93c4.69 4.69 4.69 12.28 0 16.97M19.07 4.93c-4.69 4.69-4.69 12.28 0 16.97"/>
+                  </svg>
+                </div>
+                <p class="font-display text-xl text-court group-hover:text-clay transition-colors">${m.name}</p>
               </div>
-              <p class="font-display text-xl text-court group-hover:text-clay transition-colors">${m.name}</p>
+              ${btvLink ? `<svg class="w-3.5 h-3.5 text-court/20 group-hover:text-clay transition-colors shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>` : ''}
             </div>
             <div class="pl-11 mt-2 space-y-0.5">
               <p class="font-mono text-xs text-court/50">MF: ${m.fuehrer}</p>
@@ -118,8 +125,8 @@ function renderMannschaften(mannschaften) {
               ${m.telefon ? `<a href="tel:${m.telefon.replace(/\s/g,'')}" class="block font-mono text-xs text-court/40 hover:text-clay">📞 ${m.telefon}</a>` : ''}
               ${m.email   ? `<a href="mailto:${m.email}" class="block font-mono text-xs text-clay hover:underline truncate">✉ ${m.email}</a>` : ''}
             </div>
-          </div>
-        `).join('')}
+          </${tag}>`;
+        }).join('')}
       </div>
     </div>
   `).join('');
