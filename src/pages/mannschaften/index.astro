@@ -88,11 +88,10 @@ async function load() {
   }
 }
 
-function renderMannschaften(mannschaften: Mannschaft[]) {
-  const el = document.getElementById('tab-mannschaften')!;
+function renderMannschaften(mannschaften) {
+  const el = document.getElementById('tab-mannschaften');
 
-  // Nach Kategorie gruppieren
-  const gruppen: Record<string, Mannschaft[]> = {};
+  const gruppen = {};
   for (const m of mannschaften) {
     if (!gruppen[m.kategorie]) gruppen[m.kategorie] = [];
     gruppen[m.kategorie].push(m);
@@ -154,8 +153,8 @@ function spielplanFallback() {
     </div>`;
 }
 
-function renderBegegnungen(begegnungen: Begegnung[]) {
-  const el = document.getElementById('tab-begegnungen')!;
+function renderBegegnungen(begegnungen) {
+  const el = document.getElementById('tab-begegnungen');
   if (!begegnungen.length) {
     el.innerHTML = spielplanFallback();
     return;
@@ -178,7 +177,7 @@ function renderBegegnungen(begegnungen: Begegnung[]) {
   `;
 }
 
-function renderSpielzeile(s: Begegnung) {
+function renderSpielzeile(s) {
   return `
     <div class="flex items-center gap-3 py-3 px-4 bg-white border border-sand-dark hover:border-clay/30 transition-all">
       <div class="shrink-0 w-24 font-mono text-xs text-court/40">${s.datum}<br/>${s.uhrzeit}</div>
@@ -195,8 +194,8 @@ function renderSpielzeile(s: Begegnung) {
 }
 
 function initTabs() {
-  const btns   = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
-  const panels = document.querySelectorAll<HTMLElement>('.tab-panel');
+  const btns   = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
   btns.forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = Number(btn.dataset.tab);
