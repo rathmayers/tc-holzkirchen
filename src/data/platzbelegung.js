@@ -38,9 +38,9 @@ export const BELEGUNGEN = [
     ],
   },
 
-  // Vereinstraining – Plätze 1–5 (Mittwoch abend)
+  // Freier Spielertreff – Plätze 1–5 (Mittwoch abend)
   {
-    label:   'Vereinstraining',
+    label:   'Freier Spielertreff',
     plaetze: [1, 2, 3, 4, 5],
     zeiten: [
       { wochentage: [3], von: '18:30', bis: '20:30' }, // Mi
