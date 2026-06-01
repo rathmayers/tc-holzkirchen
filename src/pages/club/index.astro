@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { VORSTAND } from '../../data/vorstand.js';
+const vorstandJSON = JSON.stringify(VORSTAND);
 ---
 
 <BaseLayout
@@ -186,26 +188,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </p>
         </div>
 
-        <!-- Loading -->
-        <div id="ap-loading" class="text-center py-12">
-          <div class="inline-flex items-center gap-3 text-court/30">
-            <div class="w-4 h-4 border-2 border-clay border-t-transparent rounded-full animate-spin"></div>
-            <span class="font-mono text-xs uppercase tracking-widest">Lade Kontaktdaten von btv.de...</span>
-          </div>
-        </div>
-
-        <!-- Grid -->
-        <div id="ap-grid" class="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden"></div>
-
-        <!-- Fallback -->
-        <div id="ap-fallback" class="hidden text-center py-8">
-          <p class="text-court/40 text-sm font-mono mb-4">Kontaktdaten konnten nicht geladen werden.</p>
-          <a href="https://www.btv.de/de/mein-verein/vereinsseite/tc-holzkirchen.html"
-             target="_blank" rel="noopener"
-             class="font-mono text-xs text-clay uppercase tracking-widest hover:underline">
-            Direkt auf btv.de →
-          </a>
-        </div>
+        <div id="ap-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </div>
 
     </div>
@@ -213,67 +196,58 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 </BaseLayout>
 
-<script>
-interface Person {
-  name: string; funktion: string;
-  telefon: string; mobil: string; email: string;
-}
+<script define:vars={{ vorstandJSON }} is:inline>
+const STATIC_VORSTAND = JSON.parse(vorstandJSON);
 
-async function loadAnsprechpartner() {
-  try {
-    const res  = await fetch('/api/spielplan');
-    const data = await res.json();
-    const personen: Person[] = data.vorstand ?? data.ansprechpartner ?? [];
-
-    document.getElementById('ap-loading')!.classList.add('hidden');
-
-    if (!personen.length) {
-      document.getElementById('ap-fallback')!.classList.remove('hidden');
-      return;
-    }
-
-    // Timestamp
-    if (data.abgerufen) {
-      const ts = document.getElementById('ap-timestamp')!;
-      ts.textContent = `Aktualisiert: ${new Date(data.abgerufen).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })}`;
-      ts.classList.remove('hidden');
-    }
-
-    const grid = document.getElementById('ap-grid')!;
-    grid.classList.remove('hidden');
-    grid.classList.add('grid');
-    grid.innerHTML = personen.map(p => `
-      <div class="bg-white border border-sand-dark p-6 hover:border-clay/40 transition-all">
-        <p class="font-display text-xl text-court mb-0.5">${p.name}</p>
-        <p class="font-mono text-xs text-clay uppercase tracking-widest mb-4">${p.funktion || '–'}</p>
-        <div class="space-y-2 text-xs text-court/50 font-mono">
-          ${p.telefon ? `<div class="flex items-center gap-2">
-            <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 17l.92-.08z"/>
-            </svg>
-            <a href="tel:${p.telefon.replace(/\s/g,'')}" class="hover:text-clay transition-colors">${p.telefon}</a>
-          </div>` : ''}
-          ${p.mobil ? `<div class="flex items-center gap-2">
-            <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
-            </svg>
-            <a href="tel:${p.mobil.replace(/\s/g,'')}" class="hover:text-clay transition-colors">${p.mobil}</a>
-          </div>` : ''}
-          ${p.email ? `<div class="flex items-center gap-2">
-            <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-            </svg>
-            <a href="mailto:${p.email}" class="text-clay hover:underline truncate">${p.email}</a>
-          </div>` : ''}
-        </div>
+function renderGrid(personen) {
+  const grid = document.getElementById('ap-grid');
+  if (!grid) return;
+  grid.innerHTML = personen.map(p => `
+    <div class="bg-white border border-sand-dark p-6 hover:border-clay/40 transition-all">
+      <p class="font-display text-xl text-court mb-0.5">${p.name}</p>
+      <p class="font-mono text-xs text-clay uppercase tracking-widest mb-4">${p.funktion || '–'}</p>
+      <div class="space-y-2 text-xs text-court/50 font-mono">
+        ${p.telefon ? `<div class="flex items-center gap-2">
+          <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 17l.92-.08z"/>
+          </svg>
+          <a href="tel:${p.telefon.replace(/\s/g,'')}" class="hover:text-clay transition-colors">${p.telefon}</a>
+        </div>` : ''}
+        ${p.mobil ? `<div class="flex items-center gap-2">
+          <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+          <a href="tel:${p.mobil.replace(/\s/g,'')}" class="hover:text-clay transition-colors">${p.mobil}</a>
+        </div>` : ''}
+        ${p.email ? `<div class="flex items-center gap-2">
+          <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+          </svg>
+          <a href="mailto:${p.email}" class="text-clay hover:underline truncate">${p.email}</a>
+        </div>` : ''}
       </div>
-    `).join('');
-
-  } catch {
-    document.getElementById('ap-loading')!.classList.add('hidden');
-    document.getElementById('ap-fallback')!.classList.remove('hidden');
-  }
+    </div>
+  `).join('');
 }
 
-loadAnsprechpartner();
+// Sofort mit statischen Daten rendern
+renderGrid(STATIC_VORSTAND);
+
+// BTV-Daten nachladen wenn verfügbar
+(async () => {
+  try {
+    const res = await fetch('/api/spielplan');
+    if (!res.ok) return;
+    const data = await res.json();
+    const personen = data.vorstand ?? [];
+    if (personen.length) {
+      renderGrid(personen);
+      const ts = document.getElementById('ap-timestamp');
+      if (ts && data.abgerufen) {
+        ts.textContent = `Aktualisiert: ${new Date(data.abgerufen).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })}`;
+        ts.classList.remove('hidden');
+      }
+    }
+  } catch {}
+})();
 </script>
