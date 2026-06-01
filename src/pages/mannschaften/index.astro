@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { MANNSCHAFTEN } from '../../data/mannschaften.js';
+const mannschaftenJSON = JSON.stringify(MANNSCHAFTEN);
 ---
 
 <BaseLayout
@@ -63,24 +65,26 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   </section>
 </BaseLayout>
 
-<script>
-interface Begegnung {
-  datum: string; uhrzeit: string; heim: string; gast: string;
-  ergebnis: string; istHeim: boolean; gespielt: boolean;
-}
-interface Mannschaft { name: string; kategorie: string; fuehrer: string; mobil: string; telefon: string; email: string; }
+<script define:vars={{ mannschaftenJSON }} is:inline>
+const STATIC_MANNSCHAFTEN = JSON.parse(mannschaftenJSON);
 
 async function load() {
+  // Immer sofort mit statischen Daten anzeigen
+  document.getElementById('loading').classList.add('hidden');
+  document.getElementById('content').classList.remove('hidden');
+  renderMannschaften(STATIC_MANNSCHAFTEN);
+  renderBegegnungen([]);
+  initTabs();
+
+  // BTV-Daten nachladen (Kontaktinfos + Begegnungen)
   try {
     const res  = await fetch('/api/spielplan');
+    if (!res.ok) return;
     const data = await res.json();
-    document.getElementById('loading')!.classList.add('hidden');
-    document.getElementById('content')!.classList.remove('hidden');
-    renderMannschaften(data.mannschaften ?? []);
-    renderBegegnungen(data.begegnungen ?? []);
-    initTabs();
+    if (data.mannschaften?.length) renderMannschaften(data.mannschaften);
+    if (data.begegnungen?.length)  renderBegegnungen(data.begegnungen);
   } catch {
-    document.getElementById('loading')!.innerHTML = spielplanFallback();
+    // BTV nicht erreichbar – statische Daten bleiben
   }
 }
 
