@@ -30,6 +30,7 @@ const MANNSCHAFTEN = [
   { name: 'Herren 50',       kategorie: 'Senioren', fuehrer: 'Christian Neubauer' },
   { name: 'Herren 70',       kategorie: 'Senioren', fuehrer: 'Peter Gerds' },
   { name: 'Damen 30',        kategorie: 'Damen',    fuehrer: 'Marlies Vetterl' },
+  { name: 'Damen 40',        kategorie: 'Damen',    fuehrer: 'Carmen Hartmann' },
   { name: 'Damen 50',        kategorie: 'Damen',    fuehrer: 'Ulrike Schneider' },
   { name: 'Damen 50 II',     kategorie: 'Damen',    fuehrer: 'Sabine Schmid' },
   { name: 'Junioren 18',     kategorie: 'Jugend',   fuehrer: 'Vinzenz Schuler' },
@@ -72,12 +73,20 @@ export default async function handler(req, res) {
   const mannschaftsfuehrer = ansprechpartner.filter(p =>  istMF(p));
 
   // Kontaktdaten der Mannschaftsführer in Mannschaftsliste einpflegen
+  const normalize = (s) => s.toLowerCase().replace(/\s*\([^)]*\)\s*/g, ' ').trim();
   const mannschaftenMitKontakt = MANNSCHAFTEN.map(m => {
-    const mf = mannschaftsfuehrer.find(p =>
-      p.funktion.toLowerCase().includes(m.name.toLowerCase()) ||
-      m.name.toLowerCase().split(' ').filter(w => w.length > 2)
-        .every(w => p.funktion.toLowerCase().includes(w))
-    );
+    const mfName = m.name.toLowerCase();
+    // 1. Exakter Match nach Normalisierung (entfernt "(4er)" etc.)
+    let mf = mannschaftsfuehrer.find(p => normalize(p.funktion) === mfName);
+    // 2. Fallback: alle Wörter inkl. 2-stellige Zahlen müssen matchen
+    if (!mf) {
+      const words = mfName.split(/\s+/).filter(w => w.length > 1);
+      if (words.length > 1) {
+        mf = mannschaftsfuehrer.find(p =>
+          words.every(w => normalize(p.funktion).includes(w))
+        );
+      }
+    }
     return {
       ...m,
       fuehrer: mf?.name    ?? m.fuehrer,
