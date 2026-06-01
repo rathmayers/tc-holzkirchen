@@ -55,9 +55,9 @@ export default async function handler(req, res) {
   let begegnungen     = [];
 
   try {
-    const res = await fetch(BTV_URL, { headers: HEADERS });
-    if (res.ok) {
-      const html      = await res.text();
+    const btvRes = await fetch(BTV_URL, { headers: HEADERS });
+    if (btvRes.ok) {
+      const html      = await btvRes.text();
       ansprechpartner = parseAnsprechpartner(html);
       begegnungen     = parseBegegnungen(html);
     }
