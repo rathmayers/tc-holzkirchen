@@ -43,9 +43,18 @@ export const BELEGUNGEN = [
     label:   'Freier Spielertreff',
     plaetze: [1, 2, 3, 4, 5],
     zeiten: [
-      { wochentage: [3], von: '18:30', bis: '20:30' }, // Mi
+      { wochentage: [3], von: '17:30', bis: '20:30' }, // Mi
     ],
   },
+
+  // Jugend - Match and Practice – Plätze 1–4 (Mittwoch nachmittag)
+  {
+    label:   'Jugend - Match and Practice',
+    plaetze: [1, 2, 3, 4],
+    zeiten: [
+      { wochentage: [3], von: '14:30', bis: '16:00' }, // Mi
+    ],
+  },  
 
   // Weitere Belegungen hier eintragen:
   // {
