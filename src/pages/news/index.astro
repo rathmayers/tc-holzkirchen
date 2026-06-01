@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content';
 
 const allNews = await getCollection('news', e => e.data.published);
 const sorted = allNews.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const rendered = await Promise.all(sorted.map(e => e.render()));
 
 const categories = ['Alle', 'Mannschaften', 'Club', 'Jugend', 'Tennisschule'];
 ---
@@ -45,19 +46,22 @@ const categories = ['Alle', 'Mannschaften', 'Club', 'Jugend', 'Tennisschule'];
   <section class="py-16 bg-chalk">
     <div class="max-w-screen-xl mx-auto px-6">
       <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sorted.map(entry => (
-          <div data-cat={entry.data.category} class="news-item">
-            <NewsCard
-              title={entry.data.title}
-              summary={entry.data.summary}
-              date={entry.data.date}
-              author={entry.data.author}
-              category={entry.data.category}
-              slug={entry.slug}
-              image={entry.data.image}
-            />
-          </div>
-        ))}
+        {sorted.map((entry, i) => {
+          const { Content } = rendered[i];
+          return (
+            <div data-cat={entry.data.category} class="news-item">
+              <NewsCard
+                title={entry.data.title}
+                date={entry.data.date}
+                author={entry.data.author}
+                category={entry.data.category}
+                image={entry.data.image}
+              >
+                <Content />
+              </NewsCard>
+            </div>
+          );
+        })}
       </div>
 
       {sorted.length === 0 && (
