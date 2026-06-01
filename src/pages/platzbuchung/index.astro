@@ -3,14 +3,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Platzbuchung – TC Holzkirchen"
-  description="Tennisplätze beim TC Holzkirchen online buchen."
+  title="Unsere Plätze – TC Holzkirchen"
+  description="Die Tennisanlage des TC Holzkirchen – Platz- und Spielordnung, Gästekarten und Kontakt."
 >
 
   <div class="bg-court py-16 text-white">
     <div class="max-w-screen-xl mx-auto px-6">
-      <p class="section-label text-clay mb-3">Online-Buchung</p>
-      <h1 class="font-display text-7xl">Platz<br/>buchen</h1>
+      <p class="section-label text-clay mb-3">Tennisanlage</p>
+      <h1 class="font-display text-7xl">Unsere<br/>Plätze</h1>
     </div>
   </div>
 
@@ -32,18 +32,66 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         ))}
       </div>
 
-      <!-- Coming soon -->
-      <div class="max-w-2xl mx-auto text-center py-16 border-2 border-dashed border-sand-dark" data-animate>
-        <p class="font-display text-6xl text-court mb-4">Coming Soon</p>
-        <p class="text-court/60 mb-8 leading-relaxed">
-          Das integrierte Platzbuchungssystem ist in Entwicklung. Mitglieder können
-          Plätze dann direkt hier online reservieren – mit Kalenderansicht, Login
-          und automatischer Bestätigung.
-        </p>
-        <p class="font-mono text-sm text-court/40 uppercase tracking-widest">
-          Bis dahin: Buchung per Telefon oder E-Mail
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+      <!-- Gästekarten Info -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16" data-animate>
+        <div class="bg-sand border border-sand-dark p-8">
+          <p class="section-label mb-3">Für Gäste</p>
+          <h2 class="font-display text-4xl text-court mb-4">Mit Gästekarte spielen</h2>
+          <p class="text-court/60 leading-relaxed mb-6">
+            Nicht-Mitglieder können unsere Plätze mit einer Gästekarte nutzen —
+            immer zusammen mit einem Mitglied.
+          </p>
+          <div class="flex gap-8 mb-6">
+            <div>
+              <p class="font-display text-3xl text-clay">7,50 €</p>
+              <p class="font-mono text-xs text-court/40 uppercase tracking-widest">Erwachsene</p>
+            </div>
+            <div>
+              <p class="font-display text-3xl text-clay">5,00 €</p>
+              <p class="font-mono text-xs text-court/40 uppercase tracking-widest">Jugendliche</p>
+            </div>
+          </div>
+          <div class="border-t border-sand-dark pt-4 space-y-1 text-sm text-court/60">
+            <p class="font-mono text-xs text-court/40 uppercase tracking-widest mb-2">Gästekarten erhältlich bei</p>
+            <p>Gesundheitszentrum Holzer, Tölzer Str. 13 <span class="text-court/40">(Mo–Do 8–20 Uhr, Fr 8–16 Uhr)</span></p>
+            <p>Dr. Claudia Benkert, Krankenhausstr. 34a</p>
+            <p>Dr. Antje Krepek, Flinspachstr. 1</p>
+            <p>Gerhard Westner, Kiem Pauli Str. 23</p>
+          </div>
+        </div>
+
+        <div class="bg-white border border-sand-dark p-8">
+          <p class="section-label mb-3">Platz- & Spielordnung</p>
+          <h2 class="font-display text-4xl text-court mb-6">So funktioniert's</h2>
+          <ul class="space-y-4 text-sm text-court/60 leading-relaxed">
+            <li class="flex gap-3">
+              <span class="font-display text-clay text-lg leading-none mt-0.5">1</span>
+              <span>Mitgliedskarte oder ausgefüllte Gästekarte an der Platztafel einhängen — damit ist der Platz reserviert.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="font-display text-clay text-lg leading-none mt-0.5">2</span>
+              <span>Spielzeit: <strong class="text-court">1 Stunde</strong> (Einzel) · <strong class="text-court">1,5 Stunden</strong> (Doppel/Mixed). Uhr auf Spielbeginn stellen.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="font-display text-clay text-lg leading-none mt-0.5">3</span>
+              <span>Sind alle Plätze belegt, in der 2. Reihe vormerken — Anwesenheit während der Wartezeit nicht erforderlich.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="font-display text-clay text-lg leading-none mt-0.5">4</span>
+              <span>Kinder bis 14 Jahre dürfen auf allen Plätzen bis 17 Uhr und auf Platz 6 zeitlich unbegrenzt spielen.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="font-display text-clay text-lg leading-none mt-0.5">5</span>
+              <span>Plätze nach dem Spiel abziehen. Nur Tennisschuhe erlaubt. Bei Platzsperrung das Schild „Plätze nicht bespielbar" beachten.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Kontakt -->
+      <div class="border-t border-sand-dark pt-16" data-animate>
+        <p class="section-label mb-4">Kontakt & Fragen</p>
+        <div class="flex flex-col sm:flex-row gap-4">
           <a href="tel:+498024123456" class="btn-primary">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 17l.92-.08z"/>

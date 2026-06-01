@@ -6,7 +6,7 @@ import { getCollection } from 'astro:content';
 const allNews = await getCollection('news', e => e.data.published);
 const sorted = allNews.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const categories = ['Alle', 'Vereinsnews', 'Mannschaft', 'Turnier', 'Jugend', 'Allgemein'];
+const categories = ['Alle', 'Mannschaften', 'Club', 'Jugend', 'Tennisschule'];
 ---
 
 <BaseLayout
@@ -23,7 +23,7 @@ const categories = ['Alle', 'Vereinsnews', 'Mannschaft', 'Turnier', 'Jugend', 'A
   </div>
 
   <!-- Filter tabs (JS-fähig) -->
-  <div class="bg-sand border-b border-sand-dark sticky top-[108px] md:top-[136px] z-40">
+  <div id="cat-filter" class="bg-sand border-b border-sand-dark sticky z-40" style="top:0">
     <div class="max-w-screen-xl mx-auto px-6 flex gap-6 overflow-x-auto py-3 scrollbar-none">
       {categories.map(cat => (
         <button
@@ -72,6 +72,15 @@ const categories = ['Alle', 'Vereinsnews', 'Mannschaft', 'Turnier', 'Jugend', 'A
 </BaseLayout>
 
 <script>
+  // Sticky filter direkt unter dem fixed Header positionieren
+  const header = document.getElementById('site-header')!;
+  const filter = document.getElementById('cat-filter')!;
+  function updateFilterTop() {
+    filter.style.top = Math.floor(header.getBoundingClientRect().bottom) + 'px';
+  }
+  updateFilterTop();
+  window.addEventListener('resize', updateFilterTop);
+
   const buttons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
   const items   = document.querySelectorAll<HTMLElement>('.news-item');
 

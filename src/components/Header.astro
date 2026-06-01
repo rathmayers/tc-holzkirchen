@@ -1,10 +1,11 @@
 ---
 const navLinks = [
-  { label: "Club", href: "/club" },
-  { label: "Mannschaften", href: "/mannschaften" },
-  { label: "Tennisschule", href: "/tennisschule" },
   { label: "News", href: "/news" },
-  { label: "Platzbuchung", href: "/platzbuchung" },
+  { label: "Mannschaften", href: "/mannschaften" },
+  { label: "Club", href: "/club" },
+  { label: "Jugend", href: "/jugend" },
+  { label: "Tennisschule", href: "/tennisschule" },
+  { label: "Unsere Plätze", href: "/platzbuchung" },
 ];
 
 const pathname = Astro.url.pathname;
@@ -36,14 +37,14 @@ const pathname = Astro.url.pathname;
   </div>
 
   <!-- Main nav -->
-  <nav class="bg-chalk/95 backdrop-blur-md border-b border-sand-dark">
+  <nav class="bg-chalk border-b border-sand-dark">
     <div
       class="max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between"
     >
       <!-- Logo -->
       <a href="/" class="flex items-center gap-3 group">
         <img
-          src="/images/tch.jpg"
+          src="/images/tch-raute.jpg"
           alt="TC Holzkirchen Logo"
           class="w-10 h-10 object-contain shrink-0"
         />

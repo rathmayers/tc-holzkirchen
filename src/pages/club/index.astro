@@ -60,7 +60,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <div class="space-y-3">
           {[
             { label: 'Mitglied werden',     href: '/mitglied-werden',  primary: true },
-            { label: 'Platzbuchung',         href: '/platzbuchung',     primary: false },
+            { label: 'Unsere Plätze',         href: '/platzbuchung',     primary: false },
             { label: 'Mannschaften & Spielplan', href: '/mannschaften', primary: false },
             { label: 'News & Aktuelles',     href: '/news',             primary: false },
           ].map(link => (
@@ -84,6 +84,96 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </div>
       </div>
 
+      <!-- Vereinszweck & Mitgliedschaft -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20 border-t border-sand-dark pt-20" data-animate>
+        <div>
+          <p class="section-label mb-4">Verein & Satzung</p>
+          <h2 class="font-display text-5xl text-court mb-6">Gemeinnützig.<br/>Demokratisch.<br/>Seit 1958.</h2>
+          <p class="text-court/60 leading-relaxed mb-4">
+            Der Tennis-Club Holzkirchen e.V. ist ein eingetragener, gemeinnütziger Verein mit dem Zweck,
+            das Tennisspiel zu pflegen. Wir betreiben unsere Anlage für Mitglieder und Gäste und
+            organisieren Veranstaltungen rund um den Sport.
+          </p>
+          <p class="text-court/60 leading-relaxed">
+            Mitglied kann jede natürliche Person werden — als Jugendmitglied, Erwachsenenmitglied
+            (ab 18 Jahren) oder förderndes Mitglied. Die Aufnahme erfolgt auf schriftlichen Antrag
+            beim Vorstand. Der Jahresbeitrag wird jeweils zum 1. April fällig. Ein Austritt ist
+            schriftlich zum Ende des Geschäftsjahres möglich.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 gap-4">
+          {[
+            { label: 'Mitglied werden', desc: 'Schriftlicher Antrag an den Vorstand — wir melden uns zeitnah.', href: '/mitglied-werden' },
+            { label: 'Jugendmitgliedschaft', desc: 'Kinder und Jugendliche spielen zu besonderen Konditionen.' },
+            { label: 'Fördermitgliedschaft', desc: 'Den Club unterstützen, ohne aktiv Tennis zu spielen.' },
+          ].map(item => (
+            <div class="bg-sand border border-sand-dark p-6">
+              <p class="font-display text-xl text-court mb-1">{item.label}</p>
+              <p class="text-sm text-court/50 mb-3">{item.desc}</p>
+              {item.href && (
+                <a href={item.href} class="font-mono text-xs text-clay uppercase tracking-widest hover:underline">
+                  Mehr erfahren →
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Mitgliedsbeiträge -->
+      <div class="border-t border-sand-dark pt-20 mb-20" data-animate>
+        <div class="mb-10">
+          <p class="section-label mb-4">Jahresbeiträge 2024</p>
+          <h2 class="font-display text-5xl text-court">Mitgliedsbeiträge</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          {[
+            { kat: 'Erwachsene',                       preis: '164 €', hinweis: '+ 10 € Arbeitsdienstabgabe*' },
+            { kat: 'Ehepartner / Lebenspartner',       preis: '138 €', hinweis: '+ 10 € Arbeitsdienstabgabe*' },
+            { kat: 'Studierende, Azubis, Schüler bis 27', preis: '92 €', hinweis: '+ 10 € Arbeitsdienstabgabe*' },
+            { kat: 'Jugendliche 15–18 Jahre',          preis: '77 €',  hinweis: '+ 5 € Arbeitsdienstabgabe*' },
+            { kat: 'Kinder bis 14 Jahre',              preis: '41 €',  hinweis: '' },
+            { kat: 'Passive Mitglieder',               preis: '20 €',  hinweis: '' },
+          ].map(item => (
+            <div class="bg-white border border-sand-dark p-6 flex justify-between items-start gap-4">
+              <div>
+                <p class="font-display text-lg text-court leading-tight">{item.kat}</p>
+                {item.hinweis && <p class="font-mono text-xs text-court/40 mt-1">{item.hinweis}</p>}
+              </div>
+              <p class="font-display text-3xl text-clay shrink-0">{item.preis}</p>
+            </div>
+          ))}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="bg-sand border border-sand-dark p-6">
+            <p class="font-display text-xl text-court mb-2">Schnuppermitgliedschaft</p>
+            <p class="text-sm text-court/60 mb-3">1 Monat Tennis ausprobieren — ohne langfristige Bindung.</p>
+            <p class="font-display text-3xl text-clay">30 €</p>
+          </div>
+          <div class="bg-sand border border-sand-dark p-6">
+            <p class="font-display text-xl text-court mb-2">Familienrabatt</p>
+            <p class="text-sm text-court/60">Kinder bis 18 Jahre zahlen den halben Beitrag, wenn beide Elternteile aktive Mitglieder sind. Das dritte Kind ist beitragsfrei.</p>
+          </div>
+        </div>
+
+        <p class="text-xs text-court/40 font-mono mb-10">
+          * Arbeitsdienstabgabe wird bei aktivem Einsatz erstattet. Der Jahresbeitrag ist jeweils zum 1. April fällig.
+        </p>
+
+        <!-- Link Platzbuchung -->
+        <a href="/platzbuchung" class="flex items-center justify-between bg-court text-white px-8 py-6 hover:bg-court-dark transition-colors group">
+          <div>
+            <p class="font-mono text-xs text-white/40 uppercase tracking-widest mb-1">Als Mitglied</p>
+            <p class="font-display text-3xl">Unsere Plätze</p>
+          </div>
+          <svg class="w-6 h-6 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
       <!-- Ansprechpartner -->
       <div data-animate>
         <div class="flex items-end justify-between mb-8">
@@ -105,7 +195,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </div>
 
         <!-- Grid -->
-        <div id="ap-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden"></div>
+        <div id="ap-grid" class="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden"></div>
 
         <!-- Fallback -->
         <div id="ap-fallback" class="hidden text-center py-8">
@@ -151,6 +241,7 @@ async function loadAnsprechpartner() {
 
     const grid = document.getElementById('ap-grid')!;
     grid.classList.remove('hidden');
+    grid.classList.add('grid');
     grid.innerHTML = personen.map(p => `
       <div class="bg-white border border-sand-dark p-6 hover:border-clay/40 transition-all">
         <p class="font-display text-xl text-court mb-0.5">${p.name}</p>

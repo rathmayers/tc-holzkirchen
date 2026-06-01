@@ -193,10 +193,13 @@ function stripTags(html) {
 }
 
 function extractFunktion(block) {
-  // Erster Textinhalt nach dem Namen-Tag, vor Telefon/Mobil
-  const m = /<(?:p|div|span|li)[^>]*>\s*([A-Za-zÄÖÜäöüß\/\s\-\.]{5,60})\s*<\//.exec(block);
-  if (m) return stripTags(m[1]).trim();
-  // Fallback: erste Zeile mit Text
-  const lines = stripTags(block).split('\n').map(l => l.trim()).filter(l => l.length > 4 && !l.match(/^(Tel|Mob|Schreiben)/i));
-  return lines[0]?.substring(0, 60) || '';
+  // Plain-Text zuerst: zuverlässiger als Tag-basierte Suche
+  const lines = stripTags(block)
+    .split(/[\n\r]+/)
+    .map(l => l.trim())
+    .filter(l => l.length > 3 && !l.match(/^(Telefon|Tel\.|Mobil|Schreiben|mailto)/i));
+  if (lines[0]) return lines[0].substring(0, 80);
+  // Fallback: erster Tag-Inhalt (jetzt mit Ziffern in der Zeichenklasse)
+  const m = /<(?:p|div|span|li)[^>]*>\s*([\w\WÄÖÜäöüß\/\s\-\.]{3,80}?)\s*<\//.exec(block);
+  return m ? stripTags(m[1]).trim().substring(0, 80) : '';
 }
