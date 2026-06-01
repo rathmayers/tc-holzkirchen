@@ -61,13 +61,16 @@ const vorstandJSON = JSON.stringify(VORSTAND);
         <!-- Schnelllinks -->
         <div class="space-y-3">
           {[
-            { label: 'Mitglied werden',     href: 'https://easyverein.com/public/TeHo/applicationform/2046',  primary: true },
-            { label: 'Unsere Plätze',         href: '/platzbuchung',     primary: false },
-            { label: 'Mannschaften & Spielplan', href: '/mannschaften', primary: false },
-            { label: 'News & Aktuelles',     href: '/news',             primary: false },
+            { label: 'Mitglied werden',        href: 'https://easyverein.com/public/TeHo/applicationform/2046', primary: true,  extern: true },
+            { label: 'Unsere Plätze',          href: '/platzbuchung',        primary: false, extern: false },
+            { label: 'Mannschaften & Spielplan', href: '/mannschaften',      primary: false, extern: false },
+            { label: 'News & Aktuelles',       href: '/news',                primary: false, extern: false },
+            { label: 'Vereinssatzung (PDF)',   href: '/doks/satzung-tch.pdf', primary: false, extern: true },
           ].map(link => (
             <a
               href={link.href}
+              target={link.extern ? '_blank' : undefined}
+              rel={link.extern ? 'noopener' : undefined}
               class:list={[
                 'flex items-center justify-between px-6 py-4 border transition-all group',
                 link.primary
