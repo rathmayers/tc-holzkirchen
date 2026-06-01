@@ -1,5 +1,6 @@
 ---
-// Hero.astro – großes, modernes Hero mit diagonalem Schnitt
+import { BELEGUNGEN, MEDENSPIELE } from '../data/platzbelegung.js';
+const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE });
 ---
 
 <section class="relative bg-court overflow-hidden min-h-[90vh] flex items-center">
@@ -97,28 +98,35 @@
         <a href="/news" class="btn-ghost text-xs mt-4 inline-flex">Mehr erfahren →</a>
       </div>
 
-      <!-- Aktuelles Wetter/Platzstatus Card -->
-      <div class="bg-clay/90 backdrop-blur p-6">
-        <p class="font-mono text-xs text-white/60 uppercase tracking-widest mb-3">Platzstatus</p>
-        <div class="flex items-center gap-3">
-          <div class="w-3 h-3 rounded-full bg-green-400 animate-pulse"></div>
-          <p class="font-display text-2xl text-white">Alle Plätze bespielbar</p>
-        </div>
-        <p class="text-white/70 text-sm mt-1">Stand: Heute, 10:00 Uhr</p>
-      </div>
-
-      <!-- Quick-Link Buchung -->
-      <div class="bg-white/5 backdrop-blur border border-white/10 p-6 flex items-center justify-between group cursor-pointer hover:bg-white/10 transition-colors">
+      <!-- Aktuelles Platzstatus Card -->
+      <a href="/platzbuchung" class="bg-clay/90 backdrop-blur p-6 flex items-center justify-between group hover:bg-clay transition-colors">
         <div>
-          <p class="font-mono text-xs text-white/40 uppercase tracking-widest mb-1">Online-Buchung</p>
-          <p class="font-display text-xl text-white">Freie Zeiten ab morgen</p>
+          <p class="font-mono text-xs text-white/60 uppercase tracking-widest mb-3">Platzstatus</p>
+          <div class="flex items-center gap-3 mb-1">
+            <div id="status-dot" class="w-3 h-3 rounded-full bg-green-400 animate-pulse shrink-0"></div>
+            <p id="status-text" class="font-display text-2xl text-white">Alle Plätze frei</p>
+          </div>
+          <p id="status-zeit" class="text-white/70 text-sm"></p>
         </div>
-        <div class="w-10 h-10 bg-clay flex items-center justify-center group-hover:bg-clay-light transition-colors">
+        <div class="w-14 h-14 bg-white/20 flex items-center justify-center shrink-0 group-hover:bg-white/30 transition-colors ml-4">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Quick-Link Mannschaftsspiele -->
+      <a href="/mannschaften" class="bg-white/5 backdrop-blur border border-white/10 p-6 flex items-center justify-between group hover:bg-white/10 transition-colors">
+        <div>
+          <p class="font-mono text-xs text-white/40 uppercase tracking-widest mb-1">Spielbetrieb</p>
+          <p class="font-display text-xl text-white">Mannschaften & Spielplan</p>
+        </div>
+        <div class="w-10 h-10 bg-clay flex items-center justify-center shrink-0 group-hover:bg-clay-light transition-colors">
           <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
         </div>
-      </div>
+      </a>
     </div>
 
   </div>
@@ -127,3 +135,54 @@
   <div class="absolute bottom-0 left-0 right-0 h-20 bg-chalk"
        style="clip-path: polygon(0 100%, 100% 0, 100% 100%)"></div>
 </section>
+
+<script define:vars={{ platzConfig }} is:inline>
+const { BELEGUNGEN, MEDENSPIELE } = JSON.parse(platzConfig);
+
+function zeitZuMinuten(str) {
+  const [h, m] = str.split(':').map(Number);
+  return h * 60 + m;
+}
+
+function irgendeinPlatzBelegt(now) {
+  const dateStr = now.toISOString().split('T')[0];
+  const day     = now.getDay();
+  const min     = now.getHours() * 60 + now.getMinutes();
+
+  // Feste Belegung?
+  for (const b of BELEGUNGEN) {
+    if (b.vonDatum && dateStr < b.vonDatum) continue;
+    if (b.bisDatum && dateStr > b.bisDatum) continue;
+    for (const z of b.zeiten) {
+      if (!z.wochentage.includes(day)) continue;
+      if (min >= zeitZuMinuten(z.von) && min < zeitZuMinuten(z.bis)) return true;
+    }
+  }
+
+  // Medenspiele-Wochenende?
+  if (dateStr >= MEDENSPIELE.vonDatum && dateStr <= MEDENSPIELE.bisDatum) {
+    const frAb  = zeitZuMinuten(MEDENSPIELE.freitag_ab);
+    const soBis = zeitZuMinuten(MEDENSPIELE.sonntag_bis);
+    if ((day === 5 && min >= frAb) || day === 6 || (day === 0 && min <= soBis)) return true;
+  }
+
+  return false;
+}
+
+function updateStatus() {
+  const now     = new Date();
+  const belegt  = irgendeinPlatzBelegt(now);
+  const dot     = document.getElementById('status-dot');
+  const text    = document.getElementById('status-text');
+  const zeitEl  = document.getElementById('status-zeit');
+
+  if (dot)  { dot.className  = `w-3 h-3 rounded-full animate-pulse ${belegt ? 'bg-yellow-300' : 'bg-green-400'}`; }
+  if (text) { text.textContent = belegt ? 'Plätze teilweise belegt' : 'Alle Plätze frei'; }
+  if (zeitEl) {
+    zeitEl.textContent = `Stand: ${now.toLocaleString('de-DE', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' })} Uhr`;
+  }
+}
+
+updateStatus();
+setInterval(updateStatus, 60_000);
+</script>
