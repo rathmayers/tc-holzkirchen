@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { BELEGUNGEN, MEDENSPIELE } from '../../data/platzbelegung.js';
-const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE });
+import { BELEGUNGEN, MEDENSPIELE_TERMINE } from '../../data/platzbelegung.js';
+const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE_TERMINE });
 ---
 
 <BaseLayout
@@ -101,7 +101,7 @@ const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE });
 </BaseLayout>
 
 <script define:vars={{ platzConfig }}>
-const { BELEGUNGEN, MEDENSPIELE } = JSON.parse(platzConfig);
+const { BELEGUNGEN, MEDENSPIELE_TERMINE } = JSON.parse(platzConfig);
 
 function zeitZuMinuten(str) {
   const [h, m] = str.split(':').map(Number);
@@ -126,17 +126,10 @@ function getPlatzStatus(platzNr, now) {
     }
   }
 
-  // 2. Orange: Medenspiele (Fr 15:00 – So 20:00 innerhalb der Saison)
-  if (dateStr >= MEDENSPIELE.vonDatum && dateStr <= MEDENSPIELE.bisDatum) {
-    const frAb  = zeitZuMinuten(MEDENSPIELE.freitag_ab);
-    const soBis = zeitZuMinuten(MEDENSPIELE.sonntag_bis);
-    if (
-      (day === 5 && min >= frAb) ||
-       day === 6 ||
-      (day === 0 && min <= soBis)
-    ) {
-      return { farbe: 'orange', text: 'Platzbelegung durch Medenspiele entsprechend Aushang am Platz' };
-    }
+  // 2. Orange: konkreter Medenspiel-Heimspieltag
+  const termin = MEDENSPIELE_TERMINE.find(t => t.datum === dateStr);
+  if (termin && min >= zeitZuMinuten(termin.von)) {
+    return { farbe: 'orange', text: 'Platzbelegung durch Medenspiele entsprechend Aushang am Platz' };
   }
 
   // 3. Grün: frei

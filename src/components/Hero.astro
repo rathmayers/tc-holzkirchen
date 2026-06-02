@@ -1,6 +1,6 @@
 ---
-import { BELEGUNGEN, MEDENSPIELE } from '../data/platzbelegung.js';
-const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE });
+import { BELEGUNGEN, MEDENSPIELE_TERMINE } from '../data/platzbelegung.js';
+const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE_TERMINE });
 ---
 
 <section class="relative bg-court overflow-hidden min-h-[90vh] flex items-center">
@@ -137,7 +137,7 @@ const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE });
 </section>
 
 <script define:vars={{ platzConfig }} is:inline>
-const { BELEGUNGEN, MEDENSPIELE } = JSON.parse(platzConfig);
+const { BELEGUNGEN, MEDENSPIELE_TERMINE } = JSON.parse(platzConfig);
 
 function zeitZuMinuten(str) {
   const [h, m] = str.split(':').map(Number);
@@ -159,12 +159,9 @@ function irgendeinPlatzBelegt(now) {
     }
   }
 
-  // Medenspiele-Wochenende?
-  if (dateStr >= MEDENSPIELE.vonDatum && dateStr <= MEDENSPIELE.bisDatum) {
-    const frAb  = zeitZuMinuten(MEDENSPIELE.freitag_ab);
-    const soBis = zeitZuMinuten(MEDENSPIELE.sonntag_bis);
-    if ((day === 5 && min >= frAb) || day === 6 || (day === 0 && min <= soBis)) return true;
-  }
+  // Medenspiel-Heimspieltag?
+  const termin = MEDENSPIELE_TERMINE.find(t => t.datum === dateStr);
+  if (termin && min >= zeitZuMinuten(termin.von)) return true;
 
   return false;
 }
