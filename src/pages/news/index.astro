@@ -7,7 +7,7 @@ const allNews = await getCollection('news', e => e.data.published);
 const sorted = allNews.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const rendered = await Promise.all(sorted.map(e => e.render()));
 
-const categories = ['Alle', 'Mannschaften', 'Club', 'Jugend', 'Tennisschule'];
+const categories = ['Alle', 'Mannschaften', 'Verein', 'Jugend', 'Tennisschule'];
 ---
 
 <BaseLayout
