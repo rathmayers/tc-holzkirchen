@@ -1,14 +1,35 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allNews  = await getCollection('news');
+const rawFiles = import.meta.glob('/src/content/news/*.mdx', { as: 'raw' });
+
+const newsData = await Promise.all(allNews.map(async entry => {
+  const filePath = `/src/content/news/${entry.id}`;
+  const raw = rawFiles[filePath] ? await rawFiles[filePath]() : '';
+  const parts = raw.split(/^---\s*$/m);
+  const body  = parts.length >= 3 ? parts.slice(2).join('---').trim() : '';
+  return {
+    slug: entry.slug, title: entry.data.title, summary: entry.data.summary ?? '',
+    date: entry.data.date.toISOString().split('T')[0], author: entry.data.author,
+    category: entry.data.category, image: entry.data.image ?? '',
+    imageLayout: entry.data.imageLayout ?? 'klein', featured: entry.data.featured ?? false,
+    published: entry.data.published ?? true, id: entry.id, body,
+  };
+}));
+const newsJSON = JSON.stringify(newsData);
 ---
 
-<BaseLayout title="News erstellen – Admin TC Holzkirchen">
+<BaseLayout title="News – Admin TC Holzkirchen">
   <div class="bg-court/5 border-b border-sand-dark py-6">
     <div class="max-w-screen-xl mx-auto px-6 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <a href="/admin" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors">← Logout</a>
         <span class="text-sand-dark">/</span>
-        <h1 class="font-display text-2xl text-court">News-Redaktion</h1>
+        <a href="/admin/news-liste" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors">Alle News</a>
+        <span class="text-sand-dark">/</span>
+        <h1 id="page-title" class="font-display text-2xl text-court">Neuer Beitrag</h1>
       </div>
       <a href="/news" class="btn-outline text-xs py-2.5 px-4">Website ansehen</a>
     </div>
@@ -115,33 +136,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
           <!-- Actions -->
           <div class="flex items-center gap-4 pt-4 border-t border-sand-dark">
-            <button id="generate-btn" class="btn-primary">
-              MDX-Datei generieren
+            <button id="publish-btn" class="btn-primary">
+              Veröffentlichen
             </button>
-            <button id="preview-btn" class="btn-outline">
-              Vorschau
-            </button>
+            <span id="publish-status" class="font-mono text-sm hidden"></span>
           </div>
         </div>
-
-        <!-- Output -->
-        <div id="output-section" class="hidden mt-8 space-y-4">
-          <div class="flex items-center justify-between">
-            <p class="section-label">Generierte MDX-Datei</p>
-            <button id="copy-btn" class="font-mono text-xs uppercase tracking-widest text-clay hover:text-clay-dark transition-colors">
-              Kopieren
-            </button>
-          </div>
-          <pre
-            id="mdx-output"
-            class="bg-court text-green-300 font-mono text-xs p-6 overflow-x-auto whitespace-pre-wrap leading-relaxed border border-court/20"
-          ></pre>
-          <div class="bg-sand border border-sand-dark p-4 text-sm text-court/70 font-mono">
-            <p class="font-semibold text-court mb-1">📁 Datei speichern unter:</p>
-            <p id="file-path" class="text-clay"></p>
-            <p class="mt-2 text-court/50 text-xs">Danach <code class="bg-white px-1">npm run build</code> ausführen, um die Seite zu aktualisieren.</p>
-          </div>
-        </div>
+      </div>
+    </div>
       </div>
     </div>
 
@@ -162,10 +164,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <h3 class="font-display text-xl mb-3">Workflow</h3>
         <ol class="space-y-3 text-sm text-white/60">
           <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">1</span><span>Formular ausfüllen</span></li>
-          <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">2</span><span>MDX-Datei generieren & kopieren</span></li>
-          <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">3</span><span>Datei unter <code class="text-clay">src/content/news/</code> speichern</span></li>
-          <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">4</span><span><code class="text-clay">npm run build</code> ausführen</span></li>
-          <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">5</span><span>Deployment anstoßen</span></li>
+          <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">2</span><span>„Veröffentlichen" klicken</span></li>
+          <li class="flex gap-3"><span class="font-display text-clay text-lg leading-none">3</span><span>Fertig — Seite aktualisiert sich automatisch</span></li>
         </ol>
       </div>
 
@@ -178,74 +178,101 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   </div>
 </BaseLayout>
 
-<script>
-  // Auth guard (Demo)
-  if (!sessionStorage.getItem('tc-admin')) {
-    window.location.href = '/admin';
+<script define:vars={{ newsJSON }} is:inline>
+  if (!sessionStorage.getItem('tc-admin')) window.location.href = '/admin';
+
+  var ALL_NEWS  = JSON.parse(newsJSON);
+  var editSlug  = new URLSearchParams(location.search).get('edit');
+  var editEntry = editSlug ? ALL_NEWS.find(function(n) { return n.slug === editSlug; }) : null;
+
+  if (editEntry) {
+    document.getElementById('page-title').textContent   = 'Beitrag bearbeiten';
+    document.getElementById('publish-btn').textContent  = 'Änderungen speichern';
   }
 
-  // Set today's date as default
-  const dateInput = document.getElementById('news-date') as HTMLInputElement;
-  dateInput.value = new Date().toISOString().split('T')[0];
+  document.getElementById('news-date').value = editEntry
+    ? editEntry.date : new Date().toISOString().split('T')[0];
 
-  function slugify(text: string): string {
-    return text
-      .toLowerCase()
-      .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
-      .replace(/[^a-z0-9\s-]/g, '')
-      .trim()
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-');
+  if (editEntry) {
+    document.getElementById('news-title').value    = editEntry.title;
+    document.getElementById('news-summary').value  = editEntry.summary;
+    document.getElementById('news-author').value   = editEntry.author;
+    document.getElementById('news-content').value  = editEntry.body;
+    document.getElementById('news-image').value    = editEntry.image;
+    document.getElementById('news-category').value = editEntry.category;
+    document.getElementById('news-featured').checked = editEntry.featured;
+    var lr = document.querySelector('input[name="image-layout"][value="' + editEntry.imageLayout + '"]');
+    if (lr) lr.checked = true;
   }
 
-  function generateMDX(): string {
-    const title    = (document.getElementById('news-title')    as HTMLInputElement).value.trim();
-    const summary  = (document.getElementById('news-summary')  as HTMLTextAreaElement).value.trim();
-    const category = (document.getElementById('news-category') as HTMLSelectElement).value;
-    const date     = (document.getElementById('news-date')     as HTMLInputElement).value;
-    const author   = (document.getElementById('news-author')   as HTMLInputElement).value.trim();
-    const content  = (document.getElementById('news-content')  as HTMLTextAreaElement).value.trim();
-    const image       = (document.getElementById('news-image')    as HTMLInputElement).value.trim();
-    const featured    = (document.getElementById('news-featured') as HTMLInputElement).checked;
-    const imageLayout = (document.querySelector('input[name="image-layout"]:checked') as HTMLInputElement)?.value ?? 'klein';
-
-    const imageLine       = image ? `\nimage: "${image}"` : '';
-    const imageLayoutLine = image && imageLayout === 'gross' ? '\nimageLayout: "gross"' : '';
-    const featuredLine    = featured ? '\nfeatured: true' : '';
-
-    return `---
-title: "${title}"
-summary: "${summary}"
-date: ${date}
-author: "${author}"
-category: "${category}"${imageLine}${imageLayoutLine}${featuredLine}
-published: true
----
-
-${content}`;
+  function slugify(text) {
+    return text.toLowerCase()
+      .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+      .replace(/[^a-z0-9\s-]/g,'').trim()
+      .replace(/\s+/g,'-').replace(/-+/g,'-');
   }
 
-  document.getElementById('generate-btn')!.addEventListener('click', () => {
-    const title = (document.getElementById('news-title') as HTMLInputElement).value.trim();
+  function buildMDX() {
+    var title       = document.getElementById('news-title').value.trim();
+    var summary     = document.getElementById('news-summary').value.trim();
+    var category    = document.getElementById('news-category').value;
+    var date        = document.getElementById('news-date').value;
+    var author      = document.getElementById('news-author').value.trim();
+    var content     = document.getElementById('news-content').value.trim();
+    var image       = document.getElementById('news-image').value.trim();
+    var featured    = document.getElementById('news-featured').checked;
+    var layoutEl    = document.querySelector('input[name="image-layout"]:checked');
+    var imageLayout = layoutEl ? layoutEl.value : 'klein';
+    var imageLine       = image ? '\nimage: "' + image + '"' : '';
+    var imageLayoutLine = (image && imageLayout === 'gross') ? '\nimageLayout: "gross"' : '';
+    var featuredLine    = featured ? '\nfeatured: true' : '';
+    return '---\ntitle: "' + title + '"\nsummary: "' + summary + '"\ndate: ' + date +
+      '\nauthor: "' + author + '"\ncategory: "' + category + '"' +
+      imageLine + imageLayoutLine + featuredLine + '\npublished: true\n---\n\n' + content;
+  }
+
+  function setStatus(msg, ok) {
+    var el = document.getElementById('publish-status');
+    el.textContent  = msg;
+    el.className    = 'font-mono text-sm ' + (ok ? 'text-emerald-600' : 'text-clay');
+    el.classList.remove('hidden');
+  }
+
+  document.getElementById('publish-btn').addEventListener('click', function() {
+    var title = document.getElementById('news-title').value.trim();
     if (!title) { alert('Bitte einen Titel eingeben.'); return; }
 
-    const mdx = generateMDX();
-    const slug = slugify(title);
-    const dateVal = (document.getElementById('news-date') as HTMLInputElement).value;
-    const filename = `${dateVal}-${slug}.mdx`;
+    var dateVal  = document.getElementById('news-date').value;
+    var filename = editEntry ? editEntry.id : dateVal + '-' + slugify(title) + '.mdx';
+    var content  = buildMDX();
+    var btn      = document.getElementById('publish-btn');
 
-    document.getElementById('mdx-output')!.textContent = mdx;
-    document.getElementById('file-path')!.textContent = `src/content/news/${filename}`;
-    document.getElementById('output-section')!.classList.remove('hidden');
-    document.getElementById('output-section')!.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+    btn.disabled    = true;
+    btn.textContent = 'Wird veröffentlicht…';
+    setStatus('', true);
 
-  document.getElementById('copy-btn')!.addEventListener('click', () => {
-    const text = document.getElementById('mdx-output')!.textContent ?? '';
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('copy-btn')!;
-      btn.textContent = '✓ Kopiert!';
-      setTimeout(() => btn.textContent = 'Kopieren', 2000);
+    fetch('/api/save-news', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ filename: filename, content: content }),
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        setStatus('✓ Erfolgreich veröffentlicht! Die Seite wird in ~1 Minute aktualisiert.', true);
+        btn.textContent = editEntry ? 'Änderungen speichern' : 'Veröffentlichen';
+        btn.disabled    = false;
+        if (!editEntry) setTimeout(function() { window.location.href = '/admin/news-liste'; }, 2000);
+      } else {
+        setStatus('Fehler: ' + (data.error || 'Unbekannter Fehler'), false);
+        btn.textContent = editEntry ? 'Änderungen speichern' : 'Veröffentlichen';
+        btn.disabled    = false;
+      }
+    })
+    .catch(function(err) {
+      setStatus('Verbindungsfehler: ' + err.message, false);
+      btn.textContent = editEntry ? 'Änderungen speichern' : 'Veröffentlichen';
+      btn.disabled    = false;
     });
   });
 </script>
