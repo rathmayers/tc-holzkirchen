@@ -105,10 +105,22 @@ const newsJSON = JSON.stringify(newsData);
             ></textarea>
           </div>
 
-          <!-- Bild URL -->
+          <!-- Bild Upload -->
           <div>
-            <label class="form-label" for="news-image">Bild-URL <span class="text-court/30">(optional, /images/news/bild.jpg)</span></label>
-            <input type="text" id="news-image" class="form-input" placeholder="/images/news/mein-bild.jpg" />
+            <label class="form-label">Bild <span class="text-court/30">(optional, JPEG/PNG/WebP, max. 5 MB)</span></label>
+            <div class="flex gap-3 items-start">
+              <div class="flex-1">
+                <input type="text" id="news-image" class="form-input" placeholder="/images/news/mein-bild.jpg" />
+              </div>
+              <label class="btn-outline cursor-pointer shrink-0 py-3 px-4 text-xs">
+                Bild wählen
+                <input type="file" id="news-image-file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden" />
+              </label>
+            </div>
+            <div id="upload-status" class="hidden mt-2 font-mono text-xs"></div>
+            <div id="image-preview-wrap" class="hidden mt-3">
+              <img id="image-preview" src="" alt="Vorschau" class="max-h-40 object-contain border border-sand-dark" />
+            </div>
           </div>
 
           <!-- Bildlayout -->
@@ -204,6 +216,56 @@ const newsJSON = JSON.stringify(newsData);
     var lr = document.querySelector('input[name="image-layout"][value="' + editEntry.imageLayout + '"]');
     if (lr) lr.checked = true;
   }
+
+  // Bild-Upload
+  document.getElementById('news-image-file').addEventListener('change', function() {
+    var file = this.files[0];
+    if (!file) return;
+
+    var statusEl  = document.getElementById('upload-status');
+    var previewEl = document.getElementById('image-preview');
+    var wrapEl    = document.getElementById('image-preview-wrap');
+    var urlInput  = document.getElementById('news-image');
+
+    statusEl.textContent = 'Wird hochgeladen…';
+    statusEl.className   = 'mt-2 font-mono text-xs text-court/50';
+    statusEl.classList.remove('hidden');
+    wrapEl.classList.add('hidden');
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      // Base64 ohne Data-URL-Prefix
+      var base64 = e.target.result.split(',')[1];
+
+      fetch('/api/upload-image', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({
+          filename: file.name,
+          content:  base64,
+          mimeType: file.type,
+        }),
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.success) {
+          urlInput.value       = data.url;
+          previewEl.src        = e.target.result;
+          wrapEl.classList.remove('hidden');
+          statusEl.textContent = '✓ Bild hochgeladen: ' + data.url;
+          statusEl.className   = 'mt-2 font-mono text-xs text-emerald-600';
+        } else {
+          statusEl.textContent = 'Fehler: ' + (data.error || 'Unbekannt');
+          statusEl.className   = 'mt-2 font-mono text-xs text-clay';
+        }
+      })
+      .catch(function(err) {
+        statusEl.textContent = 'Verbindungsfehler: ' + err.message;
+        statusEl.className   = 'mt-2 font-mono text-xs text-clay';
+      });
+    };
+    reader.readAsDataURL(file);
+  });
 
   function slugify(text) {
     return text.toLowerCase()
