@@ -65,8 +65,25 @@ const mannschaftenJSON = JSON.stringify(MANNSCHAFTEN);
   </section>
 </BaseLayout>
 
+<style>
+  .team-highlight {
+    outline: 2px solid #C45C2A;
+    outline-offset: 3px;
+    animation: highlight-fade 2.5s ease forwards;
+  }
+  @keyframes highlight-fade {
+    0%   { outline-color: #C45C2A; }
+    70%  { outline-color: #C45C2A; }
+    100% { outline-color: transparent; }
+  }
+</style>
+
 <script define:vars={{ mannschaftenJSON }} is:inline>
 const STATIC_MANNSCHAFTEN = JSON.parse(mannschaftenJSON);
+
+function slugify(name) {
+  return 'team-' + name.toLowerCase().replace(/\s+/g, '-');
+}
 
 async function load() {
   // Sofort mit statischen Daten anzeigen
@@ -75,6 +92,7 @@ async function load() {
   renderMannschaften(STATIC_MANNSCHAFTEN);
   renderBegegnungen([]);
   initTabs();
+  scrollToTeam();
 
   // BTV-Kontaktdaten nachladen (max. 8s Timeout)
   try {
@@ -107,7 +125,7 @@ function renderMannschaften(mannschaften) {
         ${teams.map(m => {
           const btvLink = m.teamid ? `https://www.btv.de/de/spielbetrieb/teamportrait.html?teamid=${m.teamid}` : '';
           return `
-          <div class="bg-white border border-sand-dark p-5 hover:border-clay transition-all group">
+          <div id="${slugify(m.name)}" class="bg-white border border-sand-dark p-5 hover:border-clay transition-all group">
             <div class="flex items-center justify-between mb-2">
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-court flex items-center justify-center shrink-0 group-hover:bg-clay transition-colors">
@@ -199,6 +217,18 @@ function renderSpielzeile(s) {
         ${s.ergebnis || '–:–'}
       </div>
     </div>`;
+}
+
+function scrollToTeam() {
+  const hash = window.location.hash;
+  if (!hash) return;
+  const el = document.querySelector(hash);
+  if (!el) return;
+  setTimeout(function() {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.add('team-highlight');
+    setTimeout(function() { el.classList.remove('team-highlight'); }, 2500);
+  }, 100);
 }
 
 function initTabs() {

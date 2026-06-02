@@ -37,6 +37,25 @@ const belegRows = BELEGUNGEN.flatMap((b: any) =>
   })
 ).sort((a: any, b: any) => a.sortKey - b.sortKey);
 
+// Chip-Name → Mannschafts-Slug (passend zu id="team-{slug}" auf /mannschaften/)
+const CHIP_SLUG: Record<string, string> = {
+  'H70 4er':    'herren-70',
+  'U15m I':     'knaben-15',
+  'U15m II':    'knaben-15-ii',
+  'U15m III':   'knaben-15-iii',
+  'U12 I':      'bambini-12',
+  'U12 II':     'bambini-12-ii',
+  'U18m I':     'junioren-18',
+  'U18m II':    'junioren-18-ii',
+  'D30 4er':    'damen-30',
+  'D50 I 4er':  'damen-50',
+  'D50 II 4er': 'damen-50-ii',
+  'H30 6er':    'herren-30',
+  'H40 4er':    'herren-40',
+  'H50 6er':    'herren-50',
+  'Herren':     'herren',
+};
+
 // Medenspiele-Termine gruppieren mit Schulferien-Bannern
 type MedRow =
   | { type: 'monat';  label: string }
@@ -203,7 +222,10 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
                       <td class="py-3">
                         <div class="flex flex-wrap gap-1">
                           {r.mannschaften.map((m: string) => (
-                            <span class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5">{m}</span>
+                            CHIP_SLUG[m]
+                              ? <a href={`/mannschaften/#team-${CHIP_SLUG[m]}`}
+                                   class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 hover:bg-clay/25 transition-colors">{m}</a>
+                              : <span class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5">{m}</span>
                           ))}
                         </div>
                       </td>
