@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="de" class="scroll-smooth"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v4.16.19"><!-- SEO --><title>News-Liste – Admin TC Holzkirchen</title><meta name="description" content="Der Tennisclub Holzkirchen – Sport, Gemeinschaft und Leidenschaft seit 1958."><link rel="canonical" href="https://tc-holzkirchen.de/admin/news-liste/"><!-- Open Graph --><meta property="og:title" content="News-Liste – Admin TC Holzkirchen"><meta property="og:description" content="Der Tennisclub Holzkirchen – Sport, Gemeinschaft und Leidenschaft seit 1958."><meta property="og:image" content="/images/og-image.jpg"><meta property="og:url" content="https://tc-holzkirchen.de/admin/news-liste/"><meta property="og:type" content="website"><meta property="og:locale" content="de_DE"><!-- Preconnect für Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="/_astro/index.De_GsbeI.css"><script type="module" src="/_astro/hoisted.BssX96ad.js"></script></head> <body class="min-h-screen flex flex-col"> <header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" data-header> <!-- Top bar --> <div class="bg-court text-white/70 text-xs font-mono tracking-wider hidden md:block"> <div class="max-w-screen-xl mx-auto px-6 py-2 flex justify-between items-center"> <span>Saison 2026 läuft!</span> <div class="flex items-center gap-6"> <a href="mailto:info@tc-holzkirchen.de" class="hover:text-white transition-colors">info@tc-holzkirchen.de</a> <a href="tel:+4980245200" class="hover:text-white transition-colors">+49 8024 5200</a> </div> </div> </div> <!-- Main nav --> <nav class="bg-chalk border-b border-sand-dark"> <div class="max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between"> <!-- Logo --> <a href="/" class="flex items-center gap-3 group"> <img src="/images/tch-raute.jpg" alt="TC Holzkirchen Logo" class="w-10 h-10 object-contain shrink-0"> <div class="leading-tight"> <span class="block font-display text-xl text-court tracking-wide">TC Holzkirchen</span> <span class="block font-mono text-[10px] uppercase tracking-widest text-court/50">Tennis seit 1958</span> </div> </a> <!-- Desktop nav --> <ul class="hidden lg:flex items-center gap-8"> <li> <a href="/news" class="nav-link text-court/70"> Aktuelles </a> </li><li> <a href="/mannschaften" class="nav-link text-court/70"> Mannschaften </a> </li><li> <a href="/club" class="nav-link text-court/70"> Verein </a> </li><li> <a href="/jugend" class="nav-link text-court/70"> Jugend </a> </li><li> <a href="/tennisschule" class="nav-link text-court/70"> Tennisschule </a> </li><li> <a href="/platzbuchung" class="nav-link text-court/70"> Unsere Plätze </a> </li> </ul> <!-- CTA + Burger --> <div class="flex items-center gap-4"> <a href="https://easyverein.com/public/TeHo/applicationform/2046" target="_blank" rel="noopener" class="btn-primary hidden md:inline-flex text-xs py-3 px-5">
+Mitglied werden
+</a> <button id="burger-btn" class="lg:hidden flex flex-col gap-1.5 p-2" aria-label="Menü öffnen"> <span class="w-6 h-0.5 bg-court transition-all duration-200" id="b1"></span> <span class="w-6 h-0.5 bg-court transition-all duration-200" id="b2"></span> <span class="w-4 h-0.5 bg-court transition-all duration-200" id="b3"></span> </button> </div> </div> <!-- Mobile nav --> <div id="mobile-menu" class="lg:hidden hidden border-t border-sand-dark bg-chalk"> <ul class="max-w-screen-xl mx-auto px-6 py-4 flex flex-col gap-4"> <li> <a href="/news" class="nav-link block text-court/70 py-1"> Aktuelles </a> </li><li> <a href="/mannschaften" class="nav-link block text-court/70 py-1"> Mannschaften </a> </li><li> <a href="/club" class="nav-link block text-court/70 py-1"> Verein </a> </li><li> <a href="/jugend" class="nav-link block text-court/70 py-1"> Jugend </a> </li><li> <a href="/tennisschule" class="nav-link block text-court/70 py-1"> Tennisschule </a> </li><li> <a href="/platzbuchung" class="nav-link block text-court/70 py-1"> Unsere Plätze </a> </li> <li class="pt-2 border-t border-sand-dark"> <a href="https://easyverein.com/public/TeHo/applicationform/2046" target="_blank" rel="noopener" class="btn-primary w-full justify-center">
+Mitglied werden
+</a> </li> </ul> </div> </nav> </header> <!-- Header spacer --> <div class="h-[108px] md:h-[136px]"></div>  <main class="flex-1">   <div class="bg-court/5 border-b border-sand-dark py-6"> <div class="max-w-screen-xl mx-auto px-6 flex items-center justify-between"> <div class="flex items-center gap-4"> <a href="/admin/news-erstellen" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors">← Neuer Beitrag</a> <span class="text-sand-dark">/</span> <h1 class="font-display text-2xl text-court">Alle News</h1> </div> <a href="/news" class="btn-outline text-xs py-2.5 px-4">Website ansehen</a> </div> </div> <div class="max-w-screen-xl mx-auto px-6 py-12"> <!-- Suche --> <div class="mb-6"> <input id="search" type="text" placeholder="Beitrag suchen..." class="form-input max-w-sm"> </div> <!-- Tabelle --> <div class="bg-white border border-sand-dark overflow-hidden"> <table class="w-full text-sm"> <thead class="bg-sand border-b border-sand-dark"> <tr> <th class="text-left px-5 py-3 font-mono text-xs text-court/50 uppercase tracking-widest">Titel</th> <th class="text-left px-5 py-3 font-mono text-xs text-court/50 uppercase tracking-widest hidden md:table-cell">Datum</th> <th class="text-left px-5 py-3 font-mono text-xs text-court/50 uppercase tracking-widest hidden lg:table-cell">Kategorie</th> <th class="text-left px-5 py-3 font-mono text-xs text-court/50 uppercase tracking-widest hidden lg:table-cell">Status</th> <th class="px-5 py-3"></th> </tr> </thead> <tbody id="news-table" class="divide-y divide-sand-dark"> <!-- wird per JS gefüllt --> </tbody> </table> <p id="empty-msg" class="hidden text-center py-16 text-court/30 font-mono text-sm">Keine Beiträge gefunden.</p> </div> </div>  <div id="delete-dialog" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 p-4"> <div class="bg-white border border-sand-dark p-8 max-w-lg w-full"> <h2 class="font-display text-2xl text-court mb-2">Beitrag löschen</h2> <p class="text-court/60 text-sm mb-4">Diesen Beitrag wirklich unwiderruflich löschen?</p> <p class="font-mono text-sm text-clay mb-6" id="delete-filename"></p> <div id="delete-status" class="hidden mb-4 font-mono text-sm"></div> <div class="flex gap-3"> <button id="delete-confirm" class="btn-primary text-sm bg-red-600 border-red-600 hover:bg-red-700">Endgültig löschen</button> <button id="delete-close" class="btn-outline text-sm">Abbrechen</button> </div> </div> </div>  </main> <footer class="bg-court text-white"> <!-- Main footer --> <div class="max-w-screen-xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12"> <!-- Brand --> <div class="lg:col-span-1"> <div class="flex items-center gap-3 mb-4"> <div class="w-10 h-10 bg-clay flex items-center justify-center text-white font-display text-xl">TC</div> <div> <span class="block font-display text-xl">TC Holzkirchen</span> <span class="block font-mono text-xs text-white/40 uppercase tracking-widest">Tennis seit 1958</span> </div> </div> <div class="text-sm text-white/60 leading-relaxed"> <p>
+Weitere Infos bekommt ihr in unserer <a href="https://chat.whatsapp.com/GTbf2WyMzXB4XfD2IovfaL" class="text-xl hover:text-white/70 text-clay transition-colors">Whatsapp-Community</a>.
+</p> <p>
+Wir freuen uns auf euch!
+</p> </div> <div class="flex gap-4 mt-6"> <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center hover:border-clay hover:bg-clay/10 transition-all" aria-label="Facebook"> <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg> </a> <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center hover:border-clay hover:bg-clay/10 transition-all" aria-label="Instagram"> <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg> </a> </div> </div> <!-- Links --> <div> <p class="section-label text-clay mb-4">Club</p> <ul class="space-y-2 text-sm text-white/60"> <li><a href="/club" class="hover:text-white transition-colors">Über uns</a></li><li><a href="/club/geschichte" class="hover:text-white transition-colors">Geschichte</a></li> </ul> </div> <!-- Kontakt --> <div> <p class="section-label text-clay mb-4">Kontakt</p> <address class="not-italic text-sm text-white/60 space-y-2"> <p>TC Holzkirchen e.V.</p> <p>Krankenhausstraße 8<br>83607 Holzkirchen</p> <p class="pt-1"> <a href="tel:+4980245200" class="hover:text-white transition-colors">+49 8024 5200</a> </p> <p> <a href="mailto:info@tc-holzkirchen.de" class="hover:text-white transition-colors">info@tc-holzkirchen.de</a> </p> </address> </div> <!-- Postanschrift --> <div> <p class="section-label text-clay mb-4">Postanschrift</p> <address class="not-italic text-sm text-white/60 space-y-2"> <p>TC Holzkirchen e.V.</p> <p>Postfach 1115<br>83607 Holzkirchen</p> </address> </div> </div> <!-- Bottom bar --> <div class="border-t border-white/10"> <div class="max-w-screen-xl mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-white/50 font-mono"> <span>© 2026 TC Holzkirchen e.V. Alle Rechte vorbehalten.</span> <div class="flex gap-6"> <a href="/impressum" class="text-white/70 hover:text-white transition-colors text-sm">Impressum</a> <a href="/datenschutz" class="text-white/70 hover:text-white transition-colors text-sm">Datenschutz</a> <a href="/admin" class="text-white/70 hover:text-white transition-colors text-sm">Admin</a> </div> </div> </div> </footer> <!-- Scroll Animation Observer -->  <!-- Lightbox --> <div id="lightbox" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/85 backdrop-blur-sm p-4" role="dialog" aria-modal="true"> <button id="lightbox-close" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors" aria-label="Schließen"> <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6l12 12"></path></svg> </button> <img id="lightbox-img" src="" alt="" class="max-w-full max-h-[90vh] object-contain shadow-2xl"> </div>   </body></html> <script>(function(){const newsJSON = "[{\"id\":\"26-8-1-sommerfest.mdx\",\"slug\":\"26-8-1-sommerfest\",\"title\":\"Safe the Date - Sommerfest am Samstag, den 1.8.26 (Ausweichtermin: 2.8.26)\",\"summary\":\"Sommer, Tennis & gute Laune!\",\"date\":\"2026-08-01\",\"author\":\"Florence Doussal\",\"category\":\"Club\",\"image\":\"/images/sommerfest-2026-08-01.jpeg\",\"imageLayout\":\"klein\",\"featured\":true,\"published\":true,\"body\":\"### Sommer, Tennis & gute Laune! \\n\\nWie jedes Jahr wollen wir euch herzlich zum Sommerfest des TC Holzkirchen einladen.\\n\\n### Beginn: 18:30\\n\\n\\n### Was könnt ihr beitragen?\\n\\nNähere Informationen findet ihr wie immer im Aushang.\\n\\nxxx ich kann jetzt text ändern oder auch news löschen ...\"},{\"id\":\"2026-05-31-tc-holzkirchen-whatsapp-community.mdx\",\"slug\":\"2026-05-31-tc-holzkirchen-whatsapp-community\",\"title\":\"TC Holzkirchen WhatsApp Community\",\"summary\":\"Willkommen in der TCH Community!\",\"date\":\"2026-05-31\",\"author\":\"Sabine Rathmayer\",\"category\":\"Club\",\"image\":\"/images/news/whatsapp.jpg\",\"imageLayout\":\"klein\",\"featured\":true,\"published\":true,\"body\":\"# Willkommen in der TCH Community\\nTrete unserer WhatsApp Community bei und wähle Kanäle aus, in denen du über Neuigkeiten und Events informiert werden möchtest.\\n\\n[Link zur WhatsApp Community](https://chat.whatsapp.com/GTbf2WyMzXB4XfD2IovfaL)\"},{\"id\":\"26-4-24-schleiferlturnier.mdx\",\"slug\":\"26-4-24-schleiferlturnier\",\"title\":\"Schleiferlturnier zum Saisonstart – Wir freuen uns auf euch!\",\"summary\":\"Samstag, den 25.4.26 (Ausweichtermin 26.4.26), um 10:00\",\"date\":\"2026-04-24\",\"author\":\"Vorstand TC Holzkirchen\",\"category\":\"Club\",\"image\":\"/images/tch-raute.jpg\",\"imageLayout\":\"klein\",\"featured\":true,\"published\":true,\"body\":\"Die warmen Tage kommen und damit auch die lang ersehnte Tennissaison 2026! Ab dem **25. April** sind alle Außenplätze geöffnet.\\n\\n## MIXED SCHLEIFERLTURNIER\\n\\nFür\\n- Erwachsene und Jugendliche 15+ (Platz 1-4)\\n- Kinder (Platz 5-6, Großfeld, grün Punkt)\\n\\nIm Anschluss wie immer gemütliches Beisammensein. Bringt dazu gerne eure selbstgemachten Schmankerl mit!\"},{\"id\":\"saisonstart-2026.mdx\",\"slug\":\"saisonstart-2026\",\"title\":\"Saisonstart 2026 – Wir freuen uns auf euch!\",\"summary\":\"Die neue Tennissaison beginnt am 25. April. Und wir starten gleich mit unserem beliebten Schleiferlturnier. Anmeldungen bitte vor Ort am Aushang.\",\"date\":\"2026-04-24\",\"author\":\"Vorstand TC Holzkirchen\",\"category\":\"Club\",\"image\":\"/images/tch-raute.jpg\",\"imageLayout\":\"klein\",\"featured\":true,\"published\":true,\"body\":\"Die warmen Tage kommen und damit auch die lang ersehnte Tennissaison 2026! Ab dem **25. April** sind alle Außenplätze geöffnet.\\n\\n## Was ist neu in dieser Saison?\\n\\n- Mit dem Start in die neue Tennissaison 2026 informieren wir euch nicht nur über die Homepage und die WhatApp Communities.\\n- Wissenswertes rund ums Vereinsleben alleuch auf unseren Instagram und Facebook-Kanälen. \\n\\nFolgt uns und bleibt stets auf dem aktuellen Stand, was beim TCH so läuft.\"},{\"id\":\"sommercamp-2025.mdx\",\"slug\":\"sommercamp-2025\",\"title\":\"Sommercamp für Kinder & Jugendliche\",\"summary\":\"Einwöchiges Tenniscamp in den Sommerferien – Spaß, Sport und neue Freundschaften für alle Altersgruppen.\",\"date\":\"2025-06-01\",\"author\":\"Jugendwart Sabine Müller\",\"category\":\"Jugend\",\"image\":\"\",\"imageLayout\":\"klein\",\"featured\":false,\"published\":true,\"body\":\"Vom **28. Juli bis 1. August 2025** veranstalten wir unser beliebtes Sommercamp für Kinder und Jugendliche im Alter von 7 bis 16 Jahren.\\n\\n## Programm\\n\\n- Tägliches Training von 9:00 bis 12:00 Uhr\\n- Nachmittagsprogramm mit Spielen und Aktivitäten\\n- Abschlussturnier am Freitag\\n\\n**Kosten:** 120 € pro Kind (Mitglieder) / 160 € (Nichtmitglieder)\\n\\nAnmeldungen ab sofort per E-Mail an jugend@tc-holzkirchen.de.\"},{\"id\":\"herren1-bezirksliga-2025.mdx\",\"slug\":\"herren1-bezirksliga-2025\",\"title\":\"Herren 1 gewinnt Auftaktspiel der Bezirksliga\",\"summary\":\"Starker Auftritt unserer ersten Herrenmannschaft beim Auswärtsspiel in Miesbach – 5:1 Sieg!\",\"date\":\"2025-05-10\",\"author\":\"Mannschaftsführer Andreas Berger\",\"category\":\"Mannschaften\",\"image\":\"\",\"imageLayout\":\"klein\",\"featured\":false,\"published\":true,\"body\":\"Unsere erste Herrenmannschaft hat den perfekten Start in die Bezirksliga-Saison hingelegt. Beim Auswärtsspiel beim TC Miesbach setzte sich das Team souverän mit **5:1** durch.\\n\\nBesonders hervorzuheben: Thomas K. gewann sein Einzel in zwei überzeugenden Sätzen (6:2, 6:3) und Marcus B. lieferte im entscheidenden Doppel eine starke Vorstellung ab.\\n\\nDas nächste Heimspiel findet am **24. Mai** ab 14:00 Uhr statt. Kommt vorbei und unterstützt eure Mannschaft!\"}]";
+
+if (!sessionStorage.getItem('tc-admin')) window.location.href = '/admin';
+
+var NEWS = JSON.parse(newsJSON);
+
+function renderTable(items) {
+  const tbody   = document.getElementById('news-table');
+  const emptyMsg = document.getElementById('empty-msg');
+  if (!items.length) { tbody.innerHTML = ''; emptyMsg.classList.remove('hidden'); return; }
+  emptyMsg.classList.add('hidden');
+
+  tbody.innerHTML = items.map(n => `
+    <tr class="hover:bg-sand/40 transition-colors" data-slug="${n.slug}">
+      <td class="px-5 py-4">
+        <p class="font-medium text-court">${n.title}</p>
+        <p class="text-xs text-court/40 font-mono mt-0.5">${n.id}</p>
+      </td>
+      <td class="px-5 py-4 text-court/60 hidden md:table-cell">${n.date}</td>
+      <td class="px-5 py-4 hidden lg:table-cell">
+        <span class="font-mono text-[10px] uppercase tracking-widest px-2 py-1 bg-sand text-court/60">${n.category}</span>
+      </td>
+      <td class="px-5 py-4 hidden lg:table-cell">
+        <span class="font-mono text-[10px] uppercase tracking-widest ${n.published ? 'text-emerald-600' : 'text-court/30'}">
+          ${n.published ? '● Veröffentlicht' : '○ Entwurf'}
+        </span>
+      </td>
+      <td class="px-5 py-4">
+        <div class="flex gap-2 justify-end">
+          <a href="/admin/news-erstellen?edit=${encodeURIComponent(n.slug)}"
+             class="font-mono text-xs text-clay uppercase tracking-widest hover:underline">
+            Bearbeiten
+          </a>
+          <span class="text-court/20">|</span>
+          <button class="delete-btn font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors"
+                  data-id="${n.id}">
+            Löschen
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  // Lösch-Buttons
+  tbody.querySelectorAll('.delete-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      currentDeleteId = btn.dataset.id;
+      document.getElementById('delete-filename').textContent = currentDeleteId;
+      var dialog = document.getElementById('delete-dialog');
+      dialog.classList.remove('hidden');
+      dialog.classList.add('flex');
+    });
+  });
+}
+
+// Suche
+document.getElementById('search').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  renderTable(q ? NEWS.filter(n => n.title.toLowerCase().includes(q) || n.category.toLowerCase().includes(q)) : NEWS);
+});
+
+// Lösch-Dialog
+var currentDeleteId = null;
+
+function closeDeleteDialog() {
+  var d = document.getElementById('delete-dialog');
+  d.classList.add('hidden'); d.classList.remove('flex');
+  document.getElementById('delete-status').classList.add('hidden');
+  currentDeleteId = null;
+}
+
+document.getElementById('delete-close').addEventListener('click', closeDeleteDialog);
+
+document.getElementById('delete-confirm').addEventListener('click', function() {
+  if (!currentDeleteId) return;
+  var btn = document.getElementById('delete-confirm');
+  btn.disabled = true; btn.textContent = 'Wird gelöscht…';
+  var statusEl = document.getElementById('delete-status');
+
+  fetch('/api/delete-news', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ filename: currentDeleteId }),
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.success) {
+      statusEl.textContent = '✓ Gelöscht! Seite aktualisiert sich in ~1 Minute.';
+      statusEl.className = 'font-mono text-sm text-emerald-600 mb-4';
+      statusEl.classList.remove('hidden');
+      // Zeile aus Tabelle entfernen
+      var row = document.querySelector('tr[data-slug]');
+      NEWS = NEWS.filter(function(n) { return n.id !== currentDeleteId; });
+      renderTable(NEWS);
+      setTimeout(closeDeleteDialog, 2000);
+    } else {
+      statusEl.textContent = 'Fehler: ' + (data.error || 'Unbekannt');
+      statusEl.className = 'font-mono text-sm text-clay mb-4';
+      statusEl.classList.remove('hidden');
+      btn.disabled = false; btn.textContent = 'Endgültig löschen';
+    }
+  })
+  .catch(function(err) {
+    statusEl.textContent = 'Verbindungsfehler: ' + err.message;
+    statusEl.className = 'font-mono text-sm text-clay mb-4';
+    statusEl.classList.remove('hidden');
+    btn.disabled = false; btn.textContent = 'Endgültig löschen';
+  });
+});
+
+renderTable(NEWS);
+})();</script>

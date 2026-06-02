@@ -1,7 +1,64 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { BELEGUNGEN, MEDENSPIELE_TERMINE } from '../../data/platzbelegung.js';
+import { BELEGUNGEN, MEDENSPIELE_TERMINE, SCHULFERIEN } from '../../data/platzbelegung.js';
 const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE_TERMINE });
+
+// ── Helpers für Belegungsplan ──────────────────────────────────────────────
+const MONATE      = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const MONATE_KURZ = ['Jan.','Feb.','Mär.','Apr.','Mai','Jun.','Jul.','Aug.','Sep.','Okt.','Nov.','Dez.'];
+const WT_KURZ = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+
+const pd   = (s: string) => new Date(s + 'T12:00:00');
+const dat  = (s: string) => { const d = pd(s); return `${d.getDate()}. ${MONATE[d.getMonth()]}`; };
+const monK = (s: string) => MONATE_KURZ[pd(s).getMonth()];
+const wtK  = (s: string) => WT_KURZ[pd(s).getDay()];
+const mon  = (s: string) => MONATE[pd(s).getMonth()];
+
+const plaetzeStr = (arr: number[]) => {
+  const s = [...arr].sort((a, b) => a - b);
+  if (s.length === 1) return `Platz ${s[0]}`;
+  const consec = s.every((v, i) => i === 0 || v === s[i - 1] + 1);
+  return consec ? `Plätze ${s[0]}–${s[s.length - 1]}` : `Plätze ${s.join(', ')}`;
+};
+
+// Wöchentliche Belegungen aufbereiten
+const belegRows = BELEGUNGEN.flatMap((b: any) =>
+  b.zeiten.map((z: any) => {
+    const [h, m] = z.von.split(':').map(Number);
+    return {
+      tage:    z.wochentage.map((d: number) => WT_KURZ[d]).join(', '),
+      sortKey: z.wochentage[0] * 1000 + h * 60 + m,
+      von:     z.von,
+      bis:     z.bis,
+      plaetze: plaetzeStr(b.plaetze),
+      label:   b.label,
+      saison:  b.vonDatum ? `${monK(b.vonDatum)} – ${monK(b.bisDatum)}` : null,
+    };
+  })
+).sort((a: any, b: any) => a.sortKey - b.sortKey);
+
+// Medenspiele-Termine gruppieren mit Schulferien-Bannern
+type MedRow =
+  | { type: 'monat';  label: string }
+  | { type: 'ferien'; label: string }
+  | { type: 'termin'; datum: string; von: string; mannschaften: string[] };
+
+const medRows: MedRow[] = [];
+let lastMonat = '';
+for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
+  const t = MEDENSPIELE_TERMINE[i] as any;
+  if (i > 0) {
+    const prev = (MEDENSPIELE_TERMINE[i - 1] as any).datum;
+    const ferien = SCHULFERIEN.find((f: any) => f.vonDatum > prev && f.vonDatum <= t.datum);
+    if (ferien) medRows.push({ type: 'ferien', label: (ferien as any).label });
+  }
+  const m = mon(t.datum);
+  if (m !== lastMonat) {
+    medRows.push({ type: 'monat', label: m });
+    lastMonat = m;
+  }
+  medRows.push({ type: 'termin', datum: t.datum, von: t.von, mannschaften: t.mannschaften ?? [] });
+}
 ---
 
 <BaseLayout
@@ -93,6 +150,73 @@ const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE_TERMINE });
         </div>
       </div>
 
+      <!-- Belegungsplan -->
+      <div class="mb-16 pt-16 border-t border-sand-dark" data-animate>
+        <p class="section-label mb-3">Platzbelegung</p>
+        <h2 class="font-display text-5xl text-court mb-10">Belegungsplan 2026</h2>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-12">
+
+          <!-- Wöchentliche Belegungen -->
+          <div>
+            <p class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4">Wöchentlich wiederkehrend</p>
+            <table class="w-full border-t border-sand-dark text-sm">
+              <tbody>
+                {belegRows.map((r: any) => (
+                  <tr class="border-b border-sand-dark/50">
+                    <td class="py-2.5 pr-3 font-mono text-xs text-court/50 whitespace-nowrap align-top pt-3">{r.tage}</td>
+                    <td class="py-2.5 pr-4 font-mono text-xs text-court/70 whitespace-nowrap align-top pt-3">{r.von}–{r.bis}</td>
+                    <td class="py-2.5 pr-4 font-mono text-[10px] text-court/40 whitespace-nowrap align-top pt-3">{r.plaetze}</td>
+                    <td class="py-2.5 align-top pt-3">
+                      <p class="text-xs text-court/70">{r.label}</p>
+                      {r.saison && <p class="font-mono text-[10px] text-court/30 mt-0.5">{r.saison}</p>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Medenspiele Heimspieltage -->
+          <div class="xl:col-span-2">
+            <p class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4">Medenspiele Heimspieltage</p>
+            <table class="w-full border-t border-sand-dark text-sm">
+              <tbody>
+                {medRows.map((r) => {
+                  if (r.type === 'monat') return (
+                    <tr>
+                      <td colspan="3" class="bg-court text-white font-mono text-xs uppercase tracking-widest py-2 px-3">{r.label}</td>
+                    </tr>
+                  );
+                  if (r.type === 'ferien') return (
+                    <tr>
+                      <td colspan="3" class="bg-yellow-50 text-yellow-700 border-y border-yellow-200 font-mono text-xs uppercase tracking-widest py-2 px-3 text-center">{r.label}</td>
+                    </tr>
+                  );
+                  return (
+                    <tr class="border-b border-sand-dark/50">
+                      <td class="py-3 pr-4 whitespace-nowrap">
+                        <span class="font-mono text-xs text-court/40">{wtK(r.datum)}</span>
+                        <span class="font-mono text-xs text-court ml-2">{dat(r.datum)}</span>
+                      </td>
+                      <td class="py-3 pr-6 font-mono text-xs text-court/50 whitespace-nowrap">ab {r.von}</td>
+                      <td class="py-3">
+                        <div class="flex flex-wrap gap-1">
+                          {r.mannschaften.map((m: string) => (
+                            <span class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5">{m}</span>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
       <!-- Kontakt -->
       <div class="border-t border-sand-dark pt-16" data-animate>
         <p class="section-label mb-4">Kontakt & Fragen</p>
@@ -114,7 +238,7 @@ const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE_TERMINE });
 
 </BaseLayout>
 
-<script define:vars={{ platzConfig }}>
+<script is:inline define:vars={{ platzConfig }}>
 const { BELEGUNGEN, MEDENSPIELE_TERMINE } = JSON.parse(platzConfig);
 
 function zeitZuMinuten(str) {
