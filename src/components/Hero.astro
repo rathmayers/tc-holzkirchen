@@ -1,6 +1,14 @@
 ---
 import { BELEGUNGEN, MEDENSPIELE_TERMINE } from '../data/platzbelegung.js';
+import { getCollection } from 'astro:content';
+
 const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE_TERMINE });
+
+const allNews = await getCollection('news', e => e.data.published);
+const latestNews = allNews.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
+const newsDate = latestNews
+  ? new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'long', year: 'numeric' }).format(latestNews.data.date)
+  : '';
 ---
 
 <section class="relative bg-court overflow-hidden min-h-[90vh] flex items-center">
@@ -90,13 +98,15 @@ const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE_TERMINE });
       class="hidden lg:flex flex-col gap-4 opacity-0 animate-slide-left"
       style="animation-delay: 0.4s; animation-fill-mode: forwards"
     >
-      <!-- Nächstes Event Card -->
-      <div class="bg-white/10 backdrop-blur border border-white/20 p-6">
-        <p class="section-label text-clay mb-3">Nächstes Event</p>
-        <p class="font-display text-2xl text-white">Schleiferlturnier zum Saisonstart 2026</p>
-        <p class="text-white/60 text-sm mt-1">Sa, 25. April 2026 · 10:00 Uhr</p>
-        <a href="/news" class="btn-ghost text-xs mt-4 inline-flex">Mehr erfahren →</a>
-      </div>
+      <!-- Neueste News Card -->
+      {latestNews && (
+        <div class="bg-white/10 backdrop-blur border border-white/20 p-6">
+          <p class="section-label text-clay mb-3">Aktuelles</p>
+          <p class="font-display text-2xl text-white leading-tight">{latestNews.data.title}</p>
+          <p class="text-white/60 text-sm mt-2">{newsDate}</p>
+          <a href="/news" class="btn-ghost text-xs mt-4 inline-flex">Alle News →</a>
+        </div>
+      )}
 
       <!-- Aktuelles Platzstatus Card -->
       <a href="/platzbuchung" class="bg-clay/90 backdrop-blur p-6 flex items-center justify-between group hover:bg-clay transition-colors">
@@ -104,7 +114,7 @@ const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE_TERMINE });
           <p class="font-mono text-xs text-white/60 uppercase tracking-widest mb-3">Platzstatus</p>
           <div class="flex items-center gap-3 mb-1">
             <div id="status-dot" class="w-3 h-3 rounded-full bg-green-400 animate-pulse shrink-0"></div>
-            <p id="status-text" class="font-display text-2xl text-white">Alle Plätze frei</p>
+            <p id="status-text" class="font-display text-2xl text-white">Alle Plätze ohne fixe Belegung</p>
           </div>
           <p id="status-zeit" class="text-white/70 text-sm"></p>
         </div>
@@ -174,7 +184,7 @@ function updateStatus() {
   const zeitEl  = document.getElementById('status-zeit');
 
   if (dot)  { dot.className  = `w-3 h-3 rounded-full animate-pulse ${belegt ? 'bg-yellow-300' : 'bg-green-400'}`; }
-  if (text) { text.textContent = belegt ? 'Plätze teilweise belegt' : 'Alle Plätze frei'; }
+  if (text) { text.textContent = belegt ? 'Plätze teilweise belegt' : 'Alle Plätze ohne fixe Belegung'; }
   if (zeitEl) {
     zeitEl.textContent = `Stand: ${now.toLocaleString('de-DE', { weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' })} Uhr`;
   }
