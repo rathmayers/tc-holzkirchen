@@ -23,15 +23,23 @@ const categoryColors: Record<string, string> = {
 const catClass = categoryColors[category] ?? 'bg-sand-dark text-court';
 ---
 
-<article class:list={['news-card group', featured && 'lg:col-span-2 lg:grid lg:grid-cols-2']}>
+<article class:list={['news-card group flex flex-col', featured && 'lg:col-span-2 lg:grid lg:grid-cols-2']}>
 
-  <!-- Image placeholder (echtes Bild via `image` prop) -->
-  <div class:list={['bg-court/10 overflow-hidden relative', featured ? 'h-64 lg:h-auto' : 'h-52']}>
+  <!-- Bild -->
+  <div class:list={['bg-court/10 overflow-hidden relative shrink-0', featured ? 'h-64 lg:h-auto' : 'h-52']}>
     {image
-      ? <img src={image} alt={title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+      ? (
+        <button
+          class="lightbox-trigger w-full h-full block cursor-zoom-in"
+          data-src={image}
+          data-alt={title}
+          aria-label="Bild vergrößern"
+        >
+          <img src={image} alt={title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+        </button>
+      )
       : (
         <div class="w-full h-full bg-gradient-to-br from-court to-court-light flex items-center justify-center">
-          <!-- SVG Tennis Ball Platzhalter -->
           <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 64 64">
             <circle cx="32" cy="32" r="28"/>
             <path d="M32 4 Q10 20 10 32 Q10 44 32 60"/>
@@ -40,25 +48,24 @@ const catClass = categoryColors[category] ?? 'bg-sand-dark text-court';
         </div>
       )
     }
-    <!-- Category badge -->
     <span class:list={['absolute top-3 left-3 font-mono text-[10px] uppercase tracking-widest px-2.5 py-1', catClass]}>
       {category}
     </span>
   </div>
 
-  <!-- Content -->
-  <div class="p-6">
-    <div class="flex items-center gap-3 text-xs font-mono text-court/40 uppercase tracking-widest mb-3">
+  <!-- Content — scrollbar wenn Inhalt länger als max-height -->
+  <div class="p-6 flex flex-col flex-1 min-h-0">
+    <div class="flex items-center gap-3 text-xs font-mono text-court/40 uppercase tracking-widest mb-3 shrink-0">
       <time datetime={date.toISOString()}>{formattedDate}</time>
       <span>·</span>
       <span>{author}</span>
     </div>
 
-    <h2 class:list={['font-display text-court leading-tight mb-3', featured ? 'text-3xl' : 'text-2xl']}>
+    <h2 class:list={['font-display text-court leading-tight mb-3 shrink-0', featured ? 'text-3xl' : 'text-2xl']}>
       {title}
     </h2>
 
-    <div class="prose prose-sm prose-court max-w-none text-court/70 leading-relaxed">
+    <div class="prose prose-sm prose-court max-w-none text-court/70 leading-relaxed overflow-y-auto pr-1">
       <slot />
     </div>
   </div>

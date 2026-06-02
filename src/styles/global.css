@@ -58,8 +58,9 @@
 
   /* ─── Cards ───────────────────────────────── */
   .news-card {
-    @apply bg-white border border-sand-dark overflow-hidden 
+    @apply bg-white border border-sand-dark overflow-hidden
            transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-court/10;
+    height: 520px;
   }
 
   /* ─── Navigation ──────────────────────────── */
