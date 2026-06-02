@@ -20,15 +20,15 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
       <!-- Meilensteine -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20" data-animate>
         {[
-          { jahr: '1958', label: 'Gründung',         sub: '82 Gründungsmitglieder' },
-          { jahr: '1964', label: 'Krankenhausstr.',  sub: 'Umzug auf heutiges Gelände' },
-          { jahr: '2006', label: 'Fusion',            sub: 'mit TC Weiß-Blau Holzkirchen' },
-          { jahr: '2008', label: '50 Jahre',          sub: 'Jubiläumsfeier' },
+          { jahr: '1958', label: 'Gründung',         sub: '82 Gründungsmitglieder',       orange: false },
+          { jahr: '1964', label: 'Krankenhausstr.',  sub: 'Umzug auf heutiges Gelände',   orange: true  },
+          { jahr: '2006', label: 'Fusion',            sub: 'mit TC Weiß-Blau Holzkirchen', orange: false },
+          { jahr: '2008', label: '50 Jahre',          sub: 'Jubiläumsfeier',               orange: true  },
         ].map(m => (
-          <div class="bg-white border border-sand-dark p-6">
-            <p class="font-display text-4xl md:text-5xl text-clay leading-none">{m.jahr}</p>
-            <p class="font-display text-lg text-court mt-2">{m.label}</p>
-            <p class="font-mono text-xs text-court/40 uppercase tracking-widest mt-1">{m.sub}</p>
+          <div class:list={['p-6', m.orange ? 'bg-clay' : 'bg-white border border-sand-dark']}>
+            <p class:list={['font-display text-4xl md:text-5xl leading-none', m.orange ? 'text-white' : 'text-clay']}>{m.jahr}</p>
+            <p class:list={['font-display text-lg mt-2', m.orange ? 'text-white' : 'text-court']}>{m.label}</p>
+            <p class:list={['font-mono text-xs uppercase tracking-widest mt-1', m.orange ? 'text-white/60' : 'text-court/40']}>{m.sub}</p>
           </div>
         ))}
       </div>
