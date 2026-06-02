@@ -23,24 +23,25 @@ const VEREINSINFO = {
   mitgliederErwachsen: '307',
 };
 
+// Nur Stammdaten — Kontaktdaten kommen live von BTV
 const MANNSCHAFTEN = [
-  { name: 'Herren',          kategorie: 'Aktive',   fuehrer: 'Felix Schneider' },
-  { name: 'Herren 30',       kategorie: 'Senioren', fuehrer: 'Christoph Benkert / Jan Depping' },
-  { name: 'Herren 40',       kategorie: 'Senioren', fuehrer: 'Christian Heimerl' },
-  { name: 'Herren 50',       kategorie: 'Senioren', fuehrer: 'Christian Neubauer' },
-  { name: 'Herren 70',       kategorie: 'Senioren', fuehrer: 'Peter Gerds' },
-  { name: 'Damen 30',        kategorie: 'Damen',    fuehrer: 'Marlies Vetterl' },
-  { name: 'Damen 40',        kategorie: 'Damen',    fuehrer: 'Carmen Hartmann' },
-  { name: 'Damen 50',        kategorie: 'Damen',    fuehrer: 'Ulrike Schneider' },
-  { name: 'Damen 50 II',     kategorie: 'Damen',    fuehrer: 'Sabine Schmid' },
-  { name: 'Junioren 18',     kategorie: 'Jugend',   fuehrer: 'Vinzenz Schuler' },
-  { name: 'Junioren 18 II',  kategorie: 'Jugend',   fuehrer: 'Julian Franzky' },
-  { name: 'Knaben 15',       kategorie: 'Jugend',   fuehrer: 'Tom Weichert' },
-  { name: 'Knaben 15 II',    kategorie: 'Jugend',   fuehrer: 'Leopold Vetterl' },
-  { name: 'Knaben 15 III',   kategorie: 'Jugend',   fuehrer: 'Philip Häcker' },
-  { name: 'Bambini 12',      kategorie: 'Jugend',   fuehrer: 'Sebastian Depping' },
-  { name: 'Bambini 12 II',   kategorie: 'Jugend',   fuehrer: 'Lilienne Doussal' },
-  { name: 'Dunlop Midcourt U10', kategorie: 'Jugend', fuehrer: 'Tom Merzinger' },
+  { name: 'Herren',              kategorie: 'Herren',   teamid: '3577223' },
+  { name: 'Herren 30',           kategorie: 'Herren',   teamid: '3582321' },
+  { name: 'Herren 40',           kategorie: 'Herren',   teamid: '3575191' },
+  { name: 'Herren 50',           kategorie: 'Herren',   teamid: '3575244' },
+  { name: 'Herren 70',           kategorie: 'Herren',   teamid: '3580450' },
+  { name: 'Damen 30',            kategorie: 'Damen',    teamid: '3573678' },
+  { name: 'Damen 40',            kategorie: 'Damen',    teamid: '3720470' },
+  { name: 'Damen 50',            kategorie: 'Damen',    teamid: '3580338' },
+  { name: 'Damen 50 II',         kategorie: 'Damen',    teamid: '3577066' },
+  { name: 'Junioren 18',         kategorie: 'Jugend',   teamid: '3581522' },
+  { name: 'Junioren 18 II',      kategorie: 'Jugend',   teamid: '3578932' },
+  { name: 'Knaben 15',           kategorie: 'Jugend',   teamid: '3573619' },
+  { name: 'Knaben 15 II',        kategorie: 'Jugend',   teamid: '3642145' },
+  { name: 'Knaben 15 III',       kategorie: 'Jugend',   teamid: '3642145' },
+  { name: 'Bambini 12',          kategorie: 'Jugend',   teamid: '3584372' },
+  { name: 'Bambini 12 II',       kategorie: 'Jugend',   teamid: '3572395' },
+  { name: 'Dunlop Midcourt U10', kategorie: 'Jugend',   teamid: '3576707' },
 ];
 
 const HEADERS = {
@@ -89,7 +90,7 @@ export default async function handler(req, res) {
     }
     return {
       ...m,
-      fuehrer: mf?.name    ?? m.fuehrer,
+      fuehrer: mf?.name    ?? '',
       mobil:   mf?.mobil   ?? '',
       telefon: mf?.telefon ?? '',
       email:   mf?.email   ?? '',
