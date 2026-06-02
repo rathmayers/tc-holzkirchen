@@ -1,13 +1,45 @@
 // ─── Platzbelegung TC Holzkirchen ─────────────────────────────────────────
 // Wochentage nach JavaScript Date.getDay(): 0=So, 1=Mo, 2=Di, 3=Mi, 4=Do, 5=Fr, 6=Sa
 
-// ── Medenspiele-Saison ────────────────────────────────────────────────────
-// In diesem Zeitraum werden Fr 15:00 – So 20:00 alle Plätze orange markiert.
+// ── Medenspiele-Heimspieltage (Plätze 1–5 orange ab angegebener Uhrzeit) ──
+// datum: 'YYYY-MM-DD', von: frühester Anpfiff des Tages
+export const MEDENSPIELE_TERMINE = [
+  // Mai
+  { datum: '2026-05-01', von: '09:00' }, // Fr – U15m I
+  { datum: '2026-05-02', von: '09:00' }, // Sa – U18m I, H40
+  { datum: '2026-05-08', von: '15:00' }, // Fr – U15m III
+  { datum: '2026-05-09', von: '09:00' }, // Sa – U12 I, U18m II, D30, D50 I
+  { datum: '2026-05-10', von: '15:00' }, // So – MC
+  { datum: '2026-05-11', von: '10:00' }, // Mo – H70
+  { datum: '2026-05-15', von: '15:00' }, // Fr – U15m II
+  { datum: '2026-05-16', von: '09:00' }, // Sa – U12 II, D50 I, H30, H50
+  { datum: '2026-05-18', von: '10:00' }, // Mo – H70
+  // Juni
+  { datum: '2026-06-08', von: '10:00' }, // Mo – H70
+  { datum: '2026-06-12', von: '15:00' }, // Fr – U15m I
+  { datum: '2026-06-13', von: '09:00' }, // Sa – U18m I, U18m II, D30, H30
+  { datum: '2026-06-14', von: '09:00' }, // So – Herren, MC
+  { datum: '2026-06-19', von: '15:00' }, // Fr – U15m III
+  { datum: '2026-06-20', von: '09:00' }, // Sa – U18m I, U18m II, D50 II, H50
+  { datum: '2026-06-26', von: '15:00' }, // Fr – U15m II
+  { datum: '2026-06-27', von: '09:00' }, // Sa – U12 I, U12 II, H30, H40
+  { datum: '2026-06-29', von: '10:00' }, // Mo – H70
+  // Juli
+  { datum: '2026-07-03', von: '15:00' }, // Fr – U15m I, U15m III
+  { datum: '2026-07-04', von: '09:00' }, // Sa – U12 II, D30, D50 I, H40
+  { datum: '2026-07-05', von: '09:00' }, // So – H30, MC
+  { datum: '2026-07-10', von: '15:00' }, // Fr – U15m III
+  { datum: '2026-07-11', von: '09:00' }, // Sa – U12 I, U18m I, H40, H50
+  { datum: '2026-07-12', von: '09:00' }, // So – Herren
+  { datum: '2026-07-17', von: '15:00' }, // Fr – U15m I
+  { datum: '2026-07-18', von: '09:00' }, // Sa – U18m I, D50 I
+  { datum: '2026-07-19', von: '09:00' }, // So – Herren
+];
+
+// Für den Hero-Statusdot: generelle Medenspiele-Saison (Fallback)
 export const MEDENSPIELE = {
-  vonDatum:    '2026-05-02',
+  vonDatum:    '2026-05-01',
   bisDatum:    '2026-07-19',
-  freitag_ab:  '15:00',   // Freitag ab dieser Uhrzeit
-  sonntag_bis: '20:00',   // Sonntag bis zu dieser Uhrzeit
 };
 
 // ── Feste Belegungen (rot) ────────────────────────────────────────────────
