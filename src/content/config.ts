@@ -7,7 +7,7 @@ const newsCollection = defineCollection({
     summary:     z.string(),
     date:        z.date(),
     author:      z.string(),
-    category:    z.enum(['Mannschaften', 'Club', 'Jugend', 'Tennisschule']),
+    category:    z.enum(['Mannschaften', 'Verein', 'Jugend', 'Tennisschule']),
     image:       z.string().optional(),
     imageAlt:    z.string().optional(),
     featured:    z.boolean().default(false),
