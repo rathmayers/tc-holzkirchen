@@ -1,0 +1,145 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Geschichte – TC Holzkirchen"
+  description="Die Geschichte des Tennis-Club Holzkirchen e.V. seit der Gründung 1958."
+>
+
+  <div class="bg-court py-16 text-white diagonal-divider">
+    <div class="max-w-screen-xl mx-auto px-6 pb-12">
+      <p class="section-label text-clay mb-3">Unser Club</p>
+      <h1 class="font-display text-7xl md:text-9xl leading-none">Seit<br/><span class="text-clay">1958</span></h1>
+    </div>
+  </div>
+
+  <section class="py-24 bg-chalk">
+    <div class="max-w-screen-xl mx-auto px-6">
+
+      <!-- Meilensteine -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20" data-animate>
+        {[
+          { jahr: '1958', label: 'Gründung',         sub: '82 Gründungsmitglieder' },
+          { jahr: '1964', label: 'Krankenhausstr.',  sub: 'Umzug auf heutiges Gelände' },
+          { jahr: '2006', label: 'Fusion',            sub: 'mit TC Weiß-Blau Holzkirchen' },
+          { jahr: '2008', label: '50 Jahre',          sub: 'Jubiläumsfeier' },
+        ].map(m => (
+          <div class="bg-white border border-sand-dark p-6">
+            <p class="font-display text-4xl md:text-5xl text-clay leading-none">{m.jahr}</p>
+            <p class="font-display text-lg text-court mt-2">{m.label}</p>
+            <p class="font-mono text-xs text-court/40 uppercase tracking-widest mt-1">{m.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Chronik -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-16" data-animate>
+
+        <div class="lg:col-span-2 space-y-8 text-court/70 leading-relaxed">
+
+          <div>
+            <h2 class="font-display text-4xl text-court mb-4">Die Anfänge</h2>
+            <p>
+              Unter kommissarischem Vorsitz des Baumeisters Willy Ohlwerther erfolgte die Gründung des Vereins
+              am <strong class="text-court">6. Juni 1958</strong>. Dabei zählte der TC Holzkirchen im ersten Jahr
+              82 Mitglieder. Die ersten Ballwechsel fanden auf zwei neu errichteten Tennisplätzen im Eisstadion
+              an der Thannerstraße statt, nachdem der Eishockeyclub Holzkirchen sein Eissportstadion vom
+              1. April bis 15. Oktober jeden Jahres zur Verfügung stellte.
+            </p>
+            <p class="mt-4">
+              Die offizielle Einweihung der Plätze erfolgte am <strong class="text-court">19. Juli 1959</strong> durch
+              den damaligen Bürgermeister Obermayer, der zu diesem Anlass einen Gemeindezuschuss in Höhe von
+              250 DM beisteuerte. In den folgenden fünf Jahren gab es auf dem Gelände des heutigen Eisstadions
+              im Sommer Tennis und in den Wintermonaten wurde Eishockey gespielt.
+            </p>
+            <p class="mt-4">
+              Leider wirkte sich die sportliche Weiterentwicklung des Eishockey-Clubs sehr zum Nachteil für die
+              Freunde des „weißen Sports" aus. Mit Einweihung des neuen Kunsteisstadions im Jahre 1963 endete
+              auch gleichzeitig der Spielbetrieb für die Tennisspieler.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="font-display text-4xl text-court mb-4">Umzug an die Krankenhausstraße</h2>
+            <p>
+              Die Gemeinde Holzkirchen stellte dem Tennis-Club daraufhin einen Teil des Krankenhausparks zur
+              Verfügung. Bürgermeister Mayr und die Fraktionssprecher vertraten die Meinung, dass der ruhige
+              Tennisbetrieb keinen Lärmfaktor für das naheliegende Krankenhaus darstelle.
+            </p>
+            <p class="mt-4">
+              Im Jahr <strong class="text-court">1964</strong> begann man mit dem Bau von zwei Tennisplätzen,
+              wobei jedes männliche Vereinsmitglied 20 Arbeitsstunden ableisten musste. Am 18. August 1964
+              verkündete der Holzkircher Merkur in seiner Ausgabe die Fertigstellung der Tennisplätze.
+              Ein VW-Bus diente in den folgenden Jahren dabei als provisorisches Clubhaus.
+            </p>
+            <p class="mt-4">
+              Im Jahre <strong class="text-court">1967</strong> wurde dieses dann endgültig eingeweiht.
+              Mit Aufnahme der ersten jugendlichen Mitglieder setzte auch der Beginn der Jugendausbildungen ein.
+              In den darauffolgenden Jahren wurde die Anlage nochmals um zwei Plätze erweitert.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="font-display text-4xl text-court mb-4">Wachstum & Jubiläen</h2>
+            <p>
+              Im Frühjahr <strong class="text-court">2006</strong> erfolgte die Fusion mit dem TC Weiß-Blau
+              Holzkirchen. Zu diesem Zeitpunkt hatte der Verein bereits 6 Sandplätze an der Krankenhausstraße.
+            </p>
+            <p class="mt-4">
+              Im <strong class="text-court">Juli 2008</strong> wurde das 50-jährige Bestehen des Vereins gefeiert.
+            </p>
+            <p class="mt-4">
+              Aktuell ist der TC Holzkirchen der zweitgrößte Verein in der Marktgemeinde und war 2017 beim
+              Bayerischen Tennisverband unter 2.048 Vereinen von der Mitgliederzahl an vierzigster Stelle
+              gelistet.
+            </p>
+            <p class="mt-4">
+              Im Rahmen der „Players Night" des alljährlich durchgeführten SOHO-Cups fand am
+              <strong class="text-court">28. Juli 2018</strong> die 60-Jahr-Feier des Vereins statt.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Seitenleiste -->
+        <div class="space-y-4">
+          <div class="bg-sand border border-sand-dark p-6 sticky top-36">
+            <p class="section-label mb-4">Chronik</p>
+            <ul class="space-y-3 text-sm">
+              {[
+                ['1958', 'Gründung unter Willy Ohlwerther'],
+                ['1959', 'Offizielle Platzeinweihung'],
+                ['1963', 'Ende am Eisstadion'],
+                ['1964', 'Bau der Plätze an der Krankenhausstraße'],
+                ['1967', 'Einweihung Clubhaus'],
+                ['2006', 'Fusion mit TC Weiß-Blau'],
+                ['2008', '50-Jahr-Jubiläum'],
+                ['2018', '60-Jahr-Jubiläum'],
+              ].map(([jahr, event]) => (
+                <li class="flex gap-3">
+                  <span class="font-display text-clay shrink-0 w-10">{jahr}</span>
+                  <span class="text-court/60">{event}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bildergalerie-Platzhalter -->
+      <div class="mt-20 border-t border-sand-dark pt-16" data-animate>
+        <p class="section-label mb-4">Bildergalerie</p>
+        <h2 class="font-display text-5xl text-court mb-8">Historische Fotos</h2>
+        <div id="galerie" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div class="col-span-full text-center py-16 border-2 border-dashed border-sand-dark text-court/30">
+            <p class="font-mono text-sm uppercase tracking-widest">Fotos folgen</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</BaseLayout>
