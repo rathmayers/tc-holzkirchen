@@ -10,6 +10,7 @@ const newsCollection = defineCollection({
     category:    z.enum(['Mannschaften', 'Club', 'Jugend', 'Tennisschule']),
     image:       z.string().optional(),
     imageAlt:    z.string().optional(),
+    imageLayout: z.enum(['klein', 'gross']).default('klein').optional(),
     featured:    z.boolean().default(false),
     published:   z.boolean().default(true),
   }),

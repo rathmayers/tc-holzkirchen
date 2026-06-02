@@ -92,7 +92,7 @@ const latestRendered = await Promise.all(latestNews.map(e => e.render()));
               author={entry.data.author}
               category={entry.data.category}
               image={entry.data.image}
-              featured={entry.data.featured}
+              imageLayout={entry.data.imageLayout}
             >
               <Content />
             </NewsCard>

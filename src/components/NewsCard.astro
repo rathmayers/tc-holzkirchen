@@ -1,14 +1,15 @@
 ---
 interface Props {
-  title:     string;
-  date:      Date;
-  author:    string;
-  category:  string;
-  image?:    string;
-  featured?: boolean;
+  title:        string;
+  date:         Date;
+  author:       string;
+  category:     string;
+  image?:       string;
+  imageLayout?: 'klein' | 'gross';
 }
 
-const { title, date, author, category, image, featured } = Astro.props;
+const { title, date, author, category, image, imageLayout = 'klein' } = Astro.props;
+const isGross = image && imageLayout === 'gross';
 
 const formattedDate = new Intl.DateTimeFormat('de-DE', {
   day: '2-digit', month: 'long', year: 'numeric',
@@ -23,19 +24,30 @@ const categoryColors: Record<string, string> = {
 const catClass = categoryColors[category] ?? 'bg-sand-dark text-court';
 ---
 
-<article class:list={['news-card group flex flex-col', featured && 'lg:col-span-2 lg:grid lg:grid-cols-2']}>
+<article class:list={[
+  'news-card group flex',
+  isGross ? 'flex-row' : 'flex-col',
+]}>
 
   <!-- Bild -->
-  <div class:list={['bg-court/10 overflow-hidden relative shrink-0', featured ? 'h-64 lg:h-auto' : 'h-52']}>
+  <div class:list={[
+    'bg-sand overflow-hidden relative shrink-0 flex items-center justify-center',
+    isGross ? 'w-2/5' : 'h-52 w-full',
+  ]}>
     {image
       ? (
         <button
-          class="lightbox-trigger w-full h-full block cursor-zoom-in"
+          class="lightbox-trigger w-full h-full flex items-center justify-center cursor-zoom-in"
           data-src={image}
           data-alt={title}
           aria-label="Bild vergrößern"
         >
-          <img src={image} alt={title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          <img
+            src={image}
+            alt={title}
+            class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
         </button>
       )
       : (
@@ -53,7 +65,7 @@ const catClass = categoryColors[category] ?? 'bg-sand-dark text-court';
     </span>
   </div>
 
-  <!-- Content — scrollbar wenn Inhalt länger als max-height -->
+  <!-- Content -->
   <div class="p-6 flex flex-col flex-1 min-h-0">
     <div class="flex items-center gap-3 text-xs font-mono text-court/40 uppercase tracking-widest mb-3 shrink-0">
       <time datetime={date.toISOString()}>{formattedDate}</time>
@@ -61,7 +73,7 @@ const catClass = categoryColors[category] ?? 'bg-sand-dark text-court';
       <span>{author}</span>
     </div>
 
-    <h2 class:list={['font-display text-court leading-tight mb-3 shrink-0', featured ? 'text-3xl' : 'text-2xl']}>
+    <h2 class="font-display text-2xl text-court leading-tight mb-3 shrink-0">
       {title}
     </h2>
 

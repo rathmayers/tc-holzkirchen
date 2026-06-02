@@ -52,12 +52,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <div>
               <label class="form-label" for="news-category">Kategorie *</label>
               <select id="news-category" class="form-input">
-                <option value="Vereinsnews">Vereinsnews</option>
-                <option value="Mannschaft">Mannschaft</option>
-                <option value="Turnier">Turnier</option>
+                <option value="Mannschaften">Mannschaften</option>
+                <option value="Club">Club</option>
                 <option value="Jugend">Jugend</option>
-                <option value="Platzbuchung">Platzbuchung</option>
-                <option value="Allgemein">Allgemein</option>
+                <option value="Tennisschule">Tennisschule</option>
               </select>
             </div>
             <div>
@@ -92,11 +90,26 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <input type="text" id="news-image" class="form-input" placeholder="/images/news/mein-bild.jpg" />
           </div>
 
+          <!-- Bildlayout -->
+          <div>
+            <label class="form-label">Bildlayout</label>
+            <div class="flex gap-6 mt-1">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="image-layout" id="layout-klein" value="klein" class="accent-clay" checked />
+                <span class="text-sm text-court/70">Klein <span class="text-court/40">(Bild oben, Text darunter)</span></span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="image-layout" id="layout-gross" value="gross" class="accent-clay" />
+                <span class="text-sm text-court/70">Groß <span class="text-court/40">(Bild links, Text rechts)</span></span>
+              </label>
+            </div>
+          </div>
+
           <!-- Featured -->
           <div class="flex items-center gap-3">
             <input type="checkbox" id="news-featured" class="w-4 h-4 accent-clay" />
             <label for="news-featured" class="font-mono text-xs uppercase tracking-widest text-court/60">
-              Als Featured-Beitrag markieren (wird prominent dargestellt)
+              Als Featured-Beitrag markieren
             </label>
           </div>
 
@@ -192,18 +205,20 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     const date     = (document.getElementById('news-date')     as HTMLInputElement).value;
     const author   = (document.getElementById('news-author')   as HTMLInputElement).value.trim();
     const content  = (document.getElementById('news-content')  as HTMLTextAreaElement).value.trim();
-    const image    = (document.getElementById('news-image')    as HTMLInputElement).value.trim();
-    const featured = (document.getElementById('news-featured') as HTMLInputElement).checked;
+    const image       = (document.getElementById('news-image')    as HTMLInputElement).value.trim();
+    const featured    = (document.getElementById('news-featured') as HTMLInputElement).checked;
+    const imageLayout = (document.querySelector('input[name="image-layout"]:checked') as HTMLInputElement)?.value ?? 'klein';
 
-    const imageLine  = image   ? `\nimage: "${image}"` : '';
-    const featuredLine = featured ? '\nfeatured: true' : '';
+    const imageLine       = image ? `\nimage: "${image}"` : '';
+    const imageLayoutLine = image && imageLayout === 'gross' ? '\nimageLayout: "gross"' : '';
+    const featuredLine    = featured ? '\nfeatured: true' : '';
 
     return `---
 title: "${title}"
 summary: "${summary}"
 date: ${date}
 author: "${author}"
-category: "${category}"${imageLine}${featuredLine}
+category: "${category}"${imageLine}${imageLayoutLine}${featuredLine}
 published: true
 ---
 
