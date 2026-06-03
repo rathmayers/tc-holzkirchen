@@ -16,21 +16,22 @@ const categories = ['Alle', 'Mannschaften', 'Club', 'Jugend', 'Tennisschule'];
 >
 
   <!-- Page Header -->
-  <div class="bg-court py-16 text-white">
+  <div class="bg-court py-16 text-white diagonal-divider">
     <div class="max-w-screen-xl mx-auto px-6">
       <p class="section-label text-clay mb-3">Aktuelles</p>
-      <h1 class="font-display text-7xl">News &<br/>Berichte</h1>
+      <h1 class="font-display text-7xl md:text-8xl leading-none">News & <span class="text-clay">Berichte</span></h1>
     </div>
   </div>
 
   <!-- Filter tabs (JS-fähig) -->
-  <div id="cat-filter" class="bg-sand border-b border-sand-dark sticky z-40" style="top:0">
+<!--  <div id="cat-filter" class="bg-sand border-b border-sand-dark sticky z-40" style="top:0">-->
+  <div id="cat-filter"  style="top:0">
     <div class="max-w-screen-xl mx-auto px-6 flex gap-6 overflow-x-auto py-3 scrollbar-none">
       {categories.map(cat => (
         <button
           data-category={cat}
           class:list={[
-            'filter-btn shrink-0 font-mono text-xs uppercase tracking-widest pb-2 border-b-2 transition-all',
+            'filter-btn shrink-0 font-mono text-m uppercase tracking-widest pb-2 border-b-2 transition-all',
             cat === 'Alle'
               ? 'border-clay text-court'
               : 'border-transparent text-court/40 hover:text-court',
