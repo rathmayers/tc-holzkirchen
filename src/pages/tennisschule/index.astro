@@ -1,37 +1,50 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout
   title="Tennisschule – TC Holzkirchen"
   description="Die Tennisschule Oberland am TC Holzkirchen – Training für alle Altersgruppen und Spielstärken."
 >
-
   <div class="bg-court py-16 text-white diagonal-divider">
     <div class="max-w-screen-xl mx-auto px-6 pb-12">
       <p class="section-label text-clay mb-3">Tennisschule Oberland</p>
-      <h1 class="font-display text-7xl md:text-9xl leading-none">Tennis<br/><span class="text-clay">lernen</span></h1>
+      <h1 class="font-display text-7xl md:text-9xl leading-none">
+        Tennis<br /><span class="text-clay">lernen</span>
+      </h1>
     </div>
   </div>
 
   <section class="py-24 bg-chalk">
     <div class="max-w-screen-xl mx-auto px-6">
-
       <!-- Intro -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20" data-animate>
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20"
+        data-animate
+      >
         <div>
           <p class="section-label mb-4">Für Einsteiger & Fortgeschrittene</p>
-          <h2 class="section-title mb-6">Training auf<br/>höchstem Niveau</h2>
+          <h2 class="section-title mb-6">
+            Qualifiziertes Training mit professionellen Trainern
+          </h2>
           <p class="text-court/60 leading-relaxed mb-4">
-            Die Tennisschule Oberland bietet am TC Holzkirchen professionelles Training für alle
-            Altersgruppen und Spielstärken — vom ersten Aufschlag bis zur Turniervorbereitung.
+            Die Tennisschule Oberland bietet beim TC Holzkirchen professionelles
+            Training für alle Altersgruppen und Spielstärken — vom ersten
+            Aufschlag bis zur Turniervorbereitung.
           </p>
           <p class="text-court/60 leading-relaxed mb-8">
-            Gruppentraining, Einzelstunden und Ferienkurse — unser Trainer ist für Mitglieder
-            und Gäste (mit Gästekarte) buchbar.
+            Gruppentraining, Einzelstunden und Ferienkurse — unsere Trainer
+            Roger Krajcovic und Tomáš Šmíd sind für Mitglieder und Gäste (mit
+            Gästekarte) buchbar.
           </p>
-          <a href="https://tennis-oberland.webnode.page/" target="_blank" rel="noopener" class="btn-primary">
-            Weitere Informationen und Anfragen direkt auf der Seite der Tennisschule
+          <a
+            href="https://tennis-oberland.webnode.page/"
+            target="_blank"
+            rel="noopener"
+            class="btn-primary"
+          >
+            Weitere Informationen und Anfragen direkt auf der Seite der
+            Tennisschule
           </a>
         </div>
 
@@ -40,30 +53,58 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           <p class="section-label mb-4">Platzbelegung Tennisschule</p>
           <h2 class="font-display text-4xl text-court mb-6">Trainingszeiten</h2>
           <div class="space-y-0 border border-sand-dark">
-            {[
-              { tag: 'Montag',     plaetze: [{ platz: 'Platz 6', zeit: '14:00 – 20:30 Uhr' }] },
-              { tag: 'Dienstag',   plaetze: [{ platz: 'Platz 5', zeit: '14:00 – 15:00 Uhr' }, { platz: 'Platz 6', zeit: '14:00 – 20:30 Uhr' }] },
-              { tag: 'Mittwoch',   plaetze: [{ platz: 'Platz 6', zeit: '14:00 – 20:30 Uhr' }] },
-              { tag: 'Donnerstag', plaetze: [{ platz: 'Platz 6', zeit: '14:00 – 20:30 Uhr' }] },
-              { tag: 'Freitag',    plaetze: [{ platz: 'Platz 6', zeit: '14:00 – 20:30 Uhr' }] },
-              { tag: 'Samstag',    plaetze: [{ platz: 'Platz 6', zeit: '09:00 – 16:00 Uhr' }] },
-            ].map(row => (
-              <div class="flex items-start border-b border-sand-dark last:border-b-0 px-5 py-4">
-                <span class="font-display text-lg text-court w-32 shrink-0">{row.tag}</span>
-                <div class="flex flex-col gap-1">
-                  {row.plaetze.map(p => (
-                    <div class="flex items-center gap-3">
-                      <span class="font-mono text-xs text-clay uppercase tracking-widest w-16">{p.platz}</span>
-                      <span class="text-sm text-court/60">{p.zeit}</span>
-                    </div>
-                  ))}
+            {
+              [
+                {
+                  tag: "Montag",
+                  plaetze: [{ platz: "Platz 6", zeit: "14:00 – 20:30 Uhr" }],
+                },
+                {
+                  tag: "Dienstag",
+                  plaetze: [
+                    { platz: "Platz 5", zeit: "14:00 – 15:00 Uhr" },
+                    { platz: "Platz 6", zeit: "14:00 – 20:30 Uhr" },
+                  ],
+                },
+                {
+                  tag: "Mittwoch",
+                  plaetze: [{ platz: "Platz 6", zeit: "14:00 – 20:30 Uhr" }],
+                },
+                {
+                  tag: "Donnerstag",
+                  plaetze: [{ platz: "Platz 6", zeit: "14:00 – 20:30 Uhr" }],
+                },
+                {
+                  tag: "Freitag",
+                  plaetze: [{ platz: "Platz 6", zeit: "14:00 – 20:30 Uhr" }],
+                },
+                {
+                  tag: "Samstag",
+                  plaetze: [{ platz: "Platz 6", zeit: "09:00 – 16:00 Uhr" }],
+                },
+              ].map((row) => (
+                <div class="flex items-start border-b border-sand-dark last:border-b-0 px-5 py-4">
+                  <span class="font-display text-lg text-court w-32 shrink-0">
+                    {row.tag}
+                  </span>
+                  <div class="flex flex-col gap-1">
+                    {row.plaetze.map((p) => (
+                      <div class="flex items-center gap-3">
+                        <span class="font-mono text-xs text-clay uppercase tracking-widest w-16">
+                          {p.platz}
+                        </span>
+                        <span class="text-sm text-court/60">{p.zeit}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            }
           </div>
           <p class="text-xs text-court/40 font-mono mt-3 leading-relaxed">
-            Auf Platz 6 hat der Trainer auch außerhalb dieser Zeiten Vorrang für Privatstunden
-            mit TCH-Mitgliedern oder Gästen mit Gästekarte. Stand: Mai 2024.
+            Auf Platz 6 hat der Trainer auch außerhalb dieser Zeiten Vorrang für
+            Privatstunden mit TCH-Mitgliedern oder Gästen mit Gästekarte. Stand:
+            Mai 2024.
           </p>
         </div>
       </div>
@@ -71,22 +112,35 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <!-- Angebote -->
       <div data-animate>
         <p class="section-label mb-4">Angebote</p>
-        <h2 class="font-display text-5xl text-court mb-8">Für jeden das Richtige</h2>
+        <h2 class="font-display text-5xl text-court mb-8">
+          Für jeden das Richtige
+        </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            { title: 'Kindertraining', desc: 'Spielerisches Erlernen der Grundschläge — ab ca. 5 Jahren. In kleinen Gruppen mit altersgerechtem Material.' },
-            { title: 'Jugend & Erwachsene', desc: 'Gruppentraining nach Spielstärke, Taktik und Technikverbesserung für alle Leistungsstufen.' },
-            { title: 'Privatstunden', desc: 'Individuelles Einzeltraining — flexibel buchbar für Mitglieder und Gäste mit Gästekarte.' },
-          ].map(item => (
-            <div class="bg-white border border-sand-dark p-8 hover:border-clay transition-colors">
-              <h3 class="font-display text-2xl text-court mb-3">{item.title}</h3>
-              <p class="text-sm text-court/60 leading-relaxed">{item.desc}</p>
-            </div>
-          ))}
+          {
+            [
+              {
+                title: "Kindertraining",
+                desc: "Spielerisches Erlernen der Grundschläge — ab ca. 5 Jahren. In kleinen Gruppen mit altersgerechtem Material.",
+              },
+              {
+                title: "Jugend & Erwachsene",
+                desc: "Gruppentraining nach Spielstärke, Taktik und Technikverbesserung für alle Leistungsstufen.",
+              },
+              {
+                title: "Privatstunden",
+                desc: "Individuelles Einzeltraining — flexibel buchbar für Mitglieder und Gäste mit Gästekarte.",
+              },
+            ].map((item) => (
+              <div class="bg-white border border-sand-dark p-8 hover:border-clay transition-colors">
+                <h3 class="font-display text-2xl text-court mb-3">
+                  {item.title}
+                </h3>
+                <p class="text-sm text-court/60 leading-relaxed">{item.desc}</p>
+              </div>
+            ))
+          }
         </div>
       </div>
-
     </div>
   </section>
-
 </BaseLayout>

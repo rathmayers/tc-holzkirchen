@@ -1,6 +1,6 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { VORSTAND } from '../../data/vorstand.js';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { VORSTAND } from "../../data/vorstand.js";
 const vorstandJSON = JSON.stringify(VORSTAND);
 ---
 
@@ -8,120 +8,214 @@ const vorstandJSON = JSON.stringify(VORSTAND);
   title="Über uns – TC Holzkirchen"
   description="Der TC Holzkirchen – Geschichte, Vorstand und Ansprechpartner."
 >
-
   <!-- Header -->
   <div class="bg-court py-16 text-white diagonal-divider">
     <div class="max-w-screen-xl mx-auto px-6 pb-12">
       <p class="section-label text-clay mb-3">Unser Club</p>
-      <h1 class="font-display text-7xl md:text-9xl leading-none">TC<br/>Holz<span class="text-clay">kirchen</span></h1>
+      <h1 class="font-display text-7xl md:text-9xl leading-none">
+        TC<br />Holz<span class="text-clay">kirchen</span>
+      </h1>
     </div>
   </div>
 
   <!-- Vereinsinfo Kacheln -->
   <section class="py-16 bg-chalk">
     <div class="max-w-screen-xl mx-auto px-6">
-
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16" data-animate>
-        {[
-          { zahl: '486',  label: 'Mitglieder',      sub: 'davon 179 Jugendliche' },
-          { zahl: '1958', label: 'Gründungsjahr',   sub: 'über 65 Jahre Tennis' },
-          { zahl: '6',    label: 'Freiplätze',       sub: '5 Wettspielplätze' },
-          { zahl: '16',   label: 'Mannschaften',     sub: 'Aktive, Senioren & Jugend' },
-        ].map(item => (
-          <div class="bg-white border border-sand-dark p-6">
-            <p class="font-display text-5xl md:text-6xl text-clay leading-none">{item.zahl}</p>
-            <p class="font-display text-xl text-court mt-2">{item.label}</p>
-            <p class="font-mono text-xs text-court/40 uppercase tracking-widest mt-1">{item.sub}</p>
-          </div>
-        ))}
+        {
+          [
+            { zahl: "486", label: "Mitglieder", sub: "davon 179 Jugendliche" },
+            {
+              zahl: "1958",
+              label: "Gründungsjahr",
+              sub: "über 65 Jahre Tennis",
+            },
+            { zahl: "6", label: "Freiplätze", sub: "5 Wettspielplätze" },
+            {
+              zahl: "16",
+              label: "Mannschaften",
+              sub: "Aktive, Senioren & Jugend",
+            },
+          ].map((item) => (
+            <div class="bg-white border border-sand-dark p-6">
+              <p class="font-display text-5xl md:text-6xl text-clay leading-none">
+                {item.zahl}
+              </p>
+              <p class="font-display text-xl text-court mt-2">{item.label}</p>
+              <p class="font-mono text-xs text-court/40 uppercase tracking-widest mt-1">
+                {item.sub}
+              </p>
+            </div>
+          ))
+        }
       </div>
 
       <!-- Über uns Text -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20" data-animate>
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20"
+        data-animate
+      >
         <div>
           <p class="section-label mb-4">Seit 1958</p>
-          <h2 class="section-title mb-6">Tennis im Herzen<br/>von Holzkirchen</h2>
+          <h2 class="section-title mb-6">Tennis im Park</h2>
           <p class="text-court/60 leading-relaxed mb-4">
-            Der TC Holzkirchen e.V. wurde 1958 gegründet und ist mit über 486 Mitgliedern
-            einer der größten Sportvereine der Region. Unser Clubgelände liegt zentral
-            in Holzkirchen und bietet optimale Bedingungen für alle Altersgruppen.
+            Der TC Holzkirchen e.V. wurde 1958 gegründet, ist mit knapp 500
+            Mitgliedern, davon 180 in der Jugend, der mitgliederstärkste
+            Tennisverein im Landkreis Miesbach und gehört zu den 50 größten
+            Tennisclubs in Bayern. Unser Clubgelände befindet sich in einer
+            Parkanlage im Ort und bietet optimale Bedingungen für alle
+            Altersgruppen, da es auch für Kinder gut erreichbar ist.
           </p>
           <p class="text-court/60 leading-relaxed mb-8">
-            Mit 6 Freiplätzen, 16 aktiven Mannschaften vom Bambini bis zu den Herren 70
-            und einem starken Jugendprogramm mit 179 jungen Spielerinnen und Spielern
-            ist der TC Holzkirchen die erste Adresse für Tennis im Landkreis Miesbach.
+            Mit zahlreichen Mannschaften im Spielbetrieb und aktiver
+            Jugendarbeit finden Tennissportler rasch den für sie passenden Level
+            in Sachen Spielniveau und Spielhäufigkeit.
           </p>
           <div class="flex flex-col gap-2 text-sm font-mono text-court/50">
             <p>📍 Krankenhausstr. 8, 83607 Holzkirchen</p>
-            <p>✉️ <a href="mailto:info@tc-holzkirchen.de" class="text-clay hover:underline">info@tc-holzkirchen.de</a></p>
-            <p>🌐 <a href="https://www.btv.de/de/mein-verein/vereinsseite/tc-holzkirchen.html" target="_blank" rel="noopener" class="text-clay hover:underline">Vereinsseite beim BTV</a></p>
+            <p>
+              ✉️ <a
+                href="mailto:info@tc-holzkirchen.de"
+                class="text-clay hover:underline">info@tc-holzkirchen.de</a
+              >
+            </p>
+            <p>
+              🌐 <a
+                href="https://www.btv.de/de/mein-verein/vereinsseite/tc-holzkirchen.html"
+                target="_blank"
+                rel="noopener"
+                class="text-clay hover:underline">Vereinsseite beim BTV</a
+              >
+            </p>
           </div>
         </div>
 
         <!-- Schnelllinks -->
         <div class="space-y-3">
-          {[
-            { label: 'Mitglied werden - vorher bitte Vereinssatzung lesen',        href: 'https://easyverein.com/public/TeHo/applicationform/2046', primary: true,  extern: true },
-            { label: 'Unsere Plätze',          href: '/platzbuchung',        primary: false, extern: false },
-            { label: 'Mannschaften & Spielplan', href: '/mannschaften',      primary: false, extern: false },
-            { label: 'Aktuelles',       href: '/news',                primary: false, extern: false },
-            { label: 'Vereinssatzung (PDF)',   href: '/doks/satzung-tch.pdf', primary: false, extern: true },
-          ].map(link => (
-            <a
-              href={link.href}
-              target={link.extern ? '_blank' : undefined}
-              rel={link.extern ? 'noopener' : undefined}
-              class:list={[
-                'flex items-center justify-between px-6 py-4 border transition-all group',
-                link.primary
-                  ? 'bg-clay border-clay text-white hover:bg-clay-dark'
-                  : 'bg-white border-sand-dark text-court hover:border-clay',
-              ]}
-            >
-              <span class:list={['font-display text-xl', link.primary ? '' : 'group-hover:text-clay transition-colors']}>
-                {link.label}
-              </span>
-              <svg class="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
-          ))}
+          {
+            [
+              {
+                label: "Mitglied werden - vorher bitte Vereinssatzung lesen",
+                href: "https://easyverein.com/public/TeHo/applicationform/2046",
+                primary: true,
+                extern: true,
+              },
+              {
+                label: "Unsere Plätze",
+                href: "/platzbuchung",
+                primary: false,
+                extern: false,
+              },
+              {
+                label: "Mannschaften & Spielplan",
+                href: "/mannschaften",
+                primary: false,
+                extern: false,
+              },
+              {
+                label: "Aktuelles",
+                href: "/news",
+                primary: false,
+                extern: false,
+              },
+              {
+                label: "Vereinssatzung (PDF)",
+                href: "/doks/satzung-tch.pdf",
+                primary: false,
+                extern: true,
+              },
+            ].map((link) => (
+              <a
+                href={link.href}
+                target={link.extern ? "_blank" : undefined}
+                rel={link.extern ? "noopener" : undefined}
+                class:list={[
+                  "flex items-center justify-between px-6 py-4 border transition-all group",
+                  link.primary
+                    ? "bg-clay border-clay text-white hover:bg-clay-dark"
+                    : "bg-white border-sand-dark text-court hover:border-clay",
+                ]}
+              >
+                <span
+                  class:list={[
+                    "font-display text-xl",
+                    link.primary
+                      ? ""
+                      : "group-hover:text-clay transition-colors",
+                  ]}
+                >
+                  {link.label}
+                </span>
+                <svg
+                  class="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </a>
+            ))
+          }
         </div>
       </div>
 
       <!-- Vereinszweck & Mitgliedschaft -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20 border-t border-sand-dark pt-20" data-animate>
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-20 border-t border-sand-dark pt-20"
+        data-animate
+      >
         <div>
           <p class="section-label mb-4">Verein & Satzung</p>
-          <h2 class="font-display text-5xl text-court mb-6">Gemeinnützig.<br/>Demokratisch.<br/>Seit 1958.</h2>
+          <h2 class="font-display text-5xl text-court mb-6">
+            Gemeinnützig.<br />Demokratisch.<br />Seit 1958.
+          </h2>
           <p class="text-court/60 leading-relaxed mb-4">
-            Der Tennis-Club Holzkirchen e.V. ist ein eingetragener, gemeinnütziger Verein mit dem Zweck,
-            das Tennisspiel zu pflegen. Wir betreiben unsere Anlage für Mitglieder und Gäste und
-            organisieren Veranstaltungen rund um den Sport.
+            Der Tennis-Club Holzkirchen e.V. ist ein eingetragener,
+            gemeinnütziger Verein mit dem Zweck, das Tennisspiel zu pflegen. Wir
+            betreiben unsere Anlage für Mitglieder und Gäste und organisieren
+            Veranstaltungen rund um den Sport.
           </p>
           <p class="text-court/60 leading-relaxed">
-            Mitglied kann jede natürliche Person werden — als Jugendmitglied, Erwachsenenmitglied
-            (ab 18 Jahren) oder förderndes Mitglied. Die Aufnahme erfolgt auf schriftlichen Antrag
-            beim Vorstand. Der Jahresbeitrag wird jeweils zum 1. April fällig. Ein Austritt ist
+            Mitglied kann jede natürliche Person werden — als Jugendmitglied,
+            Erwachsenenmitglied (ab 18 Jahren) oder förderndes Mitglied. Die
+            Aufnahme erfolgt auf schriftlichen Antrag beim Vorstand. Der
+            Jahresbeitrag wird jeweils zum 1. April fällig. Ein Austritt ist
             schriftlich zum Ende des Geschäftsjahres möglich.
           </p>
         </div>
         <div class="grid grid-cols-1 gap-4">
-          {[
-            { label: 'Mitglied werden', desc: 'Schriftlicher Antrag an den Vorstand — wir melden uns zeitnah.', href: 'https://easyverein.com/public/TeHo/applicationform/2046' },
-            { label: 'Jugendmitgliedschaft', desc: 'Kinder und Jugendliche spielen zu besonderen Konditionen.' },
-            { label: 'Fördermitgliedschaft', desc: 'Den Club unterstützen, ohne aktiv Tennis zu spielen.' },
-          ].map(item => (
-            <div class="bg-sand border border-sand-dark p-6">
-              <p class="font-display text-xl text-court mb-1">{item.label}</p>
-              <p class="text-sm text-court/50 mb-3">{item.desc}</p>
-              {item.href && (
-                <a href={item.href} class="font-mono text-xs text-clay uppercase tracking-widest hover:underline">
-                  Mehr erfahren →
-                </a>
-              )}
-            </div>
-          ))}
+          {
+            [
+              {
+                label: "Mitglied werden",
+                desc: "Schriftlicher Antrag an den Vorstand — wir melden uns zeitnah.",
+                href: "https://easyverein.com/public/TeHo/applicationform/2046",
+              },
+              {
+                label: "Jugendmitgliedschaft",
+                desc: "Kinder und Jugendliche spielen zu besonderen Konditionen.",
+              },
+              {
+                label: "Fördermitgliedschaft",
+                desc: "Den Club unterstützen, ohne aktiv Tennis zu spielen.",
+              },
+            ].map((item) => (
+              <div class="bg-sand border border-sand-dark p-6">
+                <p class="font-display text-xl text-court mb-1">{item.label}</p>
+                <p class="text-sm text-court/50 mb-3">{item.desc}</p>
+                {item.href && (
+                  <a
+                    href={item.href}
+                    class="font-mono text-xs text-clay uppercase tracking-widest hover:underline"
+                  >
+                    Mehr erfahren →
+                  </a>
+                )}
+              </div>
+            ))
+          }
         </div>
       </div>
 
@@ -133,48 +227,96 @@ const vorstandJSON = JSON.stringify(VORSTAND);
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          {[
-            { kat: 'Erwachsene',                       preis: '164 €', hinweis: '+ 10 € Arbeitsdienstabgabe*' },
-            { kat: 'Ehepartner / Lebenspartner',       preis: '138 €', hinweis: '+ 10 € Arbeitsdienstabgabe*' },
-            { kat: 'Studierende, Azubis, Schüler bis 27', preis: '92 €', hinweis: '+ 10 € Arbeitsdienstabgabe*' },
-            { kat: 'Jugendliche 15–18 Jahre',          preis: '77 €',  hinweis: '+ 5 € Arbeitsdienstabgabe*' },
-            { kat: 'Kinder bis 14 Jahre',              preis: '41 €',  hinweis: '' },
-            { kat: 'Passive Mitglieder',               preis: '20 €',  hinweis: '' },
-          ].map(item => (
-            <div class="bg-white border border-sand-dark p-6 flex justify-between items-start gap-4">
-              <div>
-                <p class="font-display text-lg text-court leading-tight">{item.kat}</p>
-                {item.hinweis && <p class="font-mono text-xs text-court/40 mt-1">{item.hinweis}</p>}
+          {
+            [
+              {
+                kat: "Erwachsene",
+                preis: "164 €",
+                hinweis: "+ 10 € Arbeitsdienstabgabe*",
+              },
+              {
+                kat: "Ehepartner / Lebenspartner",
+                preis: "138 €",
+                hinweis: "+ 10 € Arbeitsdienstabgabe*",
+              },
+              {
+                kat: "Studierende, Azubis, Schüler bis 27",
+                preis: "92 €",
+                hinweis: "+ 10 € Arbeitsdienstabgabe*",
+              },
+              {
+                kat: "Jugendliche 15–18 Jahre",
+                preis: "77 €",
+                hinweis: "+ 5 € Arbeitsdienstabgabe*",
+              },
+              { kat: "Kinder bis 14 Jahre", preis: "41 €", hinweis: "" },
+              { kat: "Passive Mitglieder", preis: "20 €", hinweis: "" },
+            ].map((item) => (
+              <div class="bg-white border border-sand-dark p-6 flex justify-between items-start gap-4">
+                <div>
+                  <p class="font-display text-lg text-court leading-tight">
+                    {item.kat}
+                  </p>
+                  {item.hinweis && (
+                    <p class="font-mono text-xs text-court/40 mt-1">
+                      {item.hinweis}
+                    </p>
+                  )}
+                </div>
+                <p class="font-display text-3xl text-clay shrink-0">
+                  {item.preis}
+                </p>
               </div>
-              <p class="font-display text-3xl text-clay shrink-0">{item.preis}</p>
-            </div>
-          ))}
+            ))
+          }
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div class="bg-sand border border-sand-dark p-6">
-            <p class="font-display text-xl text-court mb-2">Schnuppermitgliedschaft</p>
-            <p class="text-sm text-court/60 mb-3">1 Monat Tennis ausprobieren — ohne langfristige Bindung.</p>
+            <p class="font-display text-xl text-court mb-2">
+              Schnuppermitgliedschaft
+            </p>
+            <p class="text-sm text-court/60 mb-3">
+              1 Monat Tennis ausprobieren — ohne langfristige Bindung.
+            </p>
             <p class="font-display text-3xl text-clay">30 €</p>
           </div>
           <div class="bg-sand border border-sand-dark p-6">
             <p class="font-display text-xl text-court mb-2">Familienrabatt</p>
-            <p class="text-sm text-court/60">Kinder bis 18 Jahre zahlen den halben Beitrag, wenn beide Elternteile aktive Mitglieder sind. Das dritte Kind ist beitragsfrei.</p>
+            <p class="text-sm text-court/60">
+              Kinder bis 18 Jahre zahlen den halben Beitrag, wenn beide
+              Elternteile aktive Mitglieder sind. Das dritte Kind ist
+              beitragsfrei.
+            </p>
           </div>
         </div>
 
         <p class="text-xs text-court/40 font-mono mb-10">
-          * Arbeitsdienstabgabe wird bei aktivem Einsatz erstattet. Der Jahresbeitrag ist jeweils zum 1. April fällig.
+          * Arbeitsdienstabgabe wird bei aktivem Einsatz erstattet. Der
+          Jahresbeitrag ist jeweils zum 1. April fällig.
         </p>
 
         <!-- Link Platzbuchung -->
-        <a href="/platzbuchung" class="flex items-center justify-between bg-court text-white px-8 py-6 hover:bg-court-dark transition-colors group">
+        <a
+          href="/platzbuchung"
+          class="flex items-center justify-between bg-court text-white px-8 py-6 hover:bg-court-dark transition-colors group"
+        >
           <div>
-            <p class="font-mono text-xs text-white/40 uppercase tracking-widest mb-1">Als Mitglied</p>
+            <p
+              class="font-mono text-xs text-white/40 uppercase tracking-widest mb-1"
+            >
+              Als Mitglied
+            </p>
             <p class="font-display text-3xl">Unsere Plätze</p>
           </div>
-          <svg class="w-6 h-6 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
+          <svg
+            class="w-6 h-6 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7"></path>
           </svg>
         </a>
       </div>
@@ -191,66 +333,84 @@ const vorstandJSON = JSON.stringify(VORSTAND);
           </p>
         </div>
 
-        <div id="ap-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <div
+          id="ap-grid"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+        >
+        </div>
       </div>
-
     </div>
   </section>
-
 </BaseLayout>
 
 <script define:vars={{ vorstandJSON }} is:inline>
-const STATIC_VORSTAND = JSON.parse(vorstandJSON);
+  const STATIC_VORSTAND = JSON.parse(vorstandJSON);
 
-function renderGrid(personen) {
-  const grid = document.getElementById('ap-grid');
-  if (!grid) return;
-  grid.innerHTML = personen.map(p => `
+  function renderGrid(personen) {
+    const grid = document.getElementById("ap-grid");
+    if (!grid) return;
+    grid.innerHTML = personen
+      .map(
+        (p) => `
     <div class="bg-white border border-sand-dark p-6 hover:border-clay/40 transition-all">
       <p class="font-display text-xl text-court mb-0.5">${p.name}</p>
-      <p class="font-mono text-xs text-clay uppercase tracking-widest mb-4">${p.funktion || '–'}</p>
+      <p class="font-mono text-xs text-clay uppercase tracking-widest mb-4">${p.funktion || "–"}</p>
       <div class="space-y-2 text-xs text-court/50 font-mono">
-        ${p.telefon ? `<div class="flex items-center gap-2">
+        ${
+          p.telefon
+            ? `<div class="flex items-center gap-2">
           <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 17l.92-.08z"/>
           </svg>
-          <a href="tel:${p.telefon.replace(/\s/g,'')}" class="hover:text-clay transition-colors">${p.telefon}</a>
-        </div>` : ''}
-        ${p.mobil ? `<div class="flex items-center gap-2">
+          <a href="tel:${p.telefon.replace(/\s/g, "")}" class="hover:text-clay transition-colors">${p.telefon}</a>
+        </div>`
+            : ""
+        }
+        ${
+          p.mobil
+            ? `<div class="flex items-center gap-2">
           <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
           </svg>
-          <a href="tel:${p.mobil.replace(/\s/g,'')}" class="hover:text-clay transition-colors">${p.mobil}</a>
-        </div>` : ''}
-        ${p.email ? `<div class="flex items-center gap-2">
+          <a href="tel:${p.mobil.replace(/\s/g, "")}" class="hover:text-clay transition-colors">${p.mobil}</a>
+        </div>`
+            : ""
+        }
+        ${
+          p.email
+            ? `<div class="flex items-center gap-2">
           <svg class="w-3 h-3 text-court/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
           </svg>
           <a href="mailto:${p.email}" class="text-clay hover:underline truncate">${p.email}</a>
-        </div>` : ''}
+        </div>`
+            : ""
+        }
       </div>
     </div>
-  `).join('');
-}
+  `,
+      )
+      .join("");
+  }
 
-// Sofort mit statischen Daten rendern
-renderGrid(STATIC_VORSTAND);
+  // Sofort mit statischen Daten rendern
+  renderGrid(STATIC_VORSTAND);
 
-// BTV-Daten nachladen wenn verfügbar
-(async () => {
-  try {
-    const res = await fetch('/api/spielplan');
-    if (!res.ok) return;
-    const data = await res.json();
-    const personen = data.vorstand ?? [];
-    if (personen.length) {
-      renderGrid(personen);
-      const ts = document.getElementById('ap-timestamp');
-      if (ts && data.abgerufen) {
-        ts.textContent = `Aktualisiert: ${new Date(data.abgerufen).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })}`;
-        ts.classList.remove('hidden');
+  // BTV-Daten nachladen wenn verfügbar
+  (async () => {
+    try {
+      const res = await fetch("/api/spielplan");
+      if (!res.ok) return;
+      const data = await res.json();
+      const personen = data.vorstand ?? [];
+      if (personen.length) {
+        renderGrid(personen);
+        const ts = document.getElementById("ap-timestamp");
+        if (ts && data.abgerufen) {
+          ts.textContent = `Aktualisiert: ${new Date(data.abgerufen).toLocaleString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}`;
+          ts.classList.remove("hidden");
+        }
       }
-    }
-  } catch {}
-})();
+    } catch {}
+  })();
 </script>
