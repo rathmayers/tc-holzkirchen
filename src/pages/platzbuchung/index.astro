@@ -6,12 +6,12 @@ const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE_TERMINE });
 // ── Helpers für Belegungsplan ──────────────────────────────────────────────
 const MONATE      = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const MONATE_KURZ = ['Jan.','Feb.','Mär.','Apr.','Mai','Jun.','Jul.','Aug.','Sep.','Okt.','Nov.','Dez.'];
-const WT_KURZ = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+const WT_LANG = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
 
 const pd   = (s: string) => new Date(s + 'T12:00:00');
 const dat  = (s: string) => { const d = pd(s); return `${d.getDate()}. ${MONATE[d.getMonth()]}`; };
 const monK = (s: string) => MONATE_KURZ[pd(s).getMonth()];
-const wtK  = (s: string) => WT_KURZ[pd(s).getDay()];
+const wtL  = (s: string) => WT_LANG[pd(s).getDay()];
 const mon  = (s: string) => MONATE[pd(s).getMonth()];
 
 const plaetzeStr = (arr: number[]) => {
@@ -21,21 +21,28 @@ const plaetzeStr = (arr: number[]) => {
   return consec ? `Plätze ${s[0]}–${s[s.length - 1]}` : `Plätze ${s.join(', ')}`;
 };
 
-// Wöchentliche Belegungen aufbereiten
-const belegRows = BELEGUNGEN.flatMap((b: any) =>
-  b.zeiten.map((z: any) => {
-    const [h, m] = z.von.split(':').map(Number);
-    return {
-      tage:    z.wochentage.map((d: number) => WT_KURZ[d]).join(', '),
-      sortKey: z.wochentage[0] * 1000 + h * 60 + m,
-      von:     z.von,
-      bis:     z.bis,
-      plaetze: plaetzeStr(b.plaetze),
-      label:   b.label,
-      saison:  b.vonDatum ? `${monK(b.vonDatum)} – ${monK(b.bisDatum)}` : null,
-    };
-  })
-).sort((a: any, b: any) => a.sortKey - b.sortKey);
+// Wöchentliche Belegungen nach Wochentag gruppieren
+const allDayMap: Record<number, {von: string; bis: string; plaetze: string; label: string; saison: string|null}[]> = {};
+for (const b of BELEGUNGEN as any[]) {
+  for (const z of b.zeiten) {
+    for (const wt of z.wochentage) {
+      if (!allDayMap[wt]) allDayMap[wt] = [];
+      allDayMap[wt].push({
+        von:     z.von,
+        bis:     z.bis,
+        plaetze: plaetzeStr(b.plaetze),
+        label:   b.label,
+        saison:  b.vonDatum ? `${monK(b.vonDatum)} – ${monK(b.bisDatum)}` : null,
+      });
+    }
+  }
+}
+const belegRows = [1,2,3,4,5,6]
+  .filter(wt => allDayMap[wt])
+  .map(wt => ({
+    tag:   WT_LANG[wt],
+    slots: allDayMap[wt].sort((a, b) => a.von.localeCompare(b.von)),
+  }));
 
 // Chip-Name → Mannschafts-Slug (passend zu id="team-{slug}" auf /mannschaften/)
 const CHIP_SLUG: Record<string, string> = {
@@ -174,30 +181,33 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
         <p class="section-label mb-3">Platzbelegung</p>
         <h2 class="font-display text-5xl text-court mb-10">Belegungsplan 2026</h2>
 
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-12">
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
 
           <!-- Wöchentliche Belegungen -->
           <div>
             <p class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4">Wöchentlich wiederkehrend</p>
-            <table class="w-full border-t border-sand-dark text-sm">
-              <tbody>
-                {belegRows.map((r: any) => (
-                  <tr class="border-b border-sand-dark/50">
-                    <td class="py-2.5 pr-3 font-mono text-xs text-court/50 whitespace-nowrap align-top pt-3">{r.tage}</td>
-                    <td class="py-2.5 pr-4 font-mono text-xs text-court/70 whitespace-nowrap align-top pt-3">{r.von}–{r.bis}</td>
-                    <td class="py-2.5 pr-4 font-mono text-[10px] text-court/40 whitespace-nowrap align-top pt-3">{r.plaetze}</td>
-                    <td class="py-2.5 align-top pt-3">
-                      <p class="text-xs text-court/70">{r.label}</p>
-                      {r.saison && <p class="font-mono text-[10px] text-court/30 mt-0.5">{r.saison}</p>}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div class="space-y-0 border border-sand-dark">
+              {belegRows.map((r: any) => (
+                <div class="flex items-start border-b border-sand-dark last:border-b-0 px-5 py-4">
+                  <span class="font-display text-lg text-court w-32 shrink-0">{r.tag}</span>
+                  <div class="flex flex-col gap-1.5">
+                    {r.slots.map((s: any) => (
+                      <div class="flex items-center gap-3 flex-wrap">
+                        <span class="font-mono text-xs text-clay uppercase tracking-widest w-24 shrink-0">{s.plaetze}</span>
+                        <span class="text-sm text-court/60">{s.von} – {s.bis} Uhr</span>
+                        <span class="font-mono text-[10px] text-court/35 uppercase tracking-widest">
+                          {s.label}{s.saison ? ` · ${s.saison}` : ''}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <!-- Medenspiele Heimspieltage -->
-          <div class="xl:col-span-2">
+          <div>
             <p class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4">Medenspiele Heimspieltage</p>
             <table class="w-full border-t border-sand-dark text-sm">
               <tbody>
@@ -207,20 +217,16 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
                       <td colspan="3" class="bg-court text-white font-mono text-xs uppercase tracking-widest py-2 px-3">{r.label}</td>
                     </tr>
                   );
-                  if (r.type === 'ferien') return (
-                    <tr>
-                      <td colspan="3" class="bg-yellow-50 text-yellow-700 border-y border-yellow-200 font-mono text-xs uppercase tracking-widest py-2 px-3 text-center">{r.label}</td>
-                    </tr>
-                  );
+                  if (r.type === 'ferien') return null;
                   return (
                     <tr class="border-b border-sand-dark/50">
-                      <td class="py-3 pr-4 whitespace-nowrap">
-                        <span class="font-mono text-xs text-court/40">{wtK(r.datum)}</span>
-                        <span class="font-mono text-xs text-court ml-2">{dat(r.datum)}</span>
+                      <td class="py-2 pr-4 align-top">
+                        <p class="font-display text-lg text-court leading-tight">{wtL(r.datum)}</p>
+                        <p class="font-mono text-xs text-clay">{dat(r.datum)}</p>
                       </td>
-                      <td class="py-3 pr-6 font-mono text-xs text-court/50 whitespace-nowrap">ab {r.von}</td>
-                      <td class="py-3">
-                        <div class="flex flex-wrap gap-1">
+                      <td class="py-2 pr-6 font-mono text-xs text-court/50 whitespace-nowrap align-top">ab {r.von}</td>
+                      <td class="py-2 align-top">
+                        <div class="flex flex-wrap gap-1 mt-1">
                           {r.mannschaften.map((m: string) => (
                             CHIP_SLUG[m]
                               ? <a href={`/mannschaften/#team-${CHIP_SLUG[m]}`}

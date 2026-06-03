@@ -1,5 +1,29 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { BELEGUNGEN } from "../../data/platzbelegung.js";
+
+const WT_LANG = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+
+const tsBelegungen = (BELEGUNGEN as any[]).filter(b => b.label === 'Tennisschule Oberland');
+
+const dayMap: Record<number, {platz: string; von: string; bis: string}[]> = {};
+for (const b of tsBelegungen) {
+  for (const z of b.zeiten) {
+    for (const wt of z.wochentage) {
+      if (!dayMap[wt]) dayMap[wt] = [];
+      for (const platz of b.plaetze) {
+        dayMap[wt].push({ platz: `Platz ${platz}`, von: z.von, bis: z.bis });
+      }
+    }
+  }
+}
+
+const trainingsRows = [1,2,3,4,5,6]
+  .filter(wt => dayMap[wt])
+  .map(wt => ({
+    tag: WT_LANG[wt],
+    slots: dayMap[wt].sort((a, b) => a.platz.localeCompare(b.platz) || a.von.localeCompare(b.von)),
+  }));
 ---
 
 <BaseLayout
@@ -53,58 +77,27 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
           <p class="section-label mb-4">Platzbelegung Tennisschule</p>
           <h2 class="font-display text-4xl text-court mb-6">Trainingszeiten</h2>
           <div class="space-y-0 border border-sand-dark">
-            {
-              [
-                {
-                  tag: "Montag",
-                  plaetze: [{ platz: "Platz 6", zeit: "14:00 – 20:30 Uhr" }],
-                },
-                {
-                  tag: "Dienstag",
-                  plaetze: [
-                    { platz: "Platz 5", zeit: "14:00 – 15:00 Uhr" },
-                    { platz: "Platz 6", zeit: "14:00 – 20:30 Uhr" },
-                  ],
-                },
-                {
-                  tag: "Mittwoch",
-                  plaetze: [{ platz: "Platz 6", zeit: "14:00 – 20:30 Uhr" }],
-                },
-                {
-                  tag: "Donnerstag",
-                  plaetze: [{ platz: "Platz 6", zeit: "14:00 – 20:30 Uhr" }],
-                },
-                {
-                  tag: "Freitag",
-                  plaetze: [{ platz: "Platz 6", zeit: "14:00 – 20:30 Uhr" }],
-                },
-                {
-                  tag: "Samstag",
-                  plaetze: [{ platz: "Platz 6", zeit: "09:00 – 16:00 Uhr" }],
-                },
-              ].map((row) => (
-                <div class="flex items-start border-b border-sand-dark last:border-b-0 px-5 py-4">
-                  <span class="font-display text-lg text-court w-32 shrink-0">
-                    {row.tag}
-                  </span>
-                  <div class="flex flex-col gap-1">
-                    {row.plaetze.map((p) => (
-                      <div class="flex items-center gap-3">
-                        <span class="font-mono text-xs text-clay uppercase tracking-widest w-16">
-                          {p.platz}
-                        </span>
-                        <span class="text-sm text-court/60">{p.zeit}</span>
-                      </div>
-                    ))}
-                  </div>
+            {trainingsRows.map((row) => (
+              <div class="flex items-start border-b border-sand-dark last:border-b-0 px-5 py-4">
+                <span class="font-display text-lg text-court w-32 shrink-0">
+                  {row.tag}
+                </span>
+                <div class="flex flex-col gap-1">
+                  {row.slots.map((s) => (
+                    <div class="flex items-center gap-3">
+                      <span class="font-mono text-xs text-clay uppercase tracking-widest w-16">
+                        {s.platz}
+                      </span>
+                      <span class="text-sm text-court/60">{s.von} – {s.bis} Uhr</span>
+                    </div>
+                  ))}
                 </div>
-              ))
-            }
+              </div>
+            ))}
           </div>
           <p class="text-xs text-court/40 font-mono mt-3 leading-relaxed">
             Auf Platz 6 hat der Trainer auch außerhalb dieser Zeiten Vorrang für
-            Privatstunden mit TCH-Mitgliedern oder Gästen mit Gästekarte. Stand:
-            Mai 2024.
+            Privatstunden mit TCH-Mitgliedern oder Gästen mit Gästekarte.
           </p>
         </div>
       </div>
