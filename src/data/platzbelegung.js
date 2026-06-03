@@ -62,7 +62,7 @@ export const BELEGUNGEN = [
       { wochentage: [1,3], von: '13:00', bis: '20:30' },
       { wochentage: [2], von: '15:00', bis: '20:30' },
       { wochentage: [4,5], von: '14:00', bis: '20:30' },
-      { wochentage: [6],              von: '09:00', bis: '16:00' },
+      { wochentage: [6],              von: '09:00', bis: '15:00' },
     ],
   },
 
