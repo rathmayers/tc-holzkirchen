@@ -49,7 +49,7 @@
 
   /* ─── Section headings ────────────────────── */
   .section-label {
-    @apply font-mono text-xs uppercase tracking-[0.2em] text-clay;
+    @apply font-mono text-sm uppercase tracking-[0.2em] text-clay;
   }
 
   .section-title {
@@ -58,9 +58,8 @@
 
   /* ─── Cards ───────────────────────────────── */
   .news-card {
-    @apply bg-white border border-sand-dark overflow-hidden
+    @apply bg-white border border-sand-dark overflow-hidden 
            transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-court/10;
-    height: 520px;
   }
 
   /* ─── Navigation ──────────────────────────── */
