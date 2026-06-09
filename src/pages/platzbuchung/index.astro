@@ -487,7 +487,10 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
   }
 
   function getPlatzStatus(platzNr, now) {
-    const dateStr = now.toISOString().split("T")[0];
+    const y  = now.getFullYear();
+    const mo = String(now.getMonth() + 1).padStart(2, "0");
+    const d  = String(now.getDate()).padStart(2, "0");
+    const dateStr = `${y}-${mo}-${d}`;
     const day = now.getDay();
     const min = now.getHours() * 60 + now.getMinutes();
 
@@ -508,7 +511,9 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
     }
 
     // 2. Orange: konkreter Medenspiel-Heimspieltag (nur Plätze 1–5)
-    const termin = platzNr <= 5 && MEDENSPIELE_TERMINE.find((t) => t.datum === dateStr);
+    const termin = platzNr <= 5
+      ? MEDENSPIELE_TERMINE.find((t) => t.datum === dateStr)
+      : null;
     if (termin && min >= zeitZuMinuten(termin.von)) {
       const bis = getTerminBis(termin);
       if (!bis || min < zeitZuMinuten(bis)) {
