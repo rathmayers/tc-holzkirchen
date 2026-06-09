@@ -102,7 +102,20 @@ async function load() {
     clearTimeout(timeout);
     if (!res.ok) return;
     const data = await res.json();
-    if (data.mannschaften && data.mannschaften.length) renderMannschaften(data.mannschaften);
+    if (data.mannschaften && data.mannschaften.length) {
+      // Statische Felder (groupid, liga, Kontakt-Fallback) haben immer Vorrang
+      const merged = STATIC_MANNSCHAFTEN.map(function(s) {
+        const a = data.mannschaften.find(function(x) { return x.name === s.name; });
+        if (!a) return s;
+        return Object.assign({}, s, {
+          fuehrer: a.fuehrer || s.fuehrer,
+          mobil:   a.mobil   || s.mobil,
+          telefon: a.telefon || s.telefon,
+          email:   a.email   || s.email,
+        });
+      });
+      renderMannschaften(merged);
+    }
     if (data.begegnungen  && data.begegnungen.length)  renderBegegnungen(data.begegnungen);
   } catch {
     // API nicht erreichbar oder Timeout – statische Daten bleiben
