@@ -1,89 +1,148 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { BELEGUNGEN, MEDENSPIELE_TERMINE, SCHULFERIEN } from '../../data/platzbelegung.js';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  BELEGUNGEN,
+  MEDENSPIELE_TERMINE,
+  SCHULFERIEN,
+} from "../../data/platzbelegung.js";
 const platzConfig = JSON.stringify({ BELEGUNGEN, MEDENSPIELE_TERMINE });
 
 // ── Helpers für Belegungsplan ──────────────────────────────────────────────
-const MONATE      = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-const MONATE_KURZ = ['Jan.','Feb.','Mär.','Apr.','Mai','Jun.','Jul.','Aug.','Sep.','Okt.','Nov.','Dez.'];
-const WT_LANG = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+const MONATE = [
+  "Januar",
+  "Februar",
+  "März",
+  "April",
+  "Mai",
+  "Juni",
+  "Juli",
+  "August",
+  "September",
+  "Oktober",
+  "November",
+  "Dezember",
+];
+const MONATE_KURZ = [
+  "Jan.",
+  "Feb.",
+  "Mär.",
+  "Apr.",
+  "Mai",
+  "Jun.",
+  "Jul.",
+  "Aug.",
+  "Sep.",
+  "Okt.",
+  "Nov.",
+  "Dez.",
+];
+const WT_LANG = [
+  "Sonntag",
+  "Montag",
+  "Dienstag",
+  "Mittwoch",
+  "Donnerstag",
+  "Freitag",
+  "Samstag",
+];
 
-const pd   = (s: string) => new Date(s + 'T12:00:00');
-const dat  = (s: string) => { const d = pd(s); return `${d.getDate()}. ${MONATE[d.getMonth()]}`; };
+const pd = (s: string) => new Date(s + "T12:00:00");
+const dat = (s: string) => {
+  const d = pd(s);
+  return `${d.getDate()}. ${MONATE[d.getMonth()]}`;
+};
 const monK = (s: string) => MONATE_KURZ[pd(s).getMonth()];
-const wtL  = (s: string) => WT_LANG[pd(s).getDay()];
-const mon  = (s: string) => MONATE[pd(s).getMonth()];
+const wtL = (s: string) => WT_LANG[pd(s).getDay()];
+const mon = (s: string) => MONATE[pd(s).getMonth()];
 
 const plaetzeStr = (arr: number[]) => {
   const s = [...arr].sort((a, b) => a - b);
   if (s.length === 1) return `Platz ${s[0]}`;
   const consec = s.every((v, i) => i === 0 || v === s[i - 1] + 1);
-  return consec ? `Plätze ${s[0]}–${s[s.length - 1]}` : `Plätze ${s.join(', ')}`;
+  return consec
+    ? `Plätze ${s[0]}–${s[s.length - 1]}`
+    : `Plätze ${s.join(", ")}`;
 };
 
 // Wöchentliche Belegungen nach Wochentag gruppieren
-const allDayMap: Record<number, {von: string; bis: string; plaetze: string; label: string; saison: string|null}[]> = {};
+const allDayMap: Record<
+  number,
+  {
+    von: string;
+    bis: string;
+    plaetze: string;
+    label: string;
+    saison: string | null;
+  }[]
+> = {};
 for (const b of BELEGUNGEN as any[]) {
   for (const z of b.zeiten) {
     for (const wt of z.wochentage) {
       if (!allDayMap[wt]) allDayMap[wt] = [];
       allDayMap[wt].push({
-        von:     z.von,
-        bis:     z.bis,
+        von: z.von,
+        bis: z.bis,
         plaetze: plaetzeStr(b.plaetze),
-        label:   b.label,
-        saison:  b.vonDatum ? `${monK(b.vonDatum)} – ${monK(b.bisDatum)}` : null,
+        label: b.label,
+        saison: b.vonDatum ? `${monK(b.vonDatum)} – ${monK(b.bisDatum)}` : null,
       });
     }
   }
 }
-const belegRows = [1,2,3,4,5,6]
-  .filter(wt => allDayMap[wt])
-  .map(wt => ({
-    tag:   WT_LANG[wt],
+const belegRows = [1, 2, 3, 4, 5, 6]
+  .filter((wt) => allDayMap[wt])
+  .map((wt) => ({
+    tag: WT_LANG[wt],
     slots: allDayMap[wt].sort((a, b) => a.von.localeCompare(b.von)),
   }));
 
 // Chip-Name → Mannschafts-Slug (passend zu id="team-{slug}" auf /mannschaften/)
 const CHIP_SLUG: Record<string, string> = {
-  'H70 4er':    'herren-70',
-  'U15m I':     'knaben-15',
-  'U15m II':    'knaben-15-ii',
-  'U15m III':   'knaben-15-iii',
-  'U12 I':      'bambini-12',
-  'U12 II':     'bambini-12-ii',
-  'U18m I':     'junioren-18',
-  'U18m II':    'junioren-18-ii',
-  'D30 4er':    'damen-30',
-  'D50 I 4er':  'damen-50',
-  'D50 II 4er': 'damen-50-ii',
-  'H30 6er':    'herren-30',
-  'H40 4er':    'herren-40',
-  'H50 6er':    'herren-50',
-  'Herren':     'herren',
+  "H70 4er": "herren-70",
+  "U15m I": "knaben-15",
+  "U15m II": "knaben-15-ii",
+  "U15m III": "knaben-15-iii",
+  "U12 I": "bambini-12",
+  "U12 II": "bambini-12-ii",
+  "U18m I": "junioren-18",
+  "U18m II": "junioren-18-ii",
+  "D30 4er": "damen-30",
+  "D50 I 4er": "damen-50",
+  "D50 II 4er": "damen-50-ii",
+  "H30 6er": "herren-30",
+  "H40 4er": "herren-40",
+  "H50 6er": "herren-50",
+  Herren: "herren",
 };
 
 // Medenspiele-Termine gruppieren mit Schulferien-Bannern
 type MedRow =
-  | { type: 'monat';  label: string }
-  | { type: 'ferien'; label: string }
-  | { type: 'termin'; datum: string; von: string; mannschaften: string[] };
+  | { type: "monat"; label: string }
+  | { type: "ferien"; label: string }
+  | { type: "termin"; datum: string; von: string; mannschaften: string[] };
 
 const medRows: MedRow[] = [];
-let lastMonat = '';
+let lastMonat = "";
 for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
   const t = MEDENSPIELE_TERMINE[i] as any;
   if (i > 0) {
     const prev = (MEDENSPIELE_TERMINE[i - 1] as any).datum;
-    const ferien = SCHULFERIEN.find((f: any) => f.vonDatum > prev && f.vonDatum <= t.datum);
-    if (ferien) medRows.push({ type: 'ferien', label: (ferien as any).label });
+    const ferien = SCHULFERIEN.find(
+      (f: any) => f.vonDatum > prev && f.vonDatum <= t.datum,
+    );
+    if (ferien) medRows.push({ type: "ferien", label: (ferien as any).label });
   }
   const m = mon(t.datum);
   if (m !== lastMonat) {
-    medRows.push({ type: 'monat', label: m });
+    medRows.push({ type: "monat", label: m });
     lastMonat = m;
   }
-  medRows.push({ type: 'termin', datum: t.datum, von: t.von, mannschaften: t.mannschaften ?? [] });
+  medRows.push({
+    type: "termin",
+    datum: t.datum,
+    von: t.von,
+    mannschaften: t.mannschaften ?? [],
+  });
 }
 ---
 
@@ -91,26 +150,33 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
   title="Unsere Plätze – TC Holzkirchen"
   description="Die Tennisanlage des TC Holzkirchen – Platz- und Spielordnung, Gästekarten und Kontakt."
 >
-
   <div class="bg-court py-16 text-white diagonal-divider">
     <div class="max-w-screen-xl mx-auto px-6">
       <p class="section-label text-clay mb-3">Tennisanlage</p>
-      <h1 class="font-display text-7xl md:text-8xl leading-none">Unsere <span class="text-clay">Plätze</span></h1>
+      <h1 class="font-display text-7xl md:text-8xl leading-none">
+        Unsere <span class="text-clay">Plätze</span>
+      </h1>
     </div>
   </div>
 
   <section class="py-24 bg-chalk">
     <div class="max-w-screen-xl mx-auto px-6">
-
       <!-- Status Platzkarten (dynamisch) -->
-      <div id="platz-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4" data-animate></div>
+      <div
+        id="platz-grid"
+        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4"
+        data-animate
+      >
+      </div>
       <p id="platz-zeit" class="font-mono text-xs text-court/30 mb-16"></p>
 
       <!-- Gästekarten Info -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16" data-animate>
         <div class="bg-sand border border-sand-dark p-8">
           <p class="section-label mb-3">Für Gäste</p>
-          <h2 class="font-display text-4xl text-court mb-4">Mit Gästekarte spielen</h2>
+          <h2 class="font-display text-4xl text-court mb-4">
+            Mit Gästekarte spielen
+          </h2>
           <p class="text-court/60 leading-relaxed mb-6">
             Nicht-Mitglieder können unsere Plätze mit einer Gästekarte nutzen —
             immer zusammen mit einem Mitglied.
@@ -118,24 +184,66 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
           <div class="flex gap-8 mb-6">
             <div>
               <p class="font-display text-3xl text-clay">7,50 €</p>
-              <p class="font-mono text-xs text-court/40 uppercase tracking-widest">Erwachsene</p>
+              <p
+                class="font-mono text-xs text-court/40 uppercase tracking-widest"
+              >
+                Erwachsene
+              </p>
             </div>
             <div>
               <p class="font-display text-3xl text-clay">5,00 €</p>
-              <p class="font-mono text-xs text-court/40 uppercase tracking-widest">Jugendliche</p>
+              <p
+                class="font-mono text-xs text-court/40 uppercase tracking-widest"
+              >
+                Jugendliche
+              </p>
             </div>
           </div>
-          <div class="border-t border-sand-dark pt-4 space-y-1 text-sm text-court/60">
-            <p class="font-mono text-xs text-court/40 uppercase tracking-widest mb-2">Gästekarten erhältlich bei</p>
-            <p>Gesundheitszentrum Holzer, Tölzer Str. 13 <span class="text-court/40">(Mo–Do 8–20 Uhr, Fr 8–16 Uhr)</span></p>
+          <div
+            class="border-t border-sand-dark pt-4 space-y-1 text-sm text-court/60"
+          >
+            <p
+              class="font-mono text-xs text-court/40 uppercase tracking-widest mb-2"
+            >
+              Gästekarten erhältlich bei
+            </p>
+            <p>
+              Gesundheitszentrum Holzer, Tölzer Str. 13 <span
+                class="text-court/40">(Mo–Do 8–20 Uhr, Fr 8–16 Uhr)</span>
+            </p>
             <p>Dr. Claudia Benkert, Krankenhausstr. 34a</p>
             <p>Dr. Antje Krepek, Flinspachstr. 1</p>
             <p>Gerhard Westner, Kiem Pauli Str. 23</p>
           </div>
-          <a href="/doks/gaestekartenregelung.pdf" target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2 mt-6 font-mono text-xs text-clay uppercase tracking-widest hover:underline">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+          <div
+            class="border-t border-sand-dark pt-4 space-y-1 text-sm text-court/60"
+          >
+            <p
+              class="font-mono text-xs text-court/40 uppercase tracking-widest mb-2"
+            >
+              Vor Spielbeginn
+            </p>
+            <p>
+              Gästekarte mit Datum und Uhrzeit ausfüllen( bitte <span
+                class="text-red-600">nicht</span> mit Bleistift) und an der Platztafel einhängen.
+            </p>
+          </div>
+          <a
+            href="/doks/gaestekartenregelung26.pdf"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 mt-6 font-mono text-xs text-clay uppercase tracking-widest hover:underline"
+          >
+            <svg
+              class="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+              ></path><polyline points="14 2 14 8 20 8"></polyline>
             </svg>
             Gästekartenregelung (PDF)
           </a>
@@ -143,33 +251,81 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
 
         <div class="bg-white border border-sand-dark p-8">
           <p class="section-label mb-3">Platz- & Spielordnung</p>
-          <h2 class="font-display text-4xl text-court mb-6">So funktioniert's</h2>
+          <h2 class="font-display text-4xl text-court mb-6">
+            So funktioniert's
+          </h2>
           <ul class="space-y-4 text-sm text-court/60 leading-relaxed">
             <li class="flex gap-3">
-              <span class="font-display text-clay text-lg leading-none mt-0.5">1</span>
-              <span>Mitgliedskarte oder ausgefüllte Gästekarte an der Platztafel einhängen — damit ist der Platz reserviert.</span>
+              <span class="font-display text-clay text-lg leading-none mt-0.5"
+                >1</span
+              >
+              <span
+                >Mitgliedskarte oder ausgefüllte Gästekarte an der Platztafel
+                einhängen — damit ist der Platz reserviert.</span
+              >
             </li>
             <li class="flex gap-3">
-              <span class="font-display text-clay text-lg leading-none mt-0.5">2</span>
-              <span>Spielzeit: <strong class="text-court">1 Stunde</strong> (Einzel) · <strong class="text-court">1,5 Stunden</strong> (Doppel/Mixed). Uhr auf Spielbeginn stellen.</span>
+              <span class="font-display text-clay text-lg leading-none mt-0.5"
+                >2</span
+              >
+              <span
+                >Spielzeit: <strong class="text-court">1 Stunde</strong> (Einzel)
+                · <strong class="text-court">1,5 Stunden</strong> (Doppel/Mixed).
+                Uhr auf Spielbeginn stellen.</span
+              >
             </li>
             <li class="flex gap-3">
-              <span class="font-display text-clay text-lg leading-none mt-0.5">3</span>
-              <span>Sind alle Plätze belegt, in der 2. Reihe vormerken — Anwesenheit während der Wartezeit nicht erforderlich.</span>
+              <span class="font-display text-clay text-lg leading-none mt-0.5"
+                >3</span
+              >
+              <span
+                >Sind alle Plätze belegt, in der 2. Reihe vormerken —
+                Anwesenheit während der Wartezeit nicht erforderlich.</span
+              >
             </li>
             <li class="flex gap-3">
-              <span class="font-display text-clay text-lg leading-none mt-0.5">4</span>
-              <span>Kinder bis 14 Jahre dürfen auf allen Plätzen bis 17 Uhr und auf Platz 6 zeitlich unbegrenzt spielen.</span>
+              <span class="font-display text-clay text-lg leading-none mt-0.5"
+                >4</span
+              >
+              <span
+                >Kinder bis 14 Jahre dürfen auf allen Plätzen bis 17 Uhr und auf
+                Platz 6 zeitlich unbegrenzt spielen.</span
+              >
             </li>
             <li class="flex gap-3">
-              <span class="font-display text-clay text-lg leading-none mt-0.5">5</span>
-              <span>Plätze nach dem Spiel abziehen. Nur Tennisschuhe erlaubt. Bei Platzsperrung das Schild „Plätze nicht bespielbar" beachten.</span>
+              <span class="font-display text-clay text-lg leading-none mt-0.5"
+                >5</span
+              >
+              <span
+                >Plätze nach dem Spiel abziehen. Nur Tennisschuhe erlaubt. Bei
+                Platzsperrung das Schild „Plätze nicht bespielbar" beachten.</span
+              >
+            </li>
+            <li class="flex gap-3">
+              <span class="font-display text-clay text-lg leading-none mt-0.5"
+                >6</span
+              >
+              <span
+                >Auch außerhalb dieser Zeiten hat <span class="text-clay">auf Platz 6 der Trainer Vorrang</span>
+für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt Mitgliedsausweis hängen!)
             </li>
           </ul>
-          <a href="/doks/platz-und-spielordnung.pdf" target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2 mt-6 font-mono text-xs text-clay uppercase tracking-widest hover:underline">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+          <a
+            href="/doks/platz-und-spielordnung26.pdf"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 mt-6 font-mono text-xs text-clay uppercase tracking-widest hover:underline"
+          >
+            <svg
+              class="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+              ></path><polyline points="14 2 14 8 20 8"></polyline>
             </svg>
             Platz- & Spielordnung (PDF)
           </a>
@@ -179,69 +335,108 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
       <!-- Belegungsplan -->
       <div class="mb-16 pt-16 border-t border-sand-dark" data-animate>
         <p class="section-label mb-3">Platzbelegung</p>
-        <h2 class="font-display text-5xl text-court mb-10">Belegungsplan 2026</h2>
+        <h2 class="font-display text-5xl text-court mb-10">
+          Belegungsplan 2026
+        </h2>
 
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
-
           <!-- Wöchentliche Belegungen -->
           <div id="belegungsplan-woechentlich" class="scroll-mt-60">
-            <p class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4">Wöchentlich wiederkehrend</p>
+            <p
+              class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4"
+            >
+              Wöchentlich wiederkehrend
+            </p>
             <div class="space-y-0 border border-sand-dark">
-              {belegRows.map((r: any) => (
-                <div class="flex items-start border-b border-sand-dark last:border-b-0 px-5 py-4">
-                  <span class="font-display text-lg text-court w-32 shrink-0">{r.tag}</span>
-                  <div class="flex flex-col gap-1.5">
-                    {r.slots.map((s: any) => (
-                      <div class="flex items-center gap-3 flex-wrap">
-                        <span class="font-mono text-xs text-clay uppercase tracking-widest w-24 shrink-0">{s.plaetze}</span>
-                        <span class="text-sm text-court/60">{s.von} – {s.bis} Uhr</span>
-                        <span class="font-mono text-[10px] text-court/35 uppercase tracking-widest">
-                          {s.label}{s.saison ? ` · ${s.saison}` : ''}
-                        </span>
-                      </div>
-                    ))}
+              {
+                belegRows.map((r: any) => (
+                  <div class="flex items-start border-b border-sand-dark last:border-b-0 px-5 py-4">
+                    <span class="font-display text-lg text-court w-32 shrink-0">
+                      {r.tag}
+                    </span>
+                    <div class="flex flex-col gap-1.5">
+                      {r.slots.map((s: any) => (
+                        <div class="flex items-center gap-3 flex-wrap">
+                          <span class="font-mono text-xs text-clay uppercase tracking-widest w-24 shrink-0">
+                            {s.plaetze}
+                          </span>
+                          <span class="text-sm text-court/60">
+                            {s.von} – {s.bis} Uhr
+                          </span>
+                          <span class="font-mono text-[10px] text-court/35 uppercase tracking-widest">
+                            {s.label}
+                            {s.saison ? ` · ${s.saison}` : ""}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              }
             </div>
           </div>
 
           <!-- Medenspiele Heimspieltage -->
           <div id="belegungsplan-medenspiele" class="scroll-mt-60">
-            <p class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4">Medenspiele Heimspieltage</p>
+            <p
+              class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4"
+            >
+              Medenspiele Heimspieltage
+            </p>
             <table class="w-full border border-sand-dark text-sm">
               <tbody>
-                {medRows.map((r) => {
-                  if (r.type === 'monat') return (
-                    <tr>
-                      <td colspan="3" class="bg-court text-white font-mono text-xs uppercase tracking-widest py-2 px-3">{r.label}</td>
-                    </tr>
-                  );
-                  if (r.type === 'ferien') return null;
-                  return (
-                    <tr class="border-b border-sand-dark/50">
-                      <td class="py-2 pl-3 pr-4 align-top">
-                        <p class="font-display text-lg text-court leading-tight">{wtL(r.datum)}</p>
-                        <p class="font-mono text-xs text-clay">{dat(r.datum)}</p>
-                      </td>
-                      <td class="py-2 pr-6 font-mono text-xs text-court/50 whitespace-nowrap align-top">ab {r.von}</td>
-                      <td class="py-2 align-top">
-                        <div class="flex flex-wrap gap-1 mt-1">
-                          {r.mannschaften.map((m: string) => (
-                            CHIP_SLUG[m]
-                              ? <a href={`/mannschaften/#team-${CHIP_SLUG[m]}`}
-                                   class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 hover:bg-clay/25 transition-colors">{m}</a>
-                              : <span class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5">{m}</span>
-                          ))}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {
+                  medRows.map((r) => {
+                    if (r.type === "monat")
+                      return (
+                        <tr>
+                          <td
+                            colspan="3"
+                            class="bg-court text-white font-mono text-xs uppercase tracking-widest py-2 px-3"
+                          >
+                            {r.label}
+                          </td>
+                        </tr>
+                      );
+                    if (r.type === "ferien") return null;
+                    return (
+                      <tr class="border-b border-sand-dark/50">
+                        <td class="py-2 pl-3 pr-4 align-top">
+                          <p class="font-display text-lg text-court leading-tight">
+                            {wtL(r.datum)}
+                          </p>
+                          <p class="font-mono text-xs text-clay">
+                            {dat(r.datum)}
+                          </p>
+                        </td>
+                        <td class="py-2 pr-6 font-mono text-xs text-court/50 whitespace-nowrap align-top">
+                          ab {r.von}
+                        </td>
+                        <td class="py-2 align-top">
+                          <div class="flex flex-wrap gap-1 mt-1">
+                            {r.mannschaften.map((m: string) =>
+                              CHIP_SLUG[m] ? (
+                                <a
+                                  href={`/mannschaften/#team-${CHIP_SLUG[m]}`}
+                                  class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 hover:bg-clay/25 transition-colors"
+                                >
+                                  {m}
+                                </a>
+                              ) : (
+                                <span class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5">
+                                  {m}
+                                </span>
+                              ),
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                }
               </tbody>
             </table>
           </div>
-
         </div>
       </div>
 
@@ -250,8 +445,16 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
         <p class="section-label mb-4">Kontakt & Fragen</p>
         <div class="flex flex-col sm:flex-row gap-4">
           <a href="tel:+498024123456" class="btn-primary">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 17l.92-.08z"/>
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 17l.92-.08z"
+              ></path>
             </svg>
             +49 8024 5200
           </a>
@@ -260,84 +463,110 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
           </a>
         </div>
       </div>
-
     </div>
   </section>
-
 </BaseLayout>
 
 <script is:inline define:vars={{ platzConfig }}>
-const { BELEGUNGEN, MEDENSPIELE_TERMINE } = JSON.parse(platzConfig);
+  const { BELEGUNGEN, MEDENSPIELE_TERMINE } = JSON.parse(platzConfig);
 
-function zeitZuMinuten(str) {
-  const [h, m] = str.split(':').map(Number);
-  return h * 60 + m;
-}
+  function zeitZuMinuten(str) {
+    const [h, m] = str.split(":").map(Number);
+    return h * 60 + m;
+  }
 
-function getTerminBis(termin) {
-  const teams = termin.mannschaften || [];
-  if (teams.length !== 1) return null;
-  const team  = teams[0];
-  const is6er = team.endsWith('6er') || team === 'Herren';
-  const von   = termin.von;
-  if (is6er  && von === '09:00') return '19:00';
-  if (!is6er && (von === '09:00' || von === '10:00')) return '15:00';
-  return null;
-}
+  function getTerminBis(termin) {
+    const teams = termin.mannschaften || [];
+    if (teams.length !== 1) return null;
+    const team = teams[0];
+    const is6er = team.endsWith("6er") || team === "Herren";
+    const von = termin.von;
+    if (is6er && von === "09:00") return "19:00";
+    if (!is6er && (von === "09:00" || von === "10:00")) return "15:00";
+    return null;
+  }
 
-function getPlatzStatus(platzNr, now) {
-  const dateStr = now.toISOString().split('T')[0];
-  const day     = now.getDay();
-  const min     = now.getHours() * 60 + now.getMinutes();
+  function getPlatzStatus(platzNr, now) {
+    const dateStr = now.toISOString().split("T")[0];
+    const day = now.getDay();
+    const min = now.getHours() * 60 + now.getMinutes();
 
-  // 1. Rot: feste Belegung
-  for (const b of BELEGUNGEN) {
-    if (!b.plaetze.includes(platzNr)) continue;
-    if (b.vonDatum && dateStr < b.vonDatum) continue;
-    if (b.bisDatum && dateStr > b.bisDatum) continue;
-    for (const z of b.zeiten) {
-      if (!z.wochentage.includes(day)) continue;
-      if (min >= zeitZuMinuten(z.von) && min < zeitZuMinuten(z.bis)) {
-        return { farbe: 'rot', text: 'Belegt durch Training, Mannschaft oder Verein' };
+    // 1. Rot: feste Belegung
+    for (const b of BELEGUNGEN) {
+      if (!b.plaetze.includes(platzNr)) continue;
+      if (b.vonDatum && dateStr < b.vonDatum) continue;
+      if (b.bisDatum && dateStr > b.bisDatum) continue;
+      for (const z of b.zeiten) {
+        if (!z.wochentage.includes(day)) continue;
+        if (min >= zeitZuMinuten(z.von) && min < zeitZuMinuten(z.bis)) {
+          return {
+            farbe: "rot",
+            text: "Belegt durch Training, Mannschaft oder Verein",
+          };
+        }
       }
     }
-  }
 
-  // 2. Orange: konkreter Medenspiel-Heimspieltag
-  const termin = MEDENSPIELE_TERMINE.find(t => t.datum === dateStr);
-  if (termin && min >= zeitZuMinuten(termin.von)) {
-    const bis = getTerminBis(termin);
-    if (!bis || min < zeitZuMinuten(bis)) {
-      return { farbe: 'orange', text: 'Platzbelegung durch Medenspiele entsprechend Belegungsplan' };
+    // 2. Orange: konkreter Medenspiel-Heimspieltag
+    const termin = MEDENSPIELE_TERMINE.find((t) => t.datum === dateStr);
+    if (termin && min >= zeitZuMinuten(termin.von)) {
+      const bis = getTerminBis(termin);
+      if (!bis || min < zeitZuMinuten(bis)) {
+        return {
+          farbe: "orange",
+          text: "Platzbelegung durch Medenspiele entsprechend Belegungsplan",
+        };
+      }
     }
+
+    // 3. Grün: frei
+    return {
+      farbe: "gruen",
+      text: "Platz verfügbar - Belegung vor Ort beachten",
+    };
   }
 
-  // 3. Grün: frei
-  return { farbe: 'gruen', text: 'Platz verfügbar - Belegung vor Ort beachten' };
-}
+  const FARBEN = {
+    gruen: {
+      bg: "bg-emerald-50",
+      border: "border-emerald-400",
+      text: "text-emerald-800",
+      dot: "bg-emerald-400",
+    },
+    orange: {
+      bg: "bg-amber-50",
+      border: "border-amber-400",
+      text: "text-amber-800",
+      dot: "bg-amber-400",
+    },
+    rot: {
+      bg: "bg-red-50",
+      border: "border-red-400",
+      text: "text-red-800",
+      dot: "bg-red-400",
+    },
+  };
 
-const FARBEN = {
-  gruen:  { bg: 'bg-emerald-50',  border: 'border-emerald-400', text: 'text-emerald-800', dot: 'bg-emerald-400' },
-  orange: { bg: 'bg-amber-50',    border: 'border-amber-400',   text: 'text-amber-800',   dot: 'bg-amber-400'   },
-  rot:    { bg: 'bg-red-50',      border: 'border-red-400',     text: 'text-red-800',     dot: 'bg-red-400'     },
-};
+  function render() {
+    const now = new Date();
+    const grid = document.getElementById("platz-grid");
+    const zeit = document.getElementById("platz-zeit");
+    if (!grid) return;
 
-function render() {
-  const now  = new Date();
-  const grid = document.getElementById('platz-grid');
-  const zeit = document.getElementById('platz-zeit');
-  if (!grid) return;
-
-  grid.innerHTML = [1,2,3,4,5,6].map(nr => {
-    const { farbe, text } = getPlatzStatus(nr, now);
-    const f = FARBEN[farbe];
-    const anker = farbe === 'rot'    ? '#belegungsplan-woechentlich'
-                : farbe === 'orange' ? '#belegungsplan-medenspiele'
-                : '';
-    const textEl = anker
-      ? `<a href="${anker}" class="font-mono text-[10px] uppercase tracking-widest leading-tight underline underline-offset-2 opacity-70 hover:opacity-100 transition-opacity">${text} →</a>`
-      : `<p class="font-mono text-[10px] uppercase tracking-widest leading-tight">${text}</p>`;
-    return `
+    grid.innerHTML = [1, 2, 3, 4, 5, 6]
+      .map((nr) => {
+        const { farbe, text } = getPlatzStatus(nr, now);
+        const f = FARBEN[farbe];
+        const anker =
+          farbe === "rot"
+            ? "#belegungsplan-woechentlich"
+            : farbe === "orange"
+              ? "#belegungsplan-medenspiele"
+              : "";
+        const textEl = anker
+          ? `<a href="${anker}" class="font-mono text-[10px] uppercase tracking-widest leading-tight underline underline-offset-2 opacity-70 hover:opacity-100 transition-opacity">${text} →</a>`
+          : `<p class="font-mono text-[10px] uppercase tracking-widest leading-tight">${text}</p>`;
+        return `
       <div class="border ${f.bg} ${f.border} ${f.text} p-5 flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full ${f.dot} shrink-0"></span>
@@ -345,14 +574,15 @@ function render() {
         </div>
         ${textEl}
       </div>`;
-  }).join('');
+      })
+      .join("");
 
-  if (zeit) {
-    zeit.textContent = `Stand: ${now.toLocaleString('de-DE', { weekday:'long', day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })} Uhr`;
+    if (zeit) {
+      zeit.textContent = `Stand: ${now.toLocaleString("de-DE", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })} Uhr`;
+    }
   }
-}
 
-render();
-// Jede Minute neu prüfen
-setInterval(render, 60_000);
+  render();
+  // Jede Minute neu prüfen
+  setInterval(render, 60_000);
 </script>

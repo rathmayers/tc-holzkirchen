@@ -60,9 +60,9 @@ export const BELEGUNGEN = [
     bisDatum: '2026-09-26',
     zeiten: [
       { wochentage: [1,3], von: '13:00', bis: '20:30' },
-      { wochentage: [2], von: '15:00', bis: '20:30' },
+      { wochentage: [2], von: '14:30', bis: '20:30' },
       { wochentage: [4,5], von: '14:00', bis: '20:30' },
-      { wochentage: [6],              von: '09:00', bis: '15:00' },
+      { wochentage: [6], von: '09:00', bis: '16:00' },
     ],
   },
 
@@ -73,6 +73,7 @@ export const BELEGUNGEN = [
     vonDatum: '2026-04-27',
     bisDatum: '2026-09-26',
     zeiten: [
+      { wochentage: [2], von: '15:30', bis: '16:30' },
       { wochentage: [3], von: '14:00', bis: '15:00' },
       { wochentage: [4], von: '15:00', bis: '20:00' },
     ],
