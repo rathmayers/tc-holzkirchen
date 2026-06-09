@@ -507,8 +507,8 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
       }
     }
 
-    // 2. Orange: konkreter Medenspiel-Heimspieltag
-    const termin = MEDENSPIELE_TERMINE.find((t) => t.datum === dateStr);
+    // 2. Orange: konkreter Medenspiel-Heimspieltag (nur Plätze 1–5)
+    const termin = platzNr <= 5 && MEDENSPIELE_TERMINE.find((t) => t.datum === dateStr);
     if (termin && min >= zeitZuMinuten(termin.von)) {
       const bis = getTerminBis(termin);
       if (!bis || min < zeitZuMinuten(bis)) {
