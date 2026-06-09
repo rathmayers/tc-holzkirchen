@@ -274,6 +274,17 @@ function zeitZuMinuten(str) {
   return h * 60 + m;
 }
 
+function getTerminBis(termin) {
+  const teams = termin.mannschaften || [];
+  if (teams.length !== 1) return null;
+  const team  = teams[0];
+  const is6er = team.endsWith('6er') || team === 'Herren';
+  const von   = termin.von;
+  if (is6er  && von === '09:00') return '19:00';
+  if (!is6er && (von === '09:00' || von === '10:00')) return '15:00';
+  return null;
+}
+
 function getPlatzStatus(platzNr, now) {
   const dateStr = now.toISOString().split('T')[0];
   const day     = now.getDay();
@@ -295,11 +306,14 @@ function getPlatzStatus(platzNr, now) {
   // 2. Orange: konkreter Medenspiel-Heimspieltag
   const termin = MEDENSPIELE_TERMINE.find(t => t.datum === dateStr);
   if (termin && min >= zeitZuMinuten(termin.von)) {
-    return { farbe: 'orange', text: 'Platzbelegung durch Medenspiele entsprechend Aushang am Platz' };
+    const bis = getTerminBis(termin);
+    if (!bis || min < zeitZuMinuten(bis)) {
+      return { farbe: 'orange', text: 'Platzbelegung durch Medenspiele entsprechend Belegungsplan' };
+    }
   }
 
   // 3. Grün: frei
-  return { farbe: 'gruen', text: 'Platz nach Verfügbarkeit vor Ort spielbar' };
+  return { farbe: 'gruen', text: 'Platz verfügbar - Belegung vor Ort beachten' };
 }
 
 const FARBEN = {
