@@ -184,7 +184,7 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
 
           <!-- Wöchentliche Belegungen -->
-          <div>
+          <div id="belegungsplan-woechentlich" class="scroll-mt-60">
             <p class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4">Wöchentlich wiederkehrend</p>
             <div class="space-y-0 border border-sand-dark">
               {belegRows.map((r: any) => (
@@ -207,7 +207,7 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
           </div>
 
           <!-- Medenspiele Heimspieltage -->
-          <div>
+          <div id="belegungsplan-medenspiele" class="scroll-mt-60">
             <p class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4">Medenspiele Heimspieltage</p>
             <table class="w-full border border-sand-dark text-sm">
               <tbody>
@@ -331,13 +331,19 @@ function render() {
   grid.innerHTML = [1,2,3,4,5,6].map(nr => {
     const { farbe, text } = getPlatzStatus(nr, now);
     const f = FARBEN[farbe];
+    const anker = farbe === 'rot'    ? '#belegungsplan-woechentlich'
+                : farbe === 'orange' ? '#belegungsplan-medenspiele'
+                : '';
+    const textEl = anker
+      ? `<a href="${anker}" class="font-mono text-[10px] uppercase tracking-widest leading-tight underline underline-offset-2 opacity-70 hover:opacity-100 transition-opacity">${text} →</a>`
+      : `<p class="font-mono text-[10px] uppercase tracking-widest leading-tight">${text}</p>`;
     return `
       <div class="border ${f.bg} ${f.border} ${f.text} p-5 flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full ${f.dot} shrink-0"></span>
           <p class="font-display text-2xl leading-none">Platz ${nr}</p>
         </div>
-        <p class="font-mono text-[10px] uppercase tracking-widest leading-tight">${text}</p>
+        ${textEl}
       </div>`;
   }).join('');
 
