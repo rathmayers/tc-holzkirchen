@@ -79,7 +79,7 @@ export const BELEGUNGEN = [
     ],
   },
 
-  // Freier Spielertreff – Plätze 1–5 (Mittwoch abend)
+  /* Freier Spielertreff – Plätze 1–5 (Mittwoch abend) bis auf Weiteres ausgesetzt
   {
     label:   'Freier Spielertreff',
     plaetze: [1, 2, 3, 4, 5],
@@ -87,6 +87,7 @@ export const BELEGUNGEN = [
       { wochentage: [3], von: '17:30', bis: '20:30' },
     ],
   },
+*/
 
   // Jugend - Match and Practice – Plätze 1–4 (Mittwoch nachmittag)
   {
