@@ -522,13 +522,19 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
     const termin = platzNr <= 5
       ? MEDENSPIELE_TERMINE.find((t) => t.datum === dateStr)
       : null;
-    if (termin && min >= zeitZuMinuten(termin.von)) {
-      const bis = getTerminBis(termin);
-      if (!bis || min < zeitZuMinuten(bis)) {
-        return {
-          farbe: "orange",
-          text: "Platzbelegung durch Medenspiele entsprechend Belegungsplan",
-        };
+    if (termin) {
+      const terminPlaetze = termin.plaetze || [1, 2, 3, 4, 5];
+      if (terminPlaetze.includes(platzNr)) {
+        const vonMin = zeitZuMinuten(termin.von) - (termin.buffer || 0);
+        if (min >= vonMin) {
+          const bis = getTerminBis(termin);
+          if (!bis || min < zeitZuMinuten(bis)) {
+            return {
+              farbe: "orange",
+              text: "Platzbelegung durch Medenspiele entsprechend Belegungsplan",
+            };
+          }
+        }
       }
     }
 
