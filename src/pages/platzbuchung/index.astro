@@ -117,14 +117,15 @@ const CHIP_SLUG: Record<string, string> = {
   "D40C": "damen-40c",
 };
 
-// Medenspiele-Termine gruppieren mit Schulferien-Bannern
-type MedRow =
-  | { type: "monat"; label: string }
-  | { type: "ferien"; label: string }
-  | { type: "termin"; datum: string; von: string; mannschaften: string[]; plaetze?: number[] };
+// Medenspiele nach Monaten gruppieren (für Accordion)
+type MedZeit   = { von: string; mannschaften: string[]; plaetze?: number[] };
+type MedTermin = { type: "termin"; datum: string; zeiten: MedZeit[] };
+type MedFerien = { type: "ferien"; label: string };
+type MedMonat  = { label: string; monatKey: string; items: (MedTermin | MedFerien)[] };
 
-const medRows: MedRow[] = [];
-let lastMonat = "";
+const medMonate: MedMonat[] = [];
+let curMonat: MedMonat | null = null;
+
 for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
   const t = MEDENSPIELE_TERMINE[i] as any;
   if (i > 0) {
@@ -132,19 +133,24 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
     const ferien = SCHULFERIEN.find(
       (f: any) => f.vonDatum > prev && f.vonDatum <= t.datum,
     );
-    if (ferien) medRows.push({ type: "ferien", label: (ferien as any).label });
+    if (ferien && curMonat) {
+      curMonat.items.push({ type: "ferien", label: (ferien as any).label });
+    }
   }
-  const m = mon(t.datum);
-  if (m !== lastMonat) {
-    medRows.push({ type: "monat", label: m });
-    lastMonat = m;
+  const mLabel   = mon(t.datum);
+  const monatKey = t.datum.substring(0, 7);
+  if (!curMonat || curMonat.label !== mLabel) {
+    curMonat = { label: mLabel, monatKey, items: [] };
+    medMonate.push(curMonat);
   }
-  medRows.push({
+  curMonat.items.push({
     type: "termin",
     datum: t.datum,
-    von: t.von,
-    mannschaften: t.mannschaften ?? [],
-    plaetze: t.plaetze,
+    zeiten: t.zeiten.map((z: any) => ({
+      von: z.von,
+      mannschaften: z.mannschaften ?? [],
+      plaetze: z.plaetze,
+    })),
   });
 }
 ---
@@ -389,69 +395,61 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
 
           <!-- Medenspiele Heimspieltage -->
           <div id="belegungsplan-medenspiele" class="scroll-mt-60">
-            <p
-              class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4"
-            >
+            <p class="font-mono text-xs text-court/40 uppercase tracking-widest mb-4">
               Medenspiele Heimspieltage
             </p>
-            <table class="w-full border border-sand-dark text-sm">
-              <tbody>
-                {
-                  medRows.map((r) => {
-                    if (r.type === "monat")
+            <div class="border border-sand-dark divide-y divide-sand-dark">
+              {medMonate.map((monat: MedMonat) => (
+                <div class="med-monat" data-monat={monat.monatKey}>
+                  <button
+                    class="med-toggle w-full flex items-center justify-between bg-court text-white py-2 px-3 hover:bg-court/80 transition-colors"
+                  >
+                    <span class="font-mono text-xs uppercase tracking-widest">{monat.label}</span>
+                    <svg class="med-chevron w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                      <path d="M19 9l-7 7-7-7"/>
+                    </svg>
+                  </button>
+                  <div class="med-content divide-y divide-sand-dark/40">
+                    {monat.items.map((item: MedTermin | MedFerien) => {
+                      if (item.type === "ferien") return null;
                       return (
-                        <tr>
-                          <td
-                            colspan="3"
-                            class="bg-court text-white font-mono text-xs uppercase tracking-widest py-2 px-3"
-                          >
-                            {r.label}
-                          </td>
-                        </tr>
-                      );
-                    if (r.type === "ferien") return null;
-                    return (
-                      <tr class="border-b border-sand-dark/50">
-                        <td class="py-2 pl-3 pr-4 align-top">
-                          <p class="font-display text-lg text-court leading-tight">
-                            {wtL(r.datum)}
-                          </p>
-                          <p class="font-mono text-xs text-clay">
-                            {dat(r.datum)}
-                          </p>
-                        </td>
-                        <td class="py-2 pr-6 font-mono text-xs text-court/50 whitespace-nowrap align-top">
-                          ab {r.von}
-                        </td>
-                        <td class="py-2 align-top">
-                          <div class="flex flex-wrap gap-1 mt-1">
-                            {r.mannschaften.map((m: string) =>
-                              CHIP_SLUG[m] ? (
-                                <a
-                                  href={`/mannschaften/#team-${CHIP_SLUG[m]}`}
-                                  class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 hover:bg-clay/25 transition-colors"
-                                >
-                                  {m}
-                                </a>
-                              ) : (
-                                <span class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5">
-                                  {m}
-                                </span>
-                              ),
-                            )}
+                        <div class="flex text-sm">
+                          <div class="py-2 pl-3 pr-4 w-36 shrink-0">
+                            <p class="font-display text-lg text-court leading-tight">{wtL(item.datum)}</p>
+                            <p class="font-mono text-xs text-clay">{dat(item.datum)}</p>
                           </div>
-                          {r.plaetze && (
-                            <p class="font-mono text-[10px] text-court/40 mt-1">
-                              Platz {r.plaetze.join(" + ")}
-                            </p>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })
-                }
-              </tbody>
-            </table>
+                          <div class="py-2 flex-1 space-y-1">
+                            {item.zeiten.map((z: MedZeit) => (
+                              <div class="flex items-start gap-3">
+                                <span class="font-mono text-xs text-court/50 whitespace-nowrap w-16 shrink-0 pt-0.5">ab {z.von}</span>
+                                <div>
+                                  <div class="flex flex-wrap gap-1">
+                                    {z.mannschaften.map((m: string) =>
+                                      CHIP_SLUG[m] ? (
+                                        <a href={`/mannschaften/#team-${CHIP_SLUG[m]}`} class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 hover:bg-clay/25 transition-colors">
+                                          {m}
+                                        </a>
+                                      ) : (
+                                        <span class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5">
+                                          {m}
+                                        </span>
+                                      )
+                                    )}
+                                  </div>
+                                  {z.plaetze && (
+                                    <p class="font-mono text-[10px] text-court/40 mt-0.5">Platz {z.plaetze.join(" + ")}</p>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -491,12 +489,12 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
     return h * 60 + m;
   }
 
-  function getTerminBis(termin) {
-    const teams = termin.mannschaften || [];
+  function getZeitBis(zeit) {
+    const teams = zeit.mannschaften || [];
     if (teams.length !== 1) return null;
     const team = teams[0];
     const is6er = team.endsWith("6er") || team === "Herren";
-    const von = termin.von;
+    const von = zeit.von;
     if (is6er && von === "09:00") return "19:00";
     if (!is6er && (von === "09:00" || von === "10:00")) return "15:00";
     return null;
@@ -531,16 +529,18 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
       ? MEDENSPIELE_TERMINE.find((t) => t.datum === dateStr)
       : null;
     if (termin) {
-      const terminPlaetze = termin.plaetze || [1, 2, 3, 4, 5];
-      if (terminPlaetze.includes(platzNr)) {
-        const vonMin = zeitZuMinuten(termin.von) - (termin.buffer || 0);
-        if (min >= vonMin) {
-          const bis = getTerminBis(termin);
-          if (!bis || min < zeitZuMinuten(bis)) {
-            return {
-              farbe: "orange",
-              text: "Platzbelegung durch Medenspiele entsprechend Belegungsplan",
-            };
+      for (const z of termin.zeiten) {
+        const terminPlaetze = z.plaetze || [1, 2, 3, 4, 5];
+        if (terminPlaetze.includes(platzNr)) {
+          const vonMin = zeitZuMinuten(z.von) - (z.buffer || 0);
+          if (min >= vonMin) {
+            const bis = getZeitBis(z);
+            if (!bis || min < zeitZuMinuten(bis)) {
+              return {
+                farbe: "orange",
+                text: "Platzbelegung durch Medenspiele entsprechend Belegungsplan",
+              };
+            }
           }
         }
       }
@@ -612,4 +612,26 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
   render();
   // Jede Minute neu prüfen
   setInterval(render, 60_000);
+
+  // Medenspiele-Accordion
+  (function () {
+    const now = new Date();
+    const currentKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    document.querySelectorAll(".med-monat").forEach(function (section) {
+      const monat   = section.getAttribute("data-monat");
+      const content = section.querySelector(".med-content");
+      const chevron = section.querySelector(".med-chevron");
+      const toggle  = section.querySelector(".med-toggle");
+      if (!content || !chevron || !toggle) return;
+      if (monat !== currentKey) {
+        content.style.display = "none";
+        chevron.style.transform = "rotate(-90deg)";
+      }
+      toggle.addEventListener("click", function () {
+        var open = content.style.display !== "none";
+        content.style.display = open ? "none" : "";
+        chevron.style.transform = open ? "rotate(-90deg)" : "";
+      });
+    });
+  })();
 </script>

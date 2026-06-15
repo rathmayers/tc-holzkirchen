@@ -18,5 +18,5 @@ export const MANNSCHAFTEN = [
   { name: 'Bambini 12',          kategorie: 'Jugend',   fuehrer: 'Sebastian Depping',  mobil: '017632312673',   telefon: '',             email: 'jan.depping@gmx.de',              teamid: '3584372', groupid: '2216658',        liga: 'M12 - S4 - Gr. 777' },
   { name: 'Bambini 12 II',       kategorie: 'Jugend',   fuehrer: 'Lilienne Doussal',   mobil: '',               telefon: '08024 9009944', email: 'florence@doussal.de',            teamid: '3572395', groupid: '2216732',        liga: 'M12 - S5 - Gr. 845' },
   { name: 'Dunlop Midcourt U10', kategorie: 'Jugend',   fuehrer: 'Tom Merzinger',      mobil: '01718645703',    telefon: '',             email: '',                                teamid: '3576707', groupid: '2216784',        liga: 'MC1 - S2 - Gr. 907' },
-  { name: 'Damen 40',            kategorie: 'After Work',    fuehrer: 'Carmen Hartmann',    mobil: '01633643686',    telefon: '',             email: 'Bianca-tommi@web.de',             teamid: '3720470',  groupid: '2236387',        liga: 'D40C - Sp.Ebene C - Gr. 108' },
+  { name: 'Damen 40C',            kategorie: 'After Work',    fuehrer: 'Carmen Hartmann',    mobil: '01633643686',    telefon: '',             email: 'Bianca-tommi@web.de',             teamid: '3720470',  groupid: '2236387',        liga: 'D40C - Sp.Ebene C - Gr. 108' },
 ];

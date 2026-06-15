@@ -5,43 +5,113 @@
 // datum: 'YYYY-MM-DD', von: frühester Anpfiff des Tages
 export const MEDENSPIELE_TERMINE = [
   // Mai
-  { datum: '2026-05-01', von: '09:00', mannschaften: ['U15m I'] },
-  { datum: '2026-05-02', von: '09:00', mannschaften: ['U18m I', 'H40 4er'] },
-  { datum: '2026-05-08', von: '15:00', mannschaften: ['U15m III'] },
-  { datum: '2026-05-09', von: '09:00', mannschaften: ['U12 I', 'U18m II', 'D30 4er', 'D50 I 4er'] },
-  { datum: '2026-05-10', von: '15:00', mannschaften: ['U10 MC'] },
-  { datum: '2026-05-11', von: '10:00', mannschaften: ['H70 4er'] },
-  { datum: '2026-05-15', von: '15:00', mannschaften: ['U15m II'] },
-  { datum: '2026-05-16', von: '09:00', mannschaften: ['U12 II', 'D50 I 4er', 'H30 6er', 'H50 6er'] },
-  { datum: '2026-05-18', von: '10:00', mannschaften: ['H70 4er'] },
+  { datum: '2026-05-02', zeiten: [
+    { von: '12:00', mannschaften: ['H40 4er'] },
+  ]},
+  { datum: '2026-05-08', zeiten: [
+    { von: '15:00', mannschaften: ['U15m III'] },
+  ]},
+  { datum: '2026-05-09', zeiten: [
+    { von: '09:00', mannschaften: ['U12 I', 'U18m II'] },
+    { von: '14:00', mannschaften: ['D30 4er', 'D50 I 4er'] },
+  ]},
+  { datum: '2026-05-10', zeiten: [
+    { von: '15:00', mannschaften: ['U10 MC'] },
+  ]},
+  { datum: '2026-05-11', zeiten: [
+    { von: '10:00', mannschaften: ['H70 4er'] },
+  ]},
+  { datum: '2026-05-15', zeiten: [
+    { von: '15:00', mannschaften: ['U15m II'] },
+  ]},
+  { datum: '2026-05-16', zeiten: [
+    { von: '09:00', mannschaften: ['U12 II'] },
+    { von: '14:00', mannschaften: ['D50 I 4er', 'H30 6er'] },
+  ]},
+  { datum: '2026-05-18', zeiten: [
+    { von: '10:00', mannschaften: ['H70 4er'] },
+  ]},
   // Juni
-  { datum: '2026-06-08', von: '10:00', mannschaften: ['H70 4er'] },
-  { datum: '2026-06-12', von: '15:00', mannschaften: ['U15m I'] },
-  { datum: '2026-06-13', von: '09:00', mannschaften: ['U18m I', 'U18m II', 'D30 4er', 'H30 6er'] },
-  { datum: '2026-06-14', von: '09:00', mannschaften: ['Herren','U10 MC'] },
-  { datum: '2026-06-15', von: '18:30', mannschaften: ['D40C'], plaetze: [3, 4], buffer: 15 },
-  { datum: '2026-06-19', von: '15:00', mannschaften: ['U15m III'] },
-  { datum: '2026-06-20', von: '09:00', mannschaften: ['U18m I', 'U18m II', 'D50 II 4er', 'H50 6er'] },
-  { datum: '2026-06-22', von: '18:30', mannschaften: ['D40C'], plaetze: [3, 4], buffer: 15 },
-  { datum: '2026-06-26', von: '15:00', mannschaften: ['U15m II'] },
-  { datum: '2026-06-27', von: '09:00', mannschaften: ['U12 I', 'U12 II', 'H30 6er', 'H40 4er'] },
-  { datum: '2026-06-29', von: '10:00', mannschaften: ['H70 4er'] },
+  { datum: '2026-06-07', zeiten: [
+    { von: '13:00', mannschaften: ['H50 6er'] },
+  ]},
+  { datum: '2026-06-08', zeiten: [
+    { von: '10:00', mannschaften: ['H70 4er'] },
+  ]},
+  { datum: '2026-06-13', zeiten: [
+    { von: '09:00', mannschaften: ['U18m I', 'U18m II'] },
+    { von: '14:00', mannschaften: ['D30 4er', 'H30 6er'] },
+  ]},
+  { datum: '2026-06-14', zeiten: [
+    { von: '15:00', mannschaften: ['U10 MC'] },
+  ]},
+  { datum: '2026-06-15', zeiten: [
+    { von: '18:30', mannschaften: ['D40C'], plaetze: [3, 4], buffer: 15 },
+  ]},
+  { datum: '2026-06-19', zeiten: [
+    { von: '15:00', mannschaften: ['U15m II'] },
+  ]},
+  { datum: '2026-06-20', zeiten: [
+    { von: '09:00', mannschaften: ['U18m I', 'U18m II'] },
+    { von: '14:00', mannschaften: ['D50 II 4er', 'H50 6er'] },
+  ]},
+  { datum: '2026-06-22', zeiten: [
+    { von: '18:30', mannschaften: ['D40C'], plaetze: [3, 4], buffer: 15 },
+  ]},
+  { datum: '2026-06-26', zeiten: [
+    { von: '15:00', mannschaften: ['U15m II'] },
+  ]},
+  { datum: '2026-06-27', zeiten: [
+    { von: '09:00', mannschaften: ['U12 I', 'U12 II'] },
+    { von: '14:00', mannschaften: ['H30 6er', 'H40 4er'] },
+  ]},
+  { datum: '2026-06-29', zeiten: [
+    { von: '10:00', mannschaften: ['H70 4er'] },
+  ]},
   // Juli
-  { datum: '2026-07-03', von: '15:00', mannschaften: ['U15m I', 'U15m III'] },
-  { datum: '2026-07-04', von: '09:00', mannschaften: ['U12 II', 'D30 4er', 'D50 I 4er', 'H40 4er'] },
-  { datum: '2026-07-05', von: '09:00', mannschaften: ['H30 6er', 'U10 MC'] },
-  { datum: '2026-07-10', von: '15:00', mannschaften: ['U15m III'] },
-  { datum: '2026-07-11', von: '09:00', mannschaften: ['U12 I', 'U18m I', 'H40 4er', 'H50 6er'] },
-  { datum: '2026-07-12', von: '09:00', mannschaften: ['Herren'] },
-  { datum: '2026-07-17', von: '15:00', mannschaften: ['U15m I'] },
-  { datum: '2026-07-18', von: '09:00', mannschaften: ['U18m I', 'D50 I 4er'] },
-  { datum: '2026-07-19', von: '09:00', mannschaften: ['Herren'] },
+  { datum: '2026-07-03', zeiten: [
+    { von: '15:00', mannschaften: ['U15m I', 'U15m III'] },
+  ]},
+  { datum: '2026-07-04', zeiten: [
+    { von: '09:00', mannschaften: ['U12 II', 'H50 6er'] },
+    { von: '14:00', mannschaften: ['D50 I 4er', 'D50 II 4er'] },
+  ]},
+  { datum: '2026-07-05', zeiten: [
+    { von: '09:00', mannschaften: ['H40 4er'] },
+    { von: '15:00', mannschaften: ['U10 MC'] },
+  ]},
+  { datum: '2026-07-10', zeiten: [
+    { von: '15:00', mannschaften: ['U15m III'] },
+  ]},
+  { datum: '2026-07-11', zeiten: [
+    { von: '09:00', mannschaften: ['U12 I', 'U18m I'] },
+    { von: '14:00', mannschaften: ['H30 6er', 'H40 4er'] },
+  ]},
+  { datum: '2026-07-12', zeiten: [
+    { von: '09:00', mannschaften: ['Herren'] },
+  ]},
+  { datum: '2026-07-17', zeiten: [
+    { von: '15:00', mannschaften: ['U15m I'] },
+  ]},
+  { datum: '2026-07-18', zeiten: [
+    { von: '09:00', mannschaften: ['U18m I'] },
+    { von: '13:00', mannschaften: ['D50 II 4er'] },
+  ]},
+  { datum: '2026-07-19', zeiten: [
+    { von: '09:00', mannschaften: ['Herren'] },
+  ]},
+  { datum: '2026-07-24', zeiten: [
+    { von: '15:00', mannschaften: ['U15m I'] },
+  ]},
+  { datum: '2026-07-25', zeiten: [
+    { von: '09:00', mannschaften: ['Herren'] },
+  ]},
 ];
 
 // Für den Hero-Statusdot: generelle Medenspiele-Saison (Fallback)
 export const MEDENSPIELE = {
-  vonDatum:    '2026-05-01',
-  bisDatum:    '2026-07-19',
+  vonDatum:    '2026-05-02',
+  bisDatum:    '2026-07-25',
 };
 
 // ── Schulferien (für Lücken im Belegungsplan) ─────────────────────────────
@@ -99,6 +169,17 @@ export const BELEGUNGEN = [
       { wochentage: [3], von: '14:30', bis: '16:00' },
     ],
   },
+
+  // Privatschule Sport-Sondertag
+  {
+    label:   'Privatschule Sport',
+    plaetze: [3, 4],
+    zeiten: [
+      { wochentage: [4], von: '11:30', bis: '13:00' },
+    ],
+  },
+
+
 
   // Weitere Belegungen hier eintragen:
   // {
