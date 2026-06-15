@@ -132,7 +132,7 @@ function renderMannschaften(mannschaften) {
   }
 
   el.innerHTML = Object.entries(gruppen).map(([kat, teams]) => `
-    <div class="mb-10">
+    <div class="mb-10" id="kategorie-${kat.toLowerCase().replace(/\s+/g, '-')}">
       <p class="section-label mb-4">${kat}</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         ${teams.map(m => {
