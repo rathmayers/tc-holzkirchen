@@ -174,6 +174,8 @@ export const BELEGUNGEN = [
   {
     label:   'Privatschule Sport',
     plaetze: [3, 4],
+    vonDatum: '2026-06-18',   // optional
+    bisDatum: '2026-06-18',   // optional
     zeiten: [
       { wochentage: [4], von: '11:30', bis: '13:00' },
     ],
