@@ -119,7 +119,7 @@ const CHIP_SLUG: Record<string, string> = {
 type MedRow =
   | { type: "monat"; label: string }
   | { type: "ferien"; label: string }
-  | { type: "termin"; datum: string; von: string; mannschaften: string[] };
+  | { type: "termin"; datum: string; von: string; mannschaften: string[]; plaetze?: number[] };
 
 const medRows: MedRow[] = [];
 let lastMonat = "";
@@ -142,6 +142,7 @@ for (let i = 0; i < MEDENSPIELE_TERMINE.length; i++) {
     datum: t.datum,
     von: t.von,
     mannschaften: t.mannschaften ?? [],
+    plaetze: t.plaetze,
   });
 }
 ---
@@ -437,6 +438,11 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
                               ),
                             )}
                           </div>
+                          {r.plaetze && (
+                            <p class="font-mono text-[10px] text-court/40 mt-1">
+                              Platz {r.plaetze.join(" + ")}
+                            </p>
+                          )}
                         </td>
                       </tr>
                     );
