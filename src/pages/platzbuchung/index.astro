@@ -426,7 +426,7 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
                                   <div class="flex flex-wrap gap-1">
                                     {z.mannschaften.map((m: string) =>
                                       CHIP_SLUG[m] ? (
-                                        <a href={`/mannschaften/#team-${CHIP_SLUG[m]}`} class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 hover:bg-clay/25 transition-colors">
+                                        <a href={`/mannschaften/#${CHIP_SLUG[m]}`} class="inline-block bg-clay/10 text-clay font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 hover:bg-clay/25 transition-colors">
                                           {m}
                                         </a>
                                       ) : (
