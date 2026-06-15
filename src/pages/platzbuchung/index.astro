@@ -51,7 +51,7 @@ const dat = (s: string) => {
   const d = pd(s);
   return `${d.getDate()}. ${MONATE[d.getMonth()]}`;
 };
-const monK = (s: string) => MONATE_KURZ[pd(s).getMonth()];
+const datK = (s: string) => { const d = pd(s); return `${d.getDate()}. ${MONATE_KURZ[d.getMonth()]}`; };
 const wtL = (s: string) => WT_LANG[pd(s).getDay()];
 const mon = (s: string) => MONATE[pd(s).getMonth()];
 
@@ -84,7 +84,7 @@ for (const b of BELEGUNGEN as any[]) {
         bis: z.bis,
         plaetze: plaetzeStr(b.plaetze),
         label: b.label,
-        saison: b.vonDatum ? `${monK(b.vonDatum)} – ${monK(b.bisDatum)}` : null,
+        saison: b.vonDatum ? `${datK(b.vonDatum)} – ${datK(b.bisDatum)}` : null,
       });
     }
   }
@@ -371,19 +371,20 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
                     <span class="font-display text-lg text-court w-32 shrink-0">
                       {r.tag}
                     </span>
-                    <div class="flex flex-col gap-1.5">
+                    <div class="flex flex-col gap-3">
                       {r.slots.map((s: any) => (
-                        <div class="flex items-center gap-3 flex-wrap">
-                          <span class="font-mono text-xs text-clay uppercase tracking-widest w-24 shrink-0">
-                            {s.plaetze}
-                          </span>
-                          <span class="text-sm text-court/60">
-                            {s.von} – {s.bis} Uhr
-                          </span>
-                          <span class="font-mono text-[10px] text-court/35 uppercase tracking-widest">
-                            {s.label}
-                            {s.saison ? ` · ${s.saison}` : ""}
-                          </span>
+                        <div>
+                          <div class="flex items-center gap-3">
+                            <span class="font-mono text-xs text-clay uppercase tracking-widest w-24 shrink-0">
+                              {s.plaetze}
+                            </span>
+                            <span class="text-sm text-court/60">
+                              {s.von} – {s.bis} Uhr
+                            </span>
+                          </div>
+                          <p class="font-mono text-[10px] text-court/35 uppercase tracking-widest mt-0.5 pl-[6.75rem]">
+                            {s.label}{s.saison ? ` · ${s.saison}` : ""}
+                          </p>
                         </div>
                       ))}
                     </div>
