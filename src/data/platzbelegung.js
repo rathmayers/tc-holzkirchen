@@ -170,7 +170,7 @@ export const BELEGUNGEN = [
     ],
   },
 
-  // Privatschule Sport-Sondertag
+  /* Privatschule Sport-Sondertag
   {
     label:   'Privatschule Sport',
     plaetze: [3, 4],
@@ -180,7 +180,7 @@ export const BELEGUNGEN = [
       { wochentage: [4], von: '11:30', bis: '13:00' },
     ],
   },
-
+*/
 
 
   // Weitere Belegungen hier eintragen:
