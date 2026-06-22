@@ -110,6 +110,10 @@ export const MEDENSPIELE_TERMINE = [
   { datum: '2026-07-25', zeiten: [
     { von: '09:00', mannschaften: ['Herren'] },
   ]},
+  { datum: '2026-08-01', zeiten: [
+    { von: '10:00', mannschaften: ['Mixed-Turnier des TC Holzkirchen mit Sommerfest'] },
+  ]},
+
 ];
 
 // Für den Hero-Statusdot: generelle Medenspiele-Saison (Fallback)
