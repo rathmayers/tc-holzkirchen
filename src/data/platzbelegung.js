@@ -58,6 +58,10 @@ export const MEDENSPIELE_TERMINE = [
   { datum: '2026-06-22', zeiten: [
     { von: '18:30', mannschaften: ['D40C'], plaetze: [3, 4], buffer: 15 },
   ]},
+    { datum: '2026-06-23', zeiten: [
+    { von: '08:30', mannschaften: ['Privatschule Tennis-Turnier'], plaetze: [1, 2,3, 4]},
+    { von: '10:30', mannschaften: ['Privatschule Tennis-Turnier'], plaetze: [3, 4]},
+  ]},
   { datum: '2026-06-26', zeiten: [
     { von: '15:00', mannschaften: ['U15m II'] },
   ]},
@@ -170,17 +174,26 @@ export const BELEGUNGEN = [
     ],
   },
 
-  /* Privatschule Sport-Sondertag
+  //Privatschule Sport-Sondertag
   {
-    label:   'Privatschule Sport',
-    plaetze: [3, 4],
-    vonDatum: '2026-06-18',   // optional
-    bisDatum: '2026-06-18',   // optional
+    label:   'Privatschule Tennis-Turnier',
+    plaetze: [1, 2, 3, 4],
+    vonDatum: '2026-06-23',   // optional
+    bisDatum: '2026-06-23',   // optional
     zeiten: [
-      { wochentage: [4], von: '11:30', bis: '13:00' },
+      { wochentage: [2], von: '8:30', bis: '10:00' },
     ],
   },
-*/
+
+  {
+    label:   'Privatschule Tennis-Turnier',
+    plaetze: [3, 4],
+    vonDatum: '2026-06-23',   // optional
+    bisDatum: '2026-06-23',   // optional
+    zeiten: [
+      { wochentage: [2], von: '10:00', bis: '10:00' },
+    ],
+  },
 
 
   // Weitere Belegungen hier eintragen:
