@@ -174,7 +174,7 @@ export const BELEGUNGEN = [
     ],
   },
 
-  //Privatschule Sport-Sondertag
+  /* weitere mögliche wöchentliche Belegungen hier eintragen:
   {
     label:   'Privatschule Tennis-Turnier',
     plaetze: [1, 2, 3, 4],
@@ -184,17 +184,7 @@ export const BELEGUNGEN = [
       { wochentage: [2], von: '8:30', bis: '10:00' },
     ],
   },
-
-  {
-    label:   'Privatschule Tennis-Turnier',
-    plaetze: [3, 4],
-    vonDatum: '2026-06-23',   // optional
-    bisDatum: '2026-06-23',   // optional
-    zeiten: [
-      { wochentage: [2], von: '10:00', bis: '10:00' },
-    ],
-  },
-
+*/
 
   // Weitere Belegungen hier eintragen:
   // {
