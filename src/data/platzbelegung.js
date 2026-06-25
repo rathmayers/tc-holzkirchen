@@ -62,12 +62,9 @@ export const MEDENSPIELE_TERMINE = [
     { von: '08:30', mannschaften: ['Privatschule Tennis-Turnier'], plaetze: [1, 2,3, 4]},
     { von: '10:30', mannschaften: ['Privatschule Tennis-Turnier'], plaetze: [3, 4]},
   ]},
-  { datum: '2026-06-26', zeiten: [
-    { von: '15:00', mannschaften: ['U15m II'] },
-  ]},
   { datum: '2026-06-27', zeiten: [
-    { von: '09:00', mannschaften: ['U12 I', 'U12 II'] },
-    { von: '14:00', mannschaften: ['H30 6er', 'H40 4er'] },
+    { von: '07:30', mannschaften: ['U12 I', 'U12 II'] },
+    { von: '14:00', mannschaften: ['H40 4er'] },
   ]},
   { datum: '2026-06-29', zeiten: [
     { von: '10:00', mannschaften: ['H70 4er'] },
@@ -85,6 +82,7 @@ export const MEDENSPIELE_TERMINE = [
     { von: '15:00', mannschaften: ['U10 MC'] },
   ]},
   { datum: '2026-07-10', zeiten: [
+    { von: '15:00', mannschaften: ['U15m II'] },
     { von: '15:00', mannschaften: ['U15m III'] },
   ]},
   { datum: '2026-07-11', zeiten: [
