@@ -1,15 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 const allNews = await getCollection('news');
-const sorted  = allNews.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const sorted  = allNews.sort((a: CollectionEntry<'news'>, b: CollectionEntry<'news'>) => b.data.date.valueOf() - a.data.date.valueOf());
 
 // Rohinhalte aller MDX-Dateien für den Edit-Modus
 const rawFiles = import.meta.glob('/src/content/news/*.mdx', { as: 'raw' });
 
 // Daten für Client serialisieren
-const newsData = await Promise.all(sorted.map(async entry => {
+const newsData = await Promise.all(sorted.map(async (entry: CollectionEntry<'news'>) => {
   const filePath = `/src/content/news/${entry.id}`;
   const raw = rawFiles[filePath] ? await rawFiles[filePath]() : '';
   // Body = alles nach dem zweiten ---
@@ -37,7 +37,7 @@ const newsJSON = JSON.stringify(newsData);
 <BaseLayout title="News-Liste – Admin TC Holzkirchen">
 
   <!-- Header -->
-  <div class="bg-court/5 border-b border-sand-dark py-6">
+  <div class="bg-court/5 border-b border-sand-dark py-6 sm:py-8">
     <div class="max-w-screen-xl mx-auto px-6 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <a href="/admin/dashboard" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors">← Dashboard</a>
