@@ -118,7 +118,7 @@ const initialData = JSON.stringify({
       var header = document.createElement('div');
       header.className = 'flex flex-wrap items-center gap-2 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 bg-sand border-b border-sand-dark';
       header.innerHTML =
-        '<input type="date" data-role="datum" data-ti="' + ti + '" value="' + t.datum + '" class="form-input text-sm flex-1 min-w-0" />' +
+        '<input type="date" data-role="datum" data-ti="' + ti + '" value="' + t.datum + '" class="form-input text-sm w-40 sm:w-44" />' +
         '<span class="font-mono text-xs text-court/40 hidden sm:inline">' + t.zeiten.length + ' Zeit' + (t.zeiten.length !== 1 ? 'en' : '') + '</span>' +
         '<div class="flex items-center gap-2 ml-auto">' +
           '<button data-ti="' + ti + '" data-action="add-zeit" class="font-mono text-xs text-court/60 hover:text-court transition-colors border border-sand-dark px-2 sm:px-3 py-1.5 whitespace-nowrap">+ Zeit</button>' +
@@ -184,10 +184,10 @@ const initialData = JSON.stringify({
 
         // Plätze
         var plaetzeWrap = document.createElement('div');
-        plaetzeWrap.className = 'flex flex-col gap-1 col-span-2 sm:w-36';
+        plaetzeWrap.className = 'flex flex-col gap-1 col-span-2 sm:w-40';
         var plaetzeLabel = document.createElement('span');
         plaetzeLabel.className = 'form-label text-xs';
-        plaetzeLabel.textContent = 'Plätze (leer = 1–5)';
+        plaetzeLabel.textContent = 'Plätze';
         var plaetzeInp = makePlaetzeInput(z.plaetze);
         plaetzeInp.dataset.ti = ti;
         plaetzeInp.dataset.zi = zi;
