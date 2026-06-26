@@ -1,0 +1,331 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  MEDENSPIELE_TERMINE,
+  MEDENSPIELE,
+  SCHULFERIEN,
+  BELEGUNGEN,
+} from '../../data/platzbelegung.js';
+
+const initialData = JSON.stringify({
+  medenspieleTermine: MEDENSPIELE_TERMINE,
+  medenspiele:        MEDENSPIELE,
+  schulferien:        SCHULFERIEN,
+  belegungen:         BELEGUNGEN,
+});
+---
+
+<BaseLayout title="Platzbelegung – Admin TC Holzkirchen">
+
+  <!-- Header -->
+  <div class="bg-court/5 border-b border-sand-dark py-4 sm:py-6">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="/admin/dashboard" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors shrink-0">← Dashboard</a>
+        <span class="text-sand-dark">/</span>
+        <h1 class="font-display text-xl sm:text-2xl text-court truncate">Platzbelegung</h1>
+      </div>
+      <a href="/platzbuchung" class="btn-outline text-xs py-2 px-3 sm:px-4 shrink-0 hidden sm:inline-flex">Platzbuchung ansehen</a>
+    </div>
+  </div>
+
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-6 sm:py-12 space-y-6 sm:space-y-12">
+
+    <!-- Medenspiele-Saison -->
+    <section class="bg-white border border-sand-dark p-4 sm:p-8">
+      <h2 class="font-display text-xl sm:text-2xl text-court mb-4 sm:mb-6">Medenspiele-Saison</h2>
+      <div class="grid grid-cols-2 gap-3 sm:gap-4 max-w-sm">
+        <div>
+          <label class="form-label" for="saison-von">Von</label>
+          <input type="date" id="saison-von" class="form-input" />
+        </div>
+        <div>
+          <label class="form-label" for="saison-bis">Bis</label>
+          <input type="date" id="saison-bis" class="form-input" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Meden-Heimspieltage und Sonderbelegungen -->
+    <section class="bg-white border border-sand-dark p-4 sm:p-8">
+      <div class="flex flex-wrap items-start justify-between gap-3 mb-4 sm:mb-6">
+        <h2 class="font-display text-xl sm:text-2xl text-court">Meden-Heimspieltage und Sonderbelegungen</h2>
+        <button id="add-termin-btn" class="btn-outline text-xs py-2 px-4 shrink-0">+ Termin</button>
+      </div>
+      <p class="text-sm text-court/50 font-mono mb-4 sm:mb-6">Plätze 1–5 werden ab der angegebenen Uhrzeit als belegt (orange) markiert. Ohne Ende-Zeit gilt 20:00 als Standard.</p>
+      <div id="termine-list" class="space-y-4"></div>
+    </section>
+
+    <!-- Speichern -->
+    <div class="flex flex-wrap items-center gap-4 pb-6 sm:pb-8">
+      <button id="save-btn" class="btn-primary w-full sm:w-auto text-base px-8 py-4">
+        Änderungen speichern
+      </button>
+      <span id="save-status" class="font-mono text-sm hidden"></span>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<script define:vars={{ initialData }} is:inline>
+  if (!sessionStorage.getItem('tc-session')) window.location.href = '/admin';
+  var SESSION_TOKEN = sessionStorage.getItem('tc-session');
+
+  var state = JSON.parse(initialData);
+
+  // ─── Hilfsfunktionen ────────────────────────────────────────────────────
+
+  function el(id) { return document.getElementById(id); }
+
+  function makePlaetzeInput(value) {
+    var inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'form-input text-sm w-full';
+    inp.placeholder = 'leer = 1–5, z.B. 3,4';
+    inp.value = value ? value.join(',') : '';
+    inp.dataset.role = 'plaetze';
+    return inp;
+  }
+
+  function makeBisInput(value) {
+    var inp = document.createElement('input');
+    inp.type = 'time';
+    inp.className = 'form-input text-sm w-full';
+    inp.placeholder = '20:00';
+    inp.value = value || '';
+    inp.dataset.role = 'bis';
+    return inp;
+  }
+
+  // ─── Saison ─────────────────────────────────────────────────────────────
+
+  el('saison-von').value = state.medenspiele.vonDatum;
+  el('saison-bis').value = state.medenspiele.bisDatum;
+
+  // ─── Termine ─────────────────────────────────────────────────────────────
+
+  function renderTermine() {
+    var list = el('termine-list');
+    list.innerHTML = '';
+
+    state.medenspieleTermine.sort(function(a, b) { return a.datum.localeCompare(b.datum); });
+
+    state.medenspieleTermine.forEach(function(t, ti) {
+      var card = document.createElement('div');
+      card.className = 'border border-sand-dark';
+
+      // Kartenheader
+      var header = document.createElement('div');
+      header.className = 'flex flex-wrap items-center gap-2 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 bg-sand border-b border-sand-dark';
+      header.innerHTML =
+        '<input type="date" data-role="datum" data-ti="' + ti + '" value="' + t.datum + '" class="form-input text-sm flex-1 min-w-0" />' +
+        '<span class="font-mono text-xs text-court/40 hidden sm:inline">' + t.zeiten.length + ' Zeit' + (t.zeiten.length !== 1 ? 'en' : '') + '</span>' +
+        '<div class="flex items-center gap-2 ml-auto">' +
+          '<button data-ti="' + ti + '" data-action="add-zeit" class="font-mono text-xs text-court/60 hover:text-court transition-colors border border-sand-dark px-2 sm:px-3 py-1.5 whitespace-nowrap">+ Zeit</button>' +
+          '<button data-ti="' + ti + '" data-action="del-termin" class="font-mono text-xs text-clay hover:text-clay/70 transition-colors whitespace-nowrap">Löschen</button>' +
+        '</div>';
+      card.appendChild(header);
+
+      // Zeiten
+      var zeitenWrap = document.createElement('div');
+      zeitenWrap.className = 'divide-y divide-sand-dark';
+
+      t.zeiten.forEach(function(z, zi) {
+        var row = document.createElement('div');
+        row.className = 'grid grid-cols-2 sm:flex sm:flex-wrap gap-3 px-3 sm:px-5 py-3';
+
+        // Ab
+        var vonWrap = document.createElement('div');
+        vonWrap.className = 'flex flex-col gap-1';
+        var vonLabel = document.createElement('span');
+        vonLabel.className = 'form-label text-xs';
+        vonLabel.textContent = 'Ab';
+        var vonInp = document.createElement('input');
+        vonInp.type = 'time';
+        vonInp.className = 'form-input text-sm';
+        vonInp.dataset.role = 'von';
+        vonInp.dataset.ti = ti;
+        vonInp.dataset.zi = zi;
+        vonInp.value = z.von;
+        vonWrap.appendChild(vonLabel);
+        vonWrap.appendChild(vonInp);
+        row.appendChild(vonWrap);
+
+        // Bis
+        var bisWrap = document.createElement('div');
+        bisWrap.className = 'flex flex-col gap-1';
+        var bisLabel = document.createElement('span');
+        bisLabel.className = 'form-label text-xs';
+        bisLabel.textContent = 'Bis (leer = 20:00)';
+        var bisInp = makeBisInput(z.bis);
+        bisInp.dataset.ti = ti;
+        bisInp.dataset.zi = zi;
+        bisWrap.appendChild(bisLabel);
+        bisWrap.appendChild(bisInp);
+        row.appendChild(bisWrap);
+
+        // Mannschaften (volle Breite)
+        var mannWrap = document.createElement('div');
+        mannWrap.className = 'flex flex-col gap-1 col-span-2 sm:flex-1 sm:min-w-48';
+        var mannLabel = document.createElement('span');
+        mannLabel.className = 'form-label text-xs';
+        mannLabel.textContent = 'Mannschaften / Bezeichnung';
+        var mannInp = document.createElement('input');
+        mannInp.type = 'text';
+        mannInp.className = 'form-input text-sm';
+        mannInp.dataset.role = 'mannschaften';
+        mannInp.dataset.ti = ti;
+        mannInp.dataset.zi = zi;
+        mannInp.value = z.mannschaften.join(', ');
+        mannInp.placeholder = 'z.B. H40 4er, U15m I';
+        mannWrap.appendChild(mannLabel);
+        mannWrap.appendChild(mannInp);
+        row.appendChild(mannWrap);
+
+        // Plätze
+        var plaetzeWrap = document.createElement('div');
+        plaetzeWrap.className = 'flex flex-col gap-1 col-span-2 sm:w-36';
+        var plaetzeLabel = document.createElement('span');
+        plaetzeLabel.className = 'form-label text-xs';
+        plaetzeLabel.textContent = 'Plätze (leer = 1–5)';
+        var plaetzeInp = makePlaetzeInput(z.plaetze);
+        plaetzeInp.dataset.ti = ti;
+        plaetzeInp.dataset.zi = zi;
+        plaetzeWrap.appendChild(plaetzeLabel);
+        plaetzeWrap.appendChild(plaetzeInp);
+        row.appendChild(plaetzeWrap);
+
+        // Löschen
+        var delWrap = document.createElement('div');
+        delWrap.className = 'flex items-end col-span-2 sm:col-auto';
+        var delBtn = document.createElement('button');
+        delBtn.className = 'font-mono text-xs text-clay hover:text-clay/70 transition-colors pb-1.5';
+        delBtn.dataset.action = 'del-zeit';
+        delBtn.dataset.ti = ti;
+        delBtn.dataset.zi = zi;
+        delBtn.textContent = 'Zeit löschen';
+        delWrap.appendChild(delBtn);
+        row.appendChild(delWrap);
+
+        zeitenWrap.appendChild(row);
+      });
+
+      card.appendChild(zeitenWrap);
+      list.appendChild(card);
+    });
+  }
+
+  el('termine-list').addEventListener('input', function(e) {
+    var inp = e.target;
+    var ti  = Number(inp.dataset.ti);
+    var zi  = Number(inp.dataset.zi);
+    var role = inp.dataset.role;
+
+    if (role === 'datum') {
+      state.medenspieleTermine[ti].datum = inp.value;
+      return;
+    }
+    if (role === 'von') {
+      state.medenspieleTermine[ti].zeiten[zi].von = inp.value;
+      return;
+    }
+    if (role === 'mannschaften') {
+      state.medenspieleTermine[ti].zeiten[zi].mannschaften =
+        inp.value.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+      return;
+    }
+    if (role === 'plaetze') {
+      var vals = inp.value.split(',').map(function(s) { return parseInt(s.trim(), 10); }).filter(function(n) { return !isNaN(n); });
+      if (vals.length > 0) {
+        state.medenspieleTermine[ti].zeiten[zi].plaetze = vals;
+      } else {
+        delete state.medenspieleTermine[ti].zeiten[zi].plaetze;
+      }
+      return;
+    }
+    if (role === 'bis') {
+      if (inp.value) {
+        state.medenspieleTermine[ti].zeiten[zi].bis = inp.value;
+      } else {
+        delete state.medenspieleTermine[ti].zeiten[zi].bis;
+      }
+    }
+  });
+
+  el('termine-list').addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    var action = btn.dataset.action;
+    var ti = Number(btn.dataset.ti);
+    var zi = Number(btn.dataset.zi);
+
+    if (action === 'del-termin') {
+      state.medenspieleTermine.splice(ti, 1);
+      renderTermine();
+    }
+    if (action === 'del-zeit') {
+      state.medenspieleTermine[ti].zeiten.splice(zi, 1);
+      if (state.medenspieleTermine[ti].zeiten.length === 0) {
+        state.medenspieleTermine.splice(ti, 1);
+      }
+      renderTermine();
+    }
+    if (action === 'add-zeit') {
+      state.medenspieleTermine[ti].zeiten.push({ von: '10:00', mannschaften: [] });
+      renderTermine();
+    }
+  });
+
+  el('add-termin-btn').addEventListener('click', function() {
+    var today = new Date().toISOString().split('T')[0];
+    state.medenspieleTermine.push({ datum: today, zeiten: [{ von: '10:00', mannschaften: [] }] });
+    renderTermine();
+    setTimeout(function() {
+      var cards = el('termine-list').querySelectorAll('.border');
+      var last = cards[cards.length - 1];
+      if (last) last.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  });
+
+  // ─── Speichern ──────────────────────────────────────────────────────────
+
+  function setStatus(msg, ok) {
+    var statusEl = el('save-status');
+    statusEl.textContent = msg;
+    statusEl.className   = 'font-mono text-sm ' + (ok ? 'text-emerald-600' : 'text-clay');
+    statusEl.classList.remove('hidden');
+  }
+
+  el('save-btn').addEventListener('click', function() {
+    state.medenspiele.vonDatum = el('saison-von').value;
+    state.medenspiele.bisDatum = el('saison-bis').value;
+
+    var btn = el('save-btn');
+    btn.disabled    = true;
+    btn.textContent = 'Wird gespeichert…';
+
+    fetch('/api/save-platzbelegung', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SESSION_TOKEN },
+      body:    JSON.stringify(state),
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        setStatus('✓ Gespeichert! Seite aktualisiert sich in ~1 Minute.', true);
+      } else {
+        setStatus('Fehler: ' + (data.error || 'Unbekannter Fehler'), false);
+      }
+      btn.disabled    = false;
+      btn.textContent = 'Änderungen speichern';
+    })
+    .catch(function(err) {
+      setStatus('Verbindungsfehler: ' + err.message, false);
+      btn.disabled    = false;
+      btn.textContent = 'Änderungen speichern';
+    });
+  });
+
+  // ─── Init ────────────────────────────────────────────────────────────────
+  renderTermine();
+</script>

@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allNews = await getCollection('news');
+const newsCount = allNews.length;
+---
+
+<BaseLayout title="Dashboard – Admin TC Holzkirchen">
+
+  <div class="bg-court/5 border-b border-sand-dark py-4 sm:py-6">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-8 h-8 bg-clay flex items-center justify-center text-white font-display text-sm shrink-0">TC</div>
+        <h1 class="font-display text-xl sm:text-2xl text-court">Admin-Dashboard</h1>
+        <span class="font-mono text-xs text-court/30 uppercase tracking-widest hidden sm:inline">TC Holzkirchen</span>
+      </div>
+      <button id="logout-btn" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors shrink-0">Logout</button>
+    </div>
+  </div>
+
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+
+      <!-- News erstellen -->
+      <a href="/admin/news-erstellen" class="group bg-white border border-sand-dark p-5 sm:p-8 hover:border-clay transition-colors">
+        <div class="w-10 h-10 bg-court flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <h2 class="font-display text-xl text-court mb-2 group-hover:text-clay transition-colors">News erstellen</h2>
+        <p class="font-mono text-xs text-court/50 uppercase tracking-widest">Neuen Beitrag verfassen und veröffentlichen</p>
+      </a>
+
+      <!-- News verwalten -->
+      <a href="/admin/news-liste" class="group bg-white border border-sand-dark p-5 sm:p-8 hover:border-clay transition-colors">
+        <div class="w-10 h-10 bg-court flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <h2 class="font-display text-xl text-court mb-2 group-hover:text-clay transition-colors">News verwalten</h2>
+        <p class="font-mono text-xs text-court/50 uppercase tracking-widest">
+          {newsCount} {newsCount === 1 ? 'Beitrag' : 'Beiträge'} · Bearbeiten &amp; löschen
+        </p>
+      </a>
+
+      <!-- Platzbelegung -->
+      <a href="/admin/platzbelegung" class="group bg-white border border-sand-dark p-5 sm:p-8 hover:border-clay transition-colors">
+        <div class="w-10 h-10 bg-court flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <h2 class="font-display text-xl text-court mb-2 group-hover:text-clay transition-colors">Platzbelegung</h2>
+        <p class="font-mono text-xs text-court/50 uppercase tracking-widest">Meden-Heimspieltage &amp; Sonderbelegungen</p>
+      </a>
+
+    </div>
+
+    <!-- Quicklinks -->
+    <div class="mt-8 sm:mt-12 border-t border-sand-dark pt-6 sm:pt-8 flex flex-wrap gap-4 sm:gap-6">
+      <a href="/" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors">Startseite ansehen →</a>
+      <a href="/news" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors">News ansehen →</a>
+      <a href="/platzbuchung" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors">Platzbuchung ansehen →</a>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  if (!sessionStorage.getItem('tc-session')) window.location.href = '/admin';
+
+  document.getElementById('logout-btn').addEventListener('click', function() {
+    sessionStorage.removeItem('tc-session');
+    window.location.href = '/admin';
+  });
+</script>

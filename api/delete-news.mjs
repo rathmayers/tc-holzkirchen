@@ -1,6 +1,8 @@
 // api/delete-news.mjs – Vercel Serverless Function
 // Löscht eine MDX-Datei aus dem GitHub-Repository.
 
+import { verifySession } from './_verify-session.mjs';
+
 const OWNER  = 'rathmayers';
 const REPO   = 'tc-holzkirchen';
 const BRANCH = 'main';
@@ -8,9 +10,10 @@ const BRANCH = 'main';
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST')    return res.status(405).json({ error: 'Method not allowed' });
+  if (!verifySession(req))      return res.status(401).json({ error: 'Nicht autorisiert' });
 
   const token = process.env.GITHUB_TOKEN;
   if (!token) return res.status(500).json({ error: 'GITHUB_TOKEN nicht konfiguriert' });

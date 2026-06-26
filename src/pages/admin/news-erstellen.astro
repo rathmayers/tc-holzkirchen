@@ -25,9 +25,7 @@ const newsJSON = JSON.stringify(newsData);
   <div class="bg-court/5 border-b border-sand-dark py-6">
     <div class="max-w-screen-xl mx-auto px-6 flex items-center justify-between">
       <div class="flex items-center gap-4">
-        <a href="/admin" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors">← Logout</a>
-        <span class="text-sand-dark">/</span>
-        <a href="/admin/news-liste" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors">Alle News</a>
+        <a href="/admin/dashboard" class="font-mono text-xs text-court/40 uppercase tracking-widest hover:text-clay transition-colors">← Dashboard</a>
         <span class="text-sand-dark">/</span>
         <h1 id="page-title" class="font-display text-2xl text-court">Neuer Beitrag</h1>
       </div>
@@ -191,7 +189,8 @@ const newsJSON = JSON.stringify(newsData);
 </BaseLayout>
 
 <script define:vars={{ newsJSON }} is:inline>
-  if (!sessionStorage.getItem('tc-admin')) window.location.href = '/admin';
+  if (!sessionStorage.getItem('tc-session')) window.location.href = '/admin';
+  var SESSION_TOKEN = sessionStorage.getItem('tc-session');
 
   var ALL_NEWS  = JSON.parse(newsJSON);
   var editSlug  = new URLSearchParams(location.search).get('edit');
@@ -239,7 +238,7 @@ const newsJSON = JSON.stringify(newsData);
 
       fetch('/api/upload-image', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SESSION_TOKEN },
         body:    JSON.stringify({
           filename: file.name,
           content:  base64,
@@ -315,7 +314,7 @@ const newsJSON = JSON.stringify(newsData);
 
     fetch('/api/save-news', {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SESSION_TOKEN },
       body:    JSON.stringify({ filename: filename, content: content }),
     })
     .then(function(r) { return r.json(); })

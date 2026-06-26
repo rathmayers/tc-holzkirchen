@@ -1,7 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-
-// In Produktion: echte Session-Prüfung (z.B. Astro middleware + JWT oder Lucia Auth)
 ---
 
 <BaseLayout title="Admin Login – TC Holzkirchen">
@@ -13,40 +11,58 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <p class="text-white/40 font-mono text-xs uppercase tracking-widest mt-1">TC Holzkirchen</p>
       </div>
 
-      <form id="login-form" class="space-y-5">
-        <div>
-          <label class="form-label text-white/50" for="username">Benutzername</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            class="form-input"
-            placeholder="admin"
-            required
-            autocomplete="username"
-          />
-        </div>
-        <div>
-          <label class="form-label text-white/50" for="password">Passwort</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            class="form-input"
-            placeholder="••••••••"
-            required
-            autocomplete="current-password"
-          />
-        </div>
+      <!-- Schritt 1: E-Mail -->
+      <div id="step-email">
+        <form id="email-form" class="space-y-5">
+          <div>
+            <label class="form-label text-white/50" for="email">E-Mail-Adresse</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="deine@email.de"
+              required
+              autocomplete="email"
+            />
+          </div>
+          <div id="email-error" class="hidden bg-clay/20 border border-clay/40 text-white/80 text-sm font-mono px-4 py-3"></div>
+          <button type="submit" id="email-btn" class="btn-primary w-full justify-center">
+            Code anfordern
+          </button>
+        </form>
+      </div>
 
-        <div id="login-error" class="hidden bg-clay/20 border border-clay/40 text-white/80 text-sm font-mono px-4 py-3">
-          Ungültige Anmeldedaten.
-        </div>
-
-        <button type="submit" class="btn-primary w-full justify-center">
-          Anmelden
-        </button>
-      </form>
+      <!-- Schritt 2: Code eingeben -->
+      <div id="step-code" class="hidden">
+        <p class="text-white/60 text-sm font-mono mb-6 text-center">
+          Wir haben einen 6-stelligen Code an <span id="email-display" class="text-white"></span> gesendet.
+        </p>
+        <form id="code-form" class="space-y-5">
+          <div>
+            <label class="form-label text-white/50" for="otp">Einmal-Code</label>
+            <input
+              type="text"
+              id="otp"
+              name="otp"
+              class="form-input text-center text-2xl tracking-widest font-mono"
+              placeholder="000000"
+              maxlength="6"
+              inputmode="numeric"
+              pattern="[0-9]{6}"
+              required
+              autocomplete="one-time-code"
+            />
+          </div>
+          <div id="code-error" class="hidden bg-clay/20 border border-clay/40 text-white/80 text-sm font-mono px-4 py-3"></div>
+          <button type="submit" id="code-btn" class="btn-primary w-full justify-center">
+            Anmelden
+          </button>
+          <button type="button" id="back-btn" class="w-full text-center font-mono text-xs text-white/30 hover:text-white/60 transition-colors mt-2">
+            ← Andere E-Mail verwenden
+          </button>
+        </form>
+      </div>
 
       <p class="text-center text-white/30 text-xs font-mono mt-8 uppercase tracking-widest">
         Nur für berechtigte Redakteure
@@ -55,20 +71,107 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   </div>
 </BaseLayout>
 
-<script>
-  // Demo-Login: In Produktion gegen echtes Backend ersetzen
-  document.getElementById('login-form')!.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const user = (form.querySelector('#username') as HTMLInputElement).value;
-    const pass = (form.querySelector('#password') as HTMLInputElement).value;
+<script is:inline>
+  // Bereits eingeloggt?
+  if (sessionStorage.getItem('tc-session')) window.location.href = '/admin/dashboard';
 
-    // Beispiel-Check – in Produktion: echte API-Anfrage
-    if (user === 'admin' && pass === 'tennis2026!%') {
-      sessionStorage.setItem('tc-admin', '1');
-      window.location.href = '/admin/news-erstellen';
-    } else {
-      document.getElementById('login-error')!.classList.remove('hidden');
-    }
+  var pendingToken = null;
+
+  function showError(id, msg) {
+    var el = document.getElementById(id);
+    el.textContent = msg;
+    el.classList.remove('hidden');
+  }
+  function hideError(id) {
+    document.getElementById(id).classList.add('hidden');
+  }
+
+  // ─── Schritt 1: E-Mail ──────────────────────────────────────────────────
+
+  document.getElementById('email-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    hideError('email-error');
+
+    var email = document.getElementById('email').value.trim();
+    var btn   = document.getElementById('email-btn');
+    btn.disabled    = true;
+    btn.textContent = 'Code wird gesendet…';
+
+    fetch('/api/admin-request-code', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ email: email }),
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      btn.disabled    = false;
+      btn.textContent = 'Code anfordern';
+
+      if (data.pendingToken) {
+        pendingToken = data.pendingToken;
+        document.getElementById('email-display').textContent = email;
+        document.getElementById('step-email').classList.add('hidden');
+        document.getElementById('step-code').classList.remove('hidden');
+        setTimeout(function() { document.getElementById('otp').focus(); }, 100);
+      } else {
+        // Auch bei unbekannter E-Mail zeigen wir dieselbe Meldung (kein Leak)
+        showError('email-error', 'Falls diese E-Mail berechtigt ist, wurde ein Code gesendet.');
+      }
+    })
+    .catch(function() {
+      btn.disabled    = false;
+      btn.textContent = 'Code anfordern';
+      showError('email-error', 'Verbindungsfehler – bitte erneut versuchen.');
+    });
+  });
+
+  // ─── Zurück ─────────────────────────────────────────────────────────────
+
+  document.getElementById('back-btn').addEventListener('click', function() {
+    pendingToken = null;
+    document.getElementById('otp').value = '';
+    hideError('code-error');
+    document.getElementById('step-code').classList.add('hidden');
+    document.getElementById('step-email').classList.remove('hidden');
+  });
+
+  // ─── Schritt 2: Code prüfen ─────────────────────────────────────────────
+
+  document.getElementById('code-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    hideError('code-error');
+
+    var otp = document.getElementById('otp').value.trim();
+    var btn = document.getElementById('code-btn');
+    btn.disabled    = true;
+    btn.textContent = 'Wird geprüft…';
+
+    fetch('/api/admin-verify-code', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ pendingToken: pendingToken, otp: otp }),
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      btn.disabled    = false;
+      btn.textContent = 'Anmelden';
+
+      if (data.sessionToken) {
+        sessionStorage.setItem('tc-session', data.sessionToken);
+        window.location.href = '/admin/dashboard';
+      } else {
+        showError('code-error', data.error || 'Ungültiger Code – bitte erneut versuchen.');
+      }
+    })
+    .catch(function() {
+      btn.disabled    = false;
+      btn.textContent = 'Anmelden';
+      showError('code-error', 'Verbindungsfehler – bitte erneut versuchen.');
+    });
+  });
+
+  // Nur Ziffern im OTP-Feld zulassen
+  document.getElementById('otp').addEventListener('input', function() {
+    this.value = this.value.replace(/[^0-9]/g, '');
   });
 </script>

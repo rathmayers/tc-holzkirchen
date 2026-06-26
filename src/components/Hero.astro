@@ -173,7 +173,12 @@ function irgendeinPlatzBelegt(now) {
 
   // Medenspiel-Heimspieltag?
   const termin = MEDENSPIELE_TERMINE.find(t => t.datum === dateStr);
-  if (termin && min >= zeitZuMinuten(termin.von)) return true;
+  if (termin) {
+    for (const z of termin.zeiten) {
+      const bis = z.bis || '20:00';
+      if (min >= zeitZuMinuten(z.von) && min < zeitZuMinuten(bis)) return true;
+    }
+  }
 
   return false;
 }

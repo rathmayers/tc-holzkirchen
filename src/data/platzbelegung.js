@@ -46,7 +46,7 @@ export const MEDENSPIELE_TERMINE = [
     { von: '15:00', mannschaften: ['U10 MC'] },
   ]},
   { datum: '2026-06-15', zeiten: [
-    { von: '18:30', mannschaften: ['D40C'], plaetze: [3, 4], buffer: 15 },
+    { von: '18:30', mannschaften: ['D40C'], plaetze: [3, 4] },
   ]},
   { datum: '2026-06-19', zeiten: [
     { von: '15:00', mannschaften: ['U15m II'] },
@@ -56,7 +56,7 @@ export const MEDENSPIELE_TERMINE = [
     { von: '14:00', mannschaften: ['D50 II 4er', 'H50 6er'] },
   ]},
   { datum: '2026-06-22', zeiten: [
-    { von: '18:30', mannschaften: ['D40C'], plaetze: [3, 4], buffer: 15 },
+    { von: '18:30', mannschaften: ['D40C'], plaetze: [3, 4] },
   ]},
     { datum: '2026-06-23', zeiten: [
     { von: '08:30', mannschaften: ['Privatschule Tennis-Turnier'], plaetze: [1, 2,3, 4]},

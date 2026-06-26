@@ -397,7 +397,7 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
           <!-- Medenspiele Heimspieltage -->
           <div id="belegungsplan-medenspiele" class="scroll-mt-60">
             <p class="font-mono text-xs text-clay uppercase tracking-widest mb-4">
-              Medenspiele Heimspieltage und Sonderbelegungen
+              Meden-Heimspieltage und Sonderbelegungen
             </p>
             <div class="border border-sand-dark divide-y divide-sand-dark">
               {medMonate.map((monat: MedMonat) => (
@@ -491,14 +491,7 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
   }
 
   function getZeitBis(zeit) {
-    const teams = zeit.mannschaften || [];
-    if (teams.length !== 1) return null;
-    const team = teams[0];
-    const is6er = team.endsWith("6er") || team === "Herren";
-    const von = zeit.von;
-    if (is6er && von === "09:00") return "19:00";
-    if (!is6er && (von === "09:00" || von === "10:00")) return "15:00";
-    return null;
+    return zeit.bis || "20:00";
   }
 
   function getPlatzStatus(platzNr, now) {
@@ -533,10 +526,8 @@ für Privatstunden <span class="text-clay">mit TCH Mitgliedern</span> (unbedingt
       for (const z of termin.zeiten) {
         const terminPlaetze = z.plaetze || [1, 2, 3, 4, 5];
         if (terminPlaetze.includes(platzNr)) {
-          const vonMin = zeitZuMinuten(z.von) - (z.buffer || 0);
-          if (min >= vonMin) {
-            const bis = getZeitBis(z);
-            if (!bis || min < zeitZuMinuten(bis)) {
+          if (min >= zeitZuMinuten(z.von)) {
+            if (min < zeitZuMinuten(getZeitBis(z))) {
               return {
                 farbe: "orange",
                 text: "Platzbelegung durch Medenspiele entsprechend Belegungsplan",
