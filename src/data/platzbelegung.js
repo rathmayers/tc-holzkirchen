@@ -62,7 +62,7 @@ export const MEDENSPIELE_TERMINE = [
   ]},
   { datum: '2026-06-27', zeiten: [
     { von: '07:30', mannschaften: ["U12 I","U12 II"] },
-    { von: '14:00', mannschaften: ["H40 4er"], plaetze: [19] },
+    { von: '14:00', mannschaften: ["H40 4er"], bis: '19:00' },
   ]},
   { datum: '2026-06-29', zeiten: [
     { von: '10:00', mannschaften: ["H70 4er"] },
