@@ -31,16 +31,16 @@ const latestRendered = await Promise.all(latestNews.map(e => e.render()));
       <!-- Feature-Kacheln -->
       <div class="grid grid-cols-2 gap-4" data-animate>
         {[
-          { icon: '🎾', title: '6 Plätze',       desc: 'Sandplätze an der Krankenhausstraße' },
-          { icon: '🏆', title: '16 Mannschaften', desc: 'Von Bambini bis Herren 70 im Spielbetrieb' },
-          { icon: '👧', title: 'Jugend',           desc: 'Jugendarbeit wird bei uns großgeschrieben' },
-          { icon: '👨‍👩‍👧', title: 'Familien',     desc: 'Tennistraining für alle Altersgruppen über die Tennisschule' },
+          { icon: '🎾', title: '6 Plätze',       desc: 'Sandplätze an der Krankenhausstraße',                        href: '/platzbuchung' },
+          { icon: '🏆', title: '16 Mannschaften', desc: 'Von Bambini bis Herren 70 im Spielbetrieb',                  href: '/mannschaften' },
+          { icon: '👧', title: 'Jugend',           desc: 'Jugendarbeit wird bei uns großgeschrieben',                  href: '/jugend' },
+          { icon: '👨‍👩‍👧', title: 'Familien',     desc: 'Tennistraining für alle Altersgruppen über die Tennisschule', href: '/tennisschule' },
         ].map(item => (
-          <div class="bg-sand p-6 border border-sand-dark hover:border-clay transition-colors">
+          <a href={item.href} class="bg-sand p-6 border border-sand-dark hover:border-clay transition-colors group">
             <span class="text-3xl mb-3 block">{item.icon}</span>
-            <h3 class="font-display text-xl text-court mb-1">{item.title}</h3>
+            <h3 class="font-display text-xl text-court mb-1 group-hover:text-clay transition-colors">{item.title}</h3>
             <p class="text-sm text-court/50">{item.desc}</p>
-          </div>
+          </a>
         ))}
       </div>
 
