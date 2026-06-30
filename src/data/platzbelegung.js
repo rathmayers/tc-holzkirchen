@@ -67,6 +67,9 @@ export const MEDENSPIELE_TERMINE = [
   { datum: '2026-06-29', zeiten: [
     { von: '10:00', mannschaften: ["H70 4er"] },
   ]},
+  { datum: '2026-07-02', zeiten: [
+    { von: '11:30', mannschaften: ["Privatschule"], plaetze: [3,4], bis: '13:00' },
+  ]},
   { datum: '2026-07-03', zeiten: [
     { von: '15:00', mannschaften: ["U15m I","U15m III"] },
   ]},
