@@ -25,7 +25,10 @@ const initialData = JSON.stringify({
         <span class="text-sand-dark">/</span>
         <h1 class="font-display text-xl sm:text-2xl text-court truncate">Platzbelegung</h1>
       </div>
-      <a href="/platzbuchung" class="btn-outline text-xs py-2 px-3 sm:px-4 shrink-0 hidden sm:inline-flex">Platzbuchung ansehen</a>
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <button id="save-btn-top" class="btn-primary text-xs py-2 px-3 sm:px-4">Speichern</button>
+        <a href="/platzbuchung" class="btn-outline text-xs py-2 px-3 sm:px-4 hidden sm:inline-flex">Platzbuchung ansehen</a>
+      </div>
     </div>
   </div>
 
@@ -292,7 +295,10 @@ const initialData = JSON.stringify({
     renderTermine();
     setTimeout(function() {
       var first = el('termine-list').firstElementChild;
-      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (first) {
+        var top = first.getBoundingClientRect().top + window.pageYOffset - 120;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
     }, 50);
   });
 
@@ -342,6 +348,8 @@ const initialData = JSON.stringify({
       btn.textContent = 'Änderungen speichern';
     });
   });
+
+  el('save-btn-top').addEventListener('click', function() { el('save-btn').click(); });
 
   // ─── Init ────────────────────────────────────────────────────────────────
   renderTermine();
