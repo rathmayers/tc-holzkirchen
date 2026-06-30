@@ -279,11 +279,15 @@ const initialData = JSON.stringify({
   el('add-termin-btn').addEventListener('click', function() {
     var today = new Date().toISOString().split('T')[0];
     state.medenspieleTermine.push({ datum: today, zeiten: [{ von: '10:00', mannschaften: [] }] });
-    renderTermine();
+    renderTermine(); // sortiert state.medenspieleTermine in-place
+    // Nach dem Sortieren die Position des neuen Eintrags bestimmen
+    var newIdx = -1;
+    for (var i = state.medenspieleTermine.length - 1; i >= 0; i--) {
+      if (state.medenspieleTermine[i].datum === today) { newIdx = i; break; }
+    }
     setTimeout(function() {
-      var cards = el('termine-list').querySelectorAll('.border');
-      var last = cards[cards.length - 1];
-      if (last) last.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      var card = el('termine-list').children[newIdx];
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
   });
 
