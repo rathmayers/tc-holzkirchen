@@ -108,18 +108,27 @@ const initialData = JSON.stringify({
     var list = el('termine-list');
     list.innerHTML = '';
 
-    state.medenspieleTermine.sort(function(a, b) { return a.datum.localeCompare(b.datum); });
+    // Entwürfe oben (unsortiert), Rest sortiert – aber originale Indizes beibehalten
+    var indexed = state.medenspieleTermine.map(function(t, i) { return { t: t, i: i }; });
+    var drafts    = indexed.filter(function(x) { return x.t._draft; });
+    var committed = indexed.filter(function(x) { return !x.t._draft; });
+    committed.sort(function(a, b) { return a.t.datum.localeCompare(b.t.datum); });
+    var ordered = drafts.concat(committed);
 
-    state.medenspieleTermine.forEach(function(t, ti) {
+    ordered.forEach(function(item) {
+      var t  = item.t;
+      var ti = item.i;
       var card = document.createElement('div');
-      card.className = 'border border-sand-dark';
+      card.className = t._draft
+        ? 'border-2 border-clay'
+        : 'border border-sand-dark';
 
       // Kartenheader
       var header = document.createElement('div');
       header.className = 'flex flex-wrap items-center gap-2 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 bg-sand border-b border-sand-dark';
       header.innerHTML =
         '<input type="date" data-role="datum" data-ti="' + ti + '" value="' + t.datum + '" class="form-input text-sm w-40 sm:w-44" />' +
-        '<span class="font-mono text-xs text-court/40 hidden sm:inline">' + t.zeiten.length + ' Zeit' + (t.zeiten.length !== 1 ? 'en' : '') + '</span>' +
+        (t._draft ? '<span class="font-mono text-xs text-clay uppercase tracking-widest">Neu</span>' : '<span class="font-mono text-xs text-court/40 hidden sm:inline">' + t.zeiten.length + ' Zeit' + (t.zeiten.length !== 1 ? 'en' : '') + '</span>') +
         '<div class="flex items-center gap-2 ml-auto">' +
           '<button data-ti="' + ti + '" data-action="add-zeit" class="font-mono text-xs text-court/60 hover:text-court transition-colors border border-sand-dark px-2 sm:px-3 py-1.5 whitespace-nowrap">+ Zeit</button>' +
           '<button data-ti="' + ti + '" data-action="del-termin" class="font-mono text-xs text-clay hover:text-clay/70 transition-colors whitespace-nowrap">Löschen</button>' +
@@ -278,17 +287,13 @@ const initialData = JSON.stringify({
 
   el('add-termin-btn').addEventListener('click', function() {
     var today = new Date().toISOString().split('T')[0];
-    state.medenspieleTermine.push({ datum: today, zeiten: [{ von: '10:00', mannschaften: [] }] });
-    renderTermine(); // sortiert state.medenspieleTermine in-place
-    // Nach dem Sortieren die Position des neuen Eintrags bestimmen
-    var newIdx = -1;
-    for (var i = state.medenspieleTermine.length - 1; i >= 0; i--) {
-      if (state.medenspieleTermine[i].datum === today) { newIdx = i; break; }
-    }
+    // _draft: true → bleibt oben bis zum Speichern
+    state.medenspieleTermine.unshift({ datum: today, zeiten: [{ von: '10:00', mannschaften: [] }], _draft: true });
+    renderTermine();
     setTimeout(function() {
-      var card = el('termine-list').children[newIdx];
-      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+      var first = el('termine-list').firstElementChild;
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   });
 
   // ─── Speichern ──────────────────────────────────────────────────────────
@@ -304,6 +309,11 @@ const initialData = JSON.stringify({
     state.medenspiele.vonDatum = el('saison-von').value;
     state.medenspiele.bisDatum = el('saison-bis').value;
 
+    // Saubere Kopie: _draft entfernen, sortieren
+    var payload = JSON.parse(JSON.stringify(state));
+    payload.medenspieleTermine.forEach(function(t) { delete t._draft; });
+    payload.medenspieleTermine.sort(function(a, b) { return a.datum.localeCompare(b.datum); });
+
     var btn = el('save-btn');
     btn.disabled    = true;
     btn.textContent = 'Wird gespeichert…';
@@ -311,11 +321,14 @@ const initialData = JSON.stringify({
     fetch('/api/save-platzbelegung', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SESSION_TOKEN },
-      body:    JSON.stringify(state),
+      body:    JSON.stringify(payload),
     })
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.success) {
+        // _draft aus State entfernen und neu rendern
+        state.medenspieleTermine.forEach(function(t) { delete t._draft; });
+        renderTermine();
         setStatus('✓ Gespeichert! Seite aktualisiert sich in ~1 Minute.', true);
       } else {
         setStatus('Fehler: ' + (data.error || 'Unbekannter Fehler'), false);
