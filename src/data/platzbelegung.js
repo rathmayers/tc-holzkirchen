@@ -162,4 +162,39 @@ export const BELEGUNGEN = [
     ],
   },
 
+  {
+    label:    'Tenniscamp Sommerferien 2026',
+    plaetze:  [1,2,3,4],
+    vonDatum: '2026-08-03',
+    bisDatum: '2026-08-07',zeiten: [
+      { wochentage: [1,2,3,4,5], von: '9:00', bis: '15:15' },
+    ],
+  },
+
+ {
+    label:    'Tenniscamp Sommerferien 2026',
+    plaetze:  [5,6],
+    vonDatum: '2026-08-03',
+    bisDatum: '2026-08-07',zeiten: [
+      { wochentage: [1,2,3,4,5], von: '9:00', bis: '13:45' },
+    ],
+  },
+
+    {
+    label:    'Tenniscamp Sommerferien 2026',
+    plaetze:  [1,2,3,4],
+    vonDatum: '2026-08-10',
+    bisDatum: '2026-08-14',zeiten: [
+      { wochentage: [1,2,3,4,5], von: '9:00', bis: '15:15' },
+    ],
+  },
+
+ {
+    label:    'Tenniscamp Sommerferien 2026',
+    plaetze:  [5,6],
+    vonDatum: '2026-08-10',
+    bisDatum: '2026-08-14',zeiten: [
+      { wochentage: [1,2,3,4,5], von: '9:00', bis: '13:45' },
+    ],
+  },
 ];
