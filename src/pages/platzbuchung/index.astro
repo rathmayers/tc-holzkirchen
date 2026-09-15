@@ -65,6 +65,7 @@ const plaetzeStr = (arr: number[]) => {
 };
 
 // Wöchentliche Belegungen nach Wochentag gruppieren
+const today = new Date().toISOString().split('T')[0];
 const allDayMap: Record<
   number,
   {
@@ -76,6 +77,7 @@ const allDayMap: Record<
   }[]
 > = {};
 for (const b of BELEGUNGEN as any[]) {
+  if (b.bisDatum && b.bisDatum < today) continue;
   for (const z of b.zeiten) {
     for (const wt of z.wochentage) {
       if (!allDayMap[wt]) allDayMap[wt] = [];
