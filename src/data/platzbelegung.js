@@ -115,7 +115,7 @@ export const MEDENSPIELE_TERMINE = [
     { von: '09:00', mannschaften: ["Herren"], plaetze: [1] },
   ]},
   { datum: '2026-10-10', zeiten: [
-    { von: '09:30', mannschaften: ["Saisonabschluss - Schleiferlturnier und Finale Clubmeisterschaft"], plaetze: [1], bis: '20:00' },
+    { von: '09:30', mannschaften: ["Saisonabschluss - Schleiferlturnier und Finale Clubmeisterschaft"], plaetze: [1,2,3,4,5,6], bis: '20:00' },
   ]},
 ];
 
