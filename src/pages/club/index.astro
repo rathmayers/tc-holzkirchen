@@ -470,9 +470,9 @@ const vorstandJSON = JSON.stringify(VORSTAND);
           });
           if (!a) return s;
           return Object.assign({}, s, {
-            telefon: s.telefon !== '' ? s.telefon : normalizePhone(a.telefon),
-            mobil:   s.mobil   !== '' ? s.mobil   : normalizePhone(a.mobil),
-            email:   s.email   !== '' ? s.email   : (a.email || ''),
+            telefon: s.telefon != null ? s.telefon : normalizePhone(a.telefon),
+            mobil:   s.mobil   != null ? s.mobil   : normalizePhone(a.mobil),
+            email:   s.email   != null ? s.email   : (a.email || ''),
           });
         });
         renderGrid(merged);
