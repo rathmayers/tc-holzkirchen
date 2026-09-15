@@ -451,17 +451,28 @@ const vorstandJSON = JSON.stringify(VORSTAND);
       const data = await res.json();
       const personen = data.vorstand ?? [];
       if (personen.length) {
-        // Statische Liste ist autoritativ (Name, Funktion, Reihenfolge)
-        // API liefert nur Kontaktdaten-Updates
+        // Statische Liste ist autoritativ — BTV-Daten füllen nur echte Lücken
+        function normalizePhone(num) {
+          if (!num) return '';
+          var n = num.replace(/[\s\-\.\/]/g, '');
+          if (n.startsWith('0049')) n = '0' + n.slice(4);
+          if (n.startsWith('+49'))  n = '0' + n.slice(3);
+          // Leerzeichen nach Vorwahl einfügen
+          if (/^0[1-9]\d{3}\d+$/.test(n) && n.length >= 9)
+            n = n.slice(0, 5) + ' ' + n.slice(5);        // 08024 92836
+          else if (/^(015|016|017)\d+$/.test(n))
+            n = n.slice(0, 4) + ' ' + n.slice(4);        // 0175 6701140
+          return n;
+        }
         const merged = STATIC_VORSTAND.map(function (s) {
           const a = personen.find(function (x) {
             return x.name === s.name;
           });
           if (!a) return s;
           return Object.assign({}, s, {
-            telefon: a.telefon || s.telefon,
-            mobil: a.mobil || s.mobil,
-            email: a.email || s.email,
+            telefon: s.telefon !== '' ? s.telefon : normalizePhone(a.telefon),
+            mobil:   s.mobil   !== '' ? s.mobil   : normalizePhone(a.mobil),
+            email:   s.email   !== '' ? s.email   : (a.email || ''),
           });
         });
         renderGrid(merged);
