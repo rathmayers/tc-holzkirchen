@@ -114,6 +114,9 @@ export const MEDENSPIELE_TERMINE = [
   { datum: '2026-08-30', zeiten: [
     { von: '09:00', mannschaften: ["Herren"], plaetze: [1] },
   ]},
+  { datum: '2026-10-10', zeiten: [
+    { von: '09:30', mannschaften: ["Saisonabschluss - Schleiferlturnier und Finale Clubmeisterschaft"], plaetze: [1], bis: '20:00' },
+  ]},
 ];
 
 // Für den Hero-Statusdot: generelle Medenspiele-Saison (Fallback)
